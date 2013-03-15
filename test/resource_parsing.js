@@ -9,17 +9,26 @@ function test(input, entry, expectation) {
   });
 }
 
+test("/", "OData", function(result) {
+  it("Service root should have no model", function() {
+     assert.equal(result.resource, null)
+  })
+})
 
-test("/model", "ResourceUri", function(result) {
+test("/model", "OData", function(result) {
   it("should have the resource specified", function() {
      assert.equal(result.resource, 'model')
   })
 })
 
-test("/", "OData", function(result) {
-  it("Should have no model", function() {
-     assert.equal(result.resource, null)
+test("/model(1)", "OData", function(result) {
+  it("should have the resource specified", function() {
+     assert.equal(result.resource, 'model')
+  })
+  it("should have the key specified for the source", function() {
+     assert.equal(result.key, '1')
   })
 })
+
 
 

@@ -1,8 +1,8 @@
 ometa ODataParser <: OMeta { // Cheating
 
   OData = (
-      '/'
-    | ResourceUri
+      ResourceUri
+    | '/'
   ),
   ResourceUri = 
       '/'

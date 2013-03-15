@@ -5,6 +5,8 @@
         OData: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
+                return this._apply("ResourceUri");
+            }, function() {
                 return function() {
                     switch (this._apply("anything")) {
                       case "/":
@@ -14,8 +16,6 @@
                         throw this._fail();
                     }
                 }.call(this);
-            }, function() {
-                return this._apply("ResourceUri");
             });
         },
         ResourceUri: function() {
