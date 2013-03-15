@@ -1,0 +1,32 @@
+ometa ODataParser <: OMeta { // Cheating
+
+  OData = (
+      '/'
+    | ResourceUri
+  ),
+  ResourceUri = 
+      '/'
+      ResourceName:resource
+      setResource(resource) -> { resource: this.resource },
+
+  ResourcePart =
+    <	(	letter
+      |	'_'
+      )+
+    >:resourcePart
+    -> resourcePart.replace(new RegExp('_', 'g'), ' '),
+
+  ResourceName =
+    <	ResourcePart
+      (	'-'
+        ResourcePart
+      )*
+    >
+}
+
+
+ODataParser.setResource = function(resource) {
+  this.resource = resource
+}
+
+exports.ODataParser = ODataParser

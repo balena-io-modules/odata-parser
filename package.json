@@ -1,0 +1,15 @@
+{
+  "name": "odata-parser",
+  "version": "0.0.0",
+  "description": "An OData parser written in OMeta",
+  "main": "ometa.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "ometa-js" :""
+  }
+}
