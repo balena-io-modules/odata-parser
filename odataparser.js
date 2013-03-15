@@ -2,6 +2,15 @@
     "function" == typeof define && define.amd ? define([ "exports", "ometa-core" ], factory) : "object" == typeof exports ? factory(exports, require("ometa-js").core) : factory(root, root.OMeta);
 })(this, function(exports, OMeta) {
     var ODataParser = OMeta._extend({
+        Number: function() {
+            var $elf = this, _fromIdx = this.input.idx, d;
+            d = this._consumedBy(function() {
+                return this._many1(function() {
+                    return this._apply("digit");
+                });
+            });
+            return parseInt(d, 10);
+        },
         OData: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
@@ -19,12 +28,17 @@
             });
         },
         ResourceUri: function() {
-            var $elf = this, _fromIdx = this.input.idx, resource;
+            var $elf = this, _fromIdx = this.input.idx, key, resource;
             this._applyWithArgs("exactly", "/");
             resource = this._apply("ResourceName");
-            this._applyWithArgs("setResource", resource);
+            this._opt(function() {
+                this._applyWithArgs("token", "(");
+                key = this._apply("Number");
+                return this._applyWithArgs("token", ")");
+            });
             return {
-                resource: this.resource
+                resource: resource,
+                key: key
             };
         },
         ResourcePart: function() {
@@ -59,8 +73,5 @@
             });
         }
     });
-    ODataParser.setResource = function(resource) {
-        this.resource = resource;
-    };
     exports.ODataParser = ODataParser;
 });

@@ -30,5 +30,18 @@ test("/model(1)", "OData", function(result) {
   })
 })
 
-
+test("/model(1)/child", "OData", function(result) {
+  it("should have the resource specified", function() {
+     assert.equal(result.resource, 'model')
+  })
+  it("should have the resource specified", function() {
+     assert.equal(result.resource, 'model')
+  })
+  it("should have the key specified for the resource", function() {
+     assert.equal(result.key, '1')
+  })
+  it("should have the child specified", function() {
+     assert.equal(result.resource.next, 'child')
+  })
+})
 

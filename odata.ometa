@@ -1,13 +1,19 @@
 ometa ODataParser <: OMeta { // Cheating
+  Number = <digit+>:d -> parseInt(d, 10),
 
   OData = (
-      ResourceUri
+      ResourceUri()
     | '/'
-  ),
+  ) 
+  ,
+
   ResourceUri = 
       '/'
-      ResourceName:resource
-      setResource(resource) -> { resource: this.resource },
+        ResourceName:resource
+        (
+          ("(" Number:key ")")?
+        ) -> { resource: resource, key: key }
+      ,
 
   ResourcePart =
     <	(	letter
@@ -22,11 +28,6 @@ ometa ODataParser <: OMeta { // Cheating
         ResourcePart
       )*
     >
-}
-
-
-ODataParser.setResource = function(resource) {
-  this.resource = resource
 }
 
 exports.ODataParser = ODataParser
