@@ -12,24 +12,25 @@
             return parseInt(d, 10);
         },
         OData: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return this._apply("ResourceUri");
-            }, function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "/":
+            var $elf = this, _fromIdx = this.input.idx, path, resources;
+            return function() {
+                switch (this._apply("anything")) {
+                  case "/":
+                    return this._or(function() {
+                        resources = this._applyWithArgs("listOf", "ResourceUri", "/");
+                        path = this._applyWithArgs("BuildModel", resources);
+                        return path;
+                    }, function() {
                         return "/";
+                    });
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
-            });
+                  default:
+                    throw this._fail();
+                }
+            }.call(this);
         },
         ResourceUri: function() {
             var $elf = this, _fromIdx = this.input.idx, key, resource;
-            this._applyWithArgs("exactly", "/");
             resource = this._apply("ResourceName");
             this._opt(function() {
                 this._applyWithArgs("token", "(");
@@ -73,5 +74,17 @@
             });
         }
     });
+    ODataParser.BuildModel = function(resources) {
+        console.log(resources);
+        for (var current = {}, model = current, i = 0; resources.length > i; i++) {
+            console.log(i);
+            current.key = resources[i].key;
+            current.resource = resources[i].resource;
+            current.next = {};
+            current = current.next;
+        }
+        console.log(model);
+        return model;
+    };
     exports.ODataParser = ODataParser;
 });

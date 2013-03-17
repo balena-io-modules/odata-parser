@@ -2,13 +2,16 @@ ometa ODataParser <: OMeta { // Cheating
   Number = <digit+>:d -> parseInt(d, 10),
 
   OData = (
-      ResourceUri()
+    (
+      '/'
+      listOf(`ResourceUri, '/'):resources
+      BuildModel(resources):path -> path
+    )
     | '/'
   ) 
   ,
 
   ResourceUri = 
-      '/'
         ResourceName:resource
         (
           ("(" Number:key ")")?
@@ -28,6 +31,19 @@ ometa ODataParser <: OMeta { // Cheating
         ResourcePart
       )*
     >
+}
+
+ODataParser.BuildModel = function(resources) {
+  var current = {}
+  var model = current
+  for(var i = 0; i < resources.length; i++) {
+    current.key = resources[i].key
+    current.resource = resources[i].resource
+    current.next = {}
+    current = current.next
+  }
+  console.log(model)
+  return model
 }
 
 exports.ODataParser = ODataParser

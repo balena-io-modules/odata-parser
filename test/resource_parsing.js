@@ -41,7 +41,7 @@ test("/model(1)/child", "OData", function(result) {
      assert.equal(result.key, '1')
   })
   it("should have the child specified", function() {
-     assert.equal(result.resource.next, 'child')
+     assert.equal(result.next.resource, 'child')
   })
 })
 
