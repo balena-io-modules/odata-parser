@@ -49,7 +49,6 @@ test("/model(1)/$links/Child", "OData", function(result) {
 
 
 test("/method(1)/child?foo=bar", "OData", function(result) {
-    console.log(result)
   it("should have the resource specified", function() {
      assert.equal(result.resource, 'method')
   })

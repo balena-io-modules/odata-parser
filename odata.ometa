@@ -32,6 +32,10 @@ ometa ODataParser <: OMeta { // Cheating
 
   QueryOption = 
       SortOption
+    | TopOption
+    | SkipOption
+    | InlineCountOption
+    | FilterByOption
     | OperationParam
   ,
 
@@ -55,6 +59,34 @@ ometa ODataParser <: OMeta { // Cheating
          return property;
        }
   ,
+
+  TopOption = 
+    seq("$top=") Number:value -> { name: "$top", value: value }
+  ,
+
+  SkipOption = 
+    seq("$skip=") Number:value -> { name: "$skip", value: value }
+  ,
+
+  InlineCountOption =
+    seq("$inlinecount=") 
+    (
+      seq("allpages") -> "allpages"
+    | seq("none") -> "none"
+    | Text -> ""
+    ):value -> { name: "$inlinecount", value: value }
+  ,
+
+  FilterByOption = 
+    seq("$filterby=")
+    FilterByExpression:expr -> { name: "$filterby", value: expr }
+  ,
+  FilterByExpression =
+    PropertyPath:lhs
+    seq(" eq ")
+    Number:rhs           -> [ "eq", lhs, rhs ]
+  ,
+
   PropertyPath = 
           ResourceName:resource
           (

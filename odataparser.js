@@ -67,6 +67,14 @@
             return this._or(function() {
                 return this._apply("SortOption");
             }, function() {
+                return this._apply("TopOption");
+            }, function() {
+                return this._apply("SkipOption");
+            }, function() {
+                return this._apply("InlineCountOption");
+            }, function() {
+                return this._apply("FilterByOption");
+            }, function() {
                 return this._apply("OperationParam");
             });
         },
@@ -137,6 +145,112 @@
                 property.order = order;
                 return property;
             }.call(this);
+        },
+        TopOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, value;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "t");
+            this._applyWithArgs("exactly", "o");
+            this._applyWithArgs("exactly", "p");
+            this._applyWithArgs("exactly", "=");
+            value = this._apply("Number");
+            return {
+                name: "$top",
+                value: value
+            };
+        },
+        SkipOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, value;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "s");
+            this._applyWithArgs("exactly", "k");
+            this._applyWithArgs("exactly", "i");
+            this._applyWithArgs("exactly", "p");
+            this._applyWithArgs("exactly", "=");
+            value = this._apply("Number");
+            return {
+                name: "$skip",
+                value: value
+            };
+        },
+        InlineCountOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, value;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "i");
+            this._applyWithArgs("exactly", "n");
+            this._applyWithArgs("exactly", "l");
+            this._applyWithArgs("exactly", "i");
+            this._applyWithArgs("exactly", "n");
+            this._applyWithArgs("exactly", "e");
+            this._applyWithArgs("exactly", "c");
+            this._applyWithArgs("exactly", "o");
+            this._applyWithArgs("exactly", "u");
+            this._applyWithArgs("exactly", "n");
+            this._applyWithArgs("exactly", "t");
+            this._applyWithArgs("exactly", "=");
+            value = this._or(function() {
+                return function() {
+                    switch (this._apply("anything")) {
+                      case "a":
+                        return function() {
+                            this._applyWithArgs("exactly", "l");
+                            this._applyWithArgs("exactly", "l");
+                            this._applyWithArgs("exactly", "p");
+                            this._applyWithArgs("exactly", "a");
+                            this._applyWithArgs("exactly", "g");
+                            this._applyWithArgs("exactly", "e");
+                            this._applyWithArgs("exactly", "s");
+                            return "allpages";
+                        }.call(this);
+
+                      case "n":
+                        return function() {
+                            this._applyWithArgs("exactly", "o");
+                            this._applyWithArgs("exactly", "n");
+                            this._applyWithArgs("exactly", "e");
+                            return "none";
+                        }.call(this);
+
+                      default:
+                        throw this._fail();
+                    }
+                }.call(this);
+            }, function() {
+                this._apply("Text");
+                return "";
+            });
+            return {
+                name: "$inlinecount",
+                value: value
+            };
+        },
+        FilterByOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, expr;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "f");
+            this._applyWithArgs("exactly", "i");
+            this._applyWithArgs("exactly", "l");
+            this._applyWithArgs("exactly", "t");
+            this._applyWithArgs("exactly", "e");
+            this._applyWithArgs("exactly", "r");
+            this._applyWithArgs("exactly", "b");
+            this._applyWithArgs("exactly", "y");
+            this._applyWithArgs("exactly", "=");
+            expr = this._apply("FilterByExpression");
+            return {
+                name: "$filterby",
+                value: expr
+            };
+        },
+        FilterByExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, rhs;
+            lhs = this._apply("PropertyPath");
+            this._applyWithArgs("exactly", " ");
+            this._applyWithArgs("exactly", "e");
+            this._applyWithArgs("exactly", "q");
+            this._applyWithArgs("exactly", " ");
+            rhs = this._apply("Number");
+            return [ "eq", lhs, rhs ];
         },
         PropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, next, resource;
