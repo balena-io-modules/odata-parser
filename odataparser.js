@@ -11,35 +11,182 @@
             });
             return parseInt(d, 10);
         },
-        OData: function() {
-            var $elf = this, _fromIdx = this.input.idx, path, resources;
-            return function() {
-                switch (this._apply("anything")) {
-                  case "/":
-                    return this._or(function() {
-                        resources = this._applyWithArgs("listOf", "ResourceUri", "/");
-                        path = this._applyWithArgs("BuildModel", resources);
-                        return path;
-                    }, function() {
-                        return "/";
+        Text: function() {
+            var $elf = this, _fromIdx = this.input.idx, text;
+            text = this._consumedBy(function() {
+                return this._many(function() {
+                    this._not(function() {
+                        return this._applyWithArgs("exactly", "'");
                     });
+                    return this._or(function() {
+                        return function() {
+                            switch (this._apply("anything")) {
+                              case "\\":
+                                return this._apply("anything");
 
-                  default:
-                    throw this._fail();
+                              default:
+                                throw this._fail();
+                            }
+                        }.call(this);
+                    }, function() {
+                        return this._apply("letter");
+                    });
+                });
+            });
+            return text;
+        },
+        OData: function() {
+            var $elf = this, _fromIdx = this.input.idx, model, options;
+            return this._or(function() {
+                model = this._apply("PathSegment");
+                this._opt(function() {
+                    this._applyWithArgs("exactly", "?");
+                    return options = this._applyWithArgs("listOf", "QueryOption", "&");
+                });
+                return function() {
+                    if (options) {
+                        model.options = {};
+                        for (var i in options) model.options[options[i].name] = options[i].value;
+                    }
+                    return model;
+                }.call(this);
+            }, function() {
+                return function() {
+                    switch (this._apply("anything")) {
+                      case "/":
+                        return "/";
+
+                      default:
+                        throw this._fail();
+                    }
+                }.call(this);
+            });
+        },
+        QueryOption: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._apply("SortOption");
+            }, function() {
+                return this._apply("OperationParam");
+            });
+        },
+        OperationParam: function() {
+            var $elf = this, _fromIdx = this.input.idx, name, value;
+            name = this._apply("Text");
+            this._applyWithArgs("exactly", "=");
+            value = this._apply("Text");
+            return {
+                name: name,
+                value: value
+            };
+        },
+        SortOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, properties;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "o");
+            this._applyWithArgs("exactly", "r");
+            this._applyWithArgs("exactly", "d");
+            this._applyWithArgs("exactly", "e");
+            this._applyWithArgs("exactly", "r");
+            this._applyWithArgs("exactly", "b");
+            this._applyWithArgs("exactly", "y");
+            this._applyWithArgs("exactly", "=");
+            properties = this._applyWithArgs("listOf", "SortProperty", ",");
+            return {
+                name: "$orderby",
+                value: {
+                    properties: properties
                 }
+            };
+        },
+        SortProperty: function() {
+            var $elf = this, _fromIdx = this.input.idx, order, property;
+            property = this._apply("PropertyPath");
+            order = this._opt(function() {
+                return function() {
+                    switch (this._apply("anything")) {
+                      case " ":
+                        return function() {
+                            switch (this._apply("anything")) {
+                              case "a":
+                                return function() {
+                                    this._applyWithArgs("exactly", "s");
+                                    this._applyWithArgs("exactly", "c");
+                                    return "asc";
+                                }.call(this);
+
+                              case "d":
+                                return function() {
+                                    this._applyWithArgs("exactly", "e");
+                                    this._applyWithArgs("exactly", "s");
+                                    this._applyWithArgs("exactly", "c");
+                                    return "desc";
+                                }.call(this);
+
+                              default:
+                                throw this._fail();
+                            }
+                        }.call(this);
+
+                      default:
+                        throw this._fail();
+                    }
+                }.call(this);
+            });
+            return function() {
+                property.order = order;
+                return property;
             }.call(this);
         },
-        ResourceUri: function() {
-            var $elf = this, _fromIdx = this.input.idx, key, resource;
+        PropertyPath: function() {
+            var $elf = this, _fromIdx = this.input.idx, next, resource;
+            resource = this._apply("ResourceName");
+            this._opt(function() {
+                this._applyWithArgs("exactly", "/");
+                return next = this._apply("PropertyPath");
+            });
+            return {
+                name: resource,
+                property: next
+            };
+        },
+        PathSegment: function() {
+            var $elf = this, _fromIdx = this.input.idx, key, link, next, resource;
+            this._applyWithArgs("exactly", "/");
             resource = this._apply("ResourceName");
             this._opt(function() {
                 this._applyWithArgs("token", "(");
                 key = this._apply("Number");
                 return this._applyWithArgs("token", ")");
             });
+            this._opt(function() {
+                return this._or(function() {
+                    return function() {
+                        switch (this._apply("anything")) {
+                          case "/":
+                            return function() {
+                                this._applyWithArgs("exactly", "$");
+                                this._applyWithArgs("exactly", "l");
+                                this._applyWithArgs("exactly", "i");
+                                this._applyWithArgs("exactly", "n");
+                                this._applyWithArgs("exactly", "k");
+                                this._applyWithArgs("exactly", "s");
+                                return link = this._apply("PathSegment");
+                            }.call(this);
+
+                          default:
+                            throw this._fail();
+                        }
+                    }.call(this);
+                }, function() {
+                    return next = this._apply("PathSegment");
+                });
+            });
             return {
                 resource: resource,
-                key: key
+                key: key,
+                link: link,
+                property: next
             };
         },
         ResourcePart: function() {
@@ -74,17 +221,5 @@
             });
         }
     });
-    ODataParser.BuildModel = function(resources) {
-        console.log(resources);
-        for (var current = {}, model = current, i = 0; resources.length > i; i++) {
-            console.log(i);
-            current.key = resources[i].key;
-            current.resource = resources[i].resource;
-            current.next = {};
-            current = current.next;
-        }
-        console.log(model);
-        return model;
-    };
     exports.ODataParser = ODataParser;
 });

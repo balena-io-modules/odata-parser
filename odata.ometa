@@ -1,29 +1,86 @@
 ometa ODataParser <: OMeta { // Cheating
   Number = <digit+>:d -> parseInt(d, 10),
+  Text =
+    <	(	~'\''
+        (	'\\' anything
+        |	letter
+        )
+      )*
+    >:text
+    -> text
+  ,
 
   OData = (
     (
-      '/'
-      listOf(`ResourceUri, '/'):resources
-      BuildModel(resources):path -> path
-    )
+      PathSegment:model 
+      (
+        '?'
+        ( listOf(`QueryOption, '&'):options
+        )
+      )?
+    ) -> { 
+            if(options) {
+             model.options = {}
+             for(var i in options)
+               model.options[options[i].name] = options[i].value;
+            }
+           return model
+         }
     | '/'
   ) 
   ,
 
-  ResourceUri = 
+  QueryOption = 
+      SortOption
+    | OperationParam
+  ,
+
+  OperationParam = 
+    Text:name '=' Text:value -> { name: name, value: value }
+  ,
+
+  SortOption = 
+    seq("$orderby=")
+    listOf(`SortProperty, ','):properties -> { name: '$orderby', value: { properties: properties }  }
+  ,
+
+  SortProperty = 
+    PropertyPath:property
+    (
+      seq(" asc") -> "asc"
+    | seq(" desc") -> "desc"
+    )?:order
+    -> {
+         property.order = order;
+         return property;
+       }
+  ,
+  PropertyPath = 
+          ResourceName:resource
+          (
+            '/'
+            PropertyPath: next
+          )? -> { name: resource, property: next}
+  ,
+  PathSegment = 
+        '/'
         ResourceName:resource
         (
           ("(" Number:key ")")?
-        ) -> { resource: resource, key: key }
-      ,
+          (
+            (seq("/$links") PathSegment:link)
+          | PathSegment: next
+          )?
+        ) -> { resource: resource, key: key, link: link, property: next }
+  ,
 
   ResourcePart =
     <	(	letter
       |	'_'
       )+
     >:resourcePart
-    -> resourcePart.replace(new RegExp('_', 'g'), ' '),
+    -> resourcePart.replace(new RegExp('_', 'g'), ' ')
+  ,
 
   ResourceName =
     <	ResourcePart
@@ -31,19 +88,6 @@ ometa ODataParser <: OMeta { // Cheating
         ResourcePart
       )*
     >
-}
-
-ODataParser.BuildModel = function(resources) {
-  var current = {}
-  var model = current
-  for(var i = 0; i < resources.length; i++) {
-    current.key = resources[i].key
-    current.resource = resources[i].resource
-    current.next = {}
-    current = current.next
-  }
-  console.log(model)
-  return model
 }
 
 exports.ODataParser = ODataParser
