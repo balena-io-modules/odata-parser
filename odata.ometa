@@ -10,6 +10,12 @@ ometa ODataParser <: OMeta { // Cheating
     -> text
   ,
 
+  QuotedText =
+    '\''
+    Text:t 
+    '\'' -> t
+  ,
+
   OData = (
     (
       PathSegment:model 
@@ -81,10 +87,25 @@ ometa ODataParser <: OMeta { // Cheating
     seq("$filterby=")
     FilterByExpression:expr -> { name: "$filterby", value: expr }
   ,
+
   FilterByExpression =
     PropertyPath:lhs
-    seq(" eq ")
-    Number:rhs           -> [ "eq", lhs, rhs ]
+    FilterByOperand:op
+    FilterByValue:rhs           -> [ op, lhs, rhs ]
+  ,
+
+  FilterByOperand =
+    seq(" eq ") -> "eq"
+  | seq(" ne ") -> "ne"
+  | seq(" gt ") -> "gt"
+  | seq(" lt ") -> "lt"
+  | seq(" le ") -> "le"
+  ,
+
+  FilterByValue = 
+    Number
+  | QuotedText
+
   ,
 
   PropertyPath = 

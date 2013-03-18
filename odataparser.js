@@ -35,6 +35,13 @@
             });
             return text;
         },
+        QuotedText: function() {
+            var $elf = this, _fromIdx = this.input.idx, t;
+            this._applyWithArgs("exactly", "'");
+            t = this._apply("Text");
+            this._applyWithArgs("exactly", "'");
+            return t;
+        },
         OData: function() {
             var $elf = this, _fromIdx = this.input.idx, model, options;
             return this._or(function() {
@@ -243,14 +250,77 @@
             };
         },
         FilterByExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, rhs;
+            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
             lhs = this._apply("PropertyPath");
-            this._applyWithArgs("exactly", " ");
-            this._applyWithArgs("exactly", "e");
-            this._applyWithArgs("exactly", "q");
-            this._applyWithArgs("exactly", " ");
-            rhs = this._apply("Number");
-            return [ "eq", lhs, rhs ];
+            op = this._apply("FilterByOperand");
+            rhs = this._apply("FilterByValue");
+            return [ op, lhs, rhs ];
+        },
+        FilterByOperand: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return function() {
+                switch (this._apply("anything")) {
+                  case " ":
+                    return function() {
+                        switch (this._apply("anything")) {
+                          case "e":
+                            return function() {
+                                this._applyWithArgs("exactly", "q");
+                                this._applyWithArgs("exactly", " ");
+                                return "eq";
+                            }.call(this);
+
+                          case "g":
+                            return function() {
+                                this._applyWithArgs("exactly", "t");
+                                this._applyWithArgs("exactly", " ");
+                                return "gt";
+                            }.call(this);
+
+                          case "l":
+                            return function() {
+                                switch (this._apply("anything")) {
+                                  case "e":
+                                    return function() {
+                                        this._applyWithArgs("exactly", " ");
+                                        return "le";
+                                    }.call(this);
+
+                                  case "t":
+                                    return function() {
+                                        this._applyWithArgs("exactly", " ");
+                                        return "lt";
+                                    }.call(this);
+
+                                  default:
+                                    throw this._fail();
+                                }
+                            }.call(this);
+
+                          case "n":
+                            return function() {
+                                this._applyWithArgs("exactly", "e");
+                                this._applyWithArgs("exactly", " ");
+                                return "ne";
+                            }.call(this);
+
+                          default:
+                            throw this._fail();
+                        }
+                    }.call(this);
+
+                  default:
+                    throw this._fail();
+                }
+            }.call(this);
+        },
+        FilterByValue: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._apply("Number");
+            }, function() {
+                return this._apply("QuotedText");
+            });
         },
         PropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, next, resource;
