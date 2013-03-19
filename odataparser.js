@@ -353,6 +353,8 @@
         FilterByValue: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
+                return this._apply("FilterMethodCallExpression");
+            }, function() {
                 return this._apply("FilterNegateExpression");
             }, function() {
                 return this._apply("Number");
@@ -477,6 +479,39 @@
                 }.call(this);
             });
             return [ "not", value ];
+        },
+        FilterMethodCallExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, methodcall;
+            methodcall = this._apply("FilterSubstringOf");
+            return [ "call", methodcall ];
+        },
+        FilterSubstringOf: function() {
+            var $elf = this, _fromIdx = this.input.idx, method, one, two;
+            this._applyWithArgs("exactly", "s");
+            this._applyWithArgs("exactly", "u");
+            this._applyWithArgs("exactly", "b");
+            this._applyWithArgs("exactly", "s");
+            this._applyWithArgs("exactly", "t");
+            this._applyWithArgs("exactly", "r");
+            this._applyWithArgs("exactly", "i");
+            this._applyWithArgs("exactly", "n");
+            this._applyWithArgs("exactly", "g");
+            this._applyWithArgs("exactly", "o");
+            this._applyWithArgs("exactly", "f");
+            method = "substringof";
+            this._applyWithArgs("exactly", "(");
+            this._apply("spaces");
+            one = this._apply("FilterByExpression");
+            this._apply("spaces");
+            this._applyWithArgs("exactly", ",");
+            this._apply("spaces");
+            two = this._apply("FilterByExpression");
+            this._apply("spaces");
+            this._applyWithArgs("exactly", ")");
+            return {
+                args: [ one, two ],
+                method: method
+            };
         },
         PropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, next, resource;

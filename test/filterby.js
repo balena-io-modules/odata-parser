@@ -181,3 +181,23 @@ test("/some/resource?$filterby=(Price div Price) mul 5 gt 10", "OData", function
      assert.equal(result.options.$filterby[2], 10)
   })
 })
+
+test("/resource?$filterby=substringof('alfred', Product) eq 'cake'", "OData", function(result) {
+  it("A filter should be present", function() {
+     assert.notEqual(result.options.$filterby, null)
+  })
+  it("Filter should be an instance of 'eq'", function() {
+     assert.equal(result.options.$filterby[0], "eq")
+  })
+  it("lhs should be a function call", function() {
+     assert.equal(result.options.$filterby[1][0], "call")
+  })
+  it("lhs should be substringof with correct args", function() {
+     assert.equal(result.options.$filterby[1][1].method, 'substringof')
+     assert.equal(result.options.$filterby[1][1].args[0], 'alfred')
+     assert.equal(result.options.$filterby[1][1].args[1].name, 'Product')
+  })
+  it("rhs should be cake", function() {
+     assert.equal(result.options.$filterby[2], "cake")
+  }) 
+})

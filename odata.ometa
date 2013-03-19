@@ -141,7 +141,8 @@ ometa ODataParser <: OMeta { // Cheating
   ,
 
   FilterByValue = 
-    FilterNegateExpression
+    FilterMethodCallExpression
+  | FilterNegateExpression
   | Number
   | QuotedText
   | PropertyPath
@@ -150,7 +151,6 @@ ometa ODataParser <: OMeta { // Cheating
 
   GroupedPrecedenceExpression = 
     "(" spaces FilterByExpression:expr spaces ")" -> expr
-
   ,
 
   FilterAndOperand =
@@ -184,6 +184,24 @@ ometa ODataParser <: OMeta { // Cheating
     | '(' spaces FilterByExpression:expr spaces ')' -> expr
     ):value ->  [ "not", value ]
   ,
+
+  FilterMethodCallExpression = 
+    FilterSubstringOf:methodcall  -> [ "call", methodcall  ]
+  ,
+
+  FilterSubstringOf = 
+    seq('substringof'):method 
+    '(' 
+    spaces 
+    FilterByExpression:one 
+    spaces 
+    ',' 
+    spaces 
+    FilterByExpression:two 
+    spaces 
+    ')' -> { args: [ one, two ], method: method }
+
+  , 
 
   PropertyPath = 
           ResourceName:resource
