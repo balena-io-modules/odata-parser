@@ -360,7 +360,18 @@
                 return this._apply("QuotedText");
             }, function() {
                 return this._apply("PropertyPath");
+            }, function() {
+                return this._apply("GroupedPrecedenceExpression");
             });
+        },
+        GroupedPrecedenceExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, expr;
+            this._applyWithArgs("token", "(");
+            this._apply("spaces");
+            expr = this._apply("FilterByExpression");
+            this._apply("spaces");
+            this._applyWithArgs("token", ")");
+            return expr;
         },
         FilterAndOperand: function() {
             var $elf = this, _fromIdx = this.input.idx, op;

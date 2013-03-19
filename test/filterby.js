@@ -133,8 +133,6 @@ test("/some/resource?$filterby=Price mul 5 gt 10", "OData", function(result) {
 })
 
 test("/some/resource?$filterby=Price div Price mul 5 gt 10", "OData", function(result) {
-    console.log(JSON.stringify(result))
-
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
   })
@@ -152,6 +150,31 @@ test("/some/resource?$filterby=Price div Price mul 5 gt 10", "OData", function(r
     assert.equal(lexpr[2][0], "mul")
     assert.equal(lexpr[2][1].name, "Price")
     assert.equal(lexpr[2][2], 5)
+  })
+
+  it("rhr should be 10", function() {
+     assert.equal(result.options.$filterby[2], 10)
+  })
+})
+
+test("/some/resource?$filterby=(Price div Price) mul 5 gt 10", "OData", function(result) {
+  it("A filter should be present", function() {
+     assert.notEqual(result.options.$filterby, null)
+  })
+  it("Filter should be an instance of 'gt'", function() {
+     assert.equal(result.options.$filterby[0], "gt")
+  })
+  var lexpr = result.options.$filterby[1] 
+
+  it("should be {expr} mul 5", function() {
+    assert.equal(lexpr[0], "mul")
+    assert.equal(lexpr[2], 5)
+  })
+
+  it("should be {Price div Price}", function() {
+    assert.equal(lexpr[1][0], "div")
+    assert.equal(lexpr[1][1].name, "Price")
+    assert.equal(lexpr[1][2].name, "Price" )
   })
 
   it("rhr should be 10", function() {
