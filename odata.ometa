@@ -102,8 +102,49 @@ ometa ODataParser <: OMeta { // Cheating
   FilterLogicalExpression =
     FilterLogicalExpression:lhs
     FilterByOperand:op
-    FilterByValue:rhs -> [ op, lhs, rhs ]
+    FilterAddExpression:rhs -> [op, lhs, rhs ]
+  | FilterAddExpression
+  ,
+
+  FilterSubExpression =
+    FilterSubExpression:lhs
+    spaces seq("sub") spaces
+    FilterAddExpression:rhs -> [ "sub", lhs, rhs ]
+  | FilterAddExpression
+  ,
+
+  FilterAddExpression =
+    FilterAddExpression:lhs
+    spaces seq("add") spaces
+    FilterModExpression:rhs -> [ "add", lhs, rhs ]
+  | FilterModExpression
+  ,
+
+  FilterModExpression =
+    FilterModExpression:lhs
+    spaces seq("mod") spaces
+    FilterDivExpression:rhs -> [ "mod", lhs, rhs ]
+  | FilterDivExpression
+  ,
+  FilterDivExpression =
+    FilterDivExpression:lhs
+    spaces seq("div") spaces
+    FilterMulExpression:rhs -> [ "div", lhs, rhs ]
+  | FilterMulExpression
+  ,
+
+  FilterMulExpression =
+    FilterMulExpression:lhs
+    spaces seq("mul") spaces
+    FilterByValue:rhs -> [ "mul", lhs, rhs ]
   | FilterByValue
+  ,
+
+  FilterByValue = 
+    FilterNegateExpression
+  | Number
+  | QuotedText
+  | PropertyPath
   ,
 
   FilterAndOperand =
@@ -128,13 +169,6 @@ ometa ODataParser <: OMeta { // Cheating
     spaces -> op
     ,
 
-  FilterByValue = 
-    FilterNegateExpression
-  |  Number
-  | QuotedText
-  | PropertyPath
-  ,
-
   FilterNegateExpression = 
     spaces
     seq("not")
@@ -144,7 +178,6 @@ ometa ODataParser <: OMeta { // Cheating
     | '(' spaces FilterByExpression:expr spaces ')' -> expr
     ):value ->  [ "not", value ]
   ,
-    
 
   PropertyPath = 
           ResourceName:resource

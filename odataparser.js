@@ -269,10 +269,97 @@
             return this._or(function() {
                 lhs = this._apply("FilterLogicalExpression");
                 op = this._apply("FilterByOperand");
-                rhs = this._apply("FilterByValue");
+                rhs = this._apply("FilterAddExpression");
                 return [ op, lhs, rhs ];
             }, function() {
+                return this._apply("FilterAddExpression");
+            });
+        },
+        FilterSubExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, rhs;
+            return this._or(function() {
+                lhs = this._apply("FilterSubExpression");
+                this._apply("spaces");
+                this._applyWithArgs("exactly", "s");
+                this._applyWithArgs("exactly", "u");
+                this._applyWithArgs("exactly", "b");
+                this._apply("spaces");
+                rhs = this._apply("FilterAddExpression");
+                return [ "sub", lhs, rhs ];
+            }, function() {
+                return this._apply("FilterAddExpression");
+            });
+        },
+        FilterAddExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, rhs;
+            return this._or(function() {
+                lhs = this._apply("FilterAddExpression");
+                this._apply("spaces");
+                this._applyWithArgs("exactly", "a");
+                this._applyWithArgs("exactly", "d");
+                this._applyWithArgs("exactly", "d");
+                this._apply("spaces");
+                rhs = this._apply("FilterModExpression");
+                return [ "add", lhs, rhs ];
+            }, function() {
+                return this._apply("FilterModExpression");
+            });
+        },
+        FilterModExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, rhs;
+            return this._or(function() {
+                lhs = this._apply("FilterModExpression");
+                this._apply("spaces");
+                this._applyWithArgs("exactly", "m");
+                this._applyWithArgs("exactly", "o");
+                this._applyWithArgs("exactly", "d");
+                this._apply("spaces");
+                rhs = this._apply("FilterDivExpression");
+                return [ "mod", lhs, rhs ];
+            }, function() {
+                return this._apply("FilterDivExpression");
+            });
+        },
+        FilterDivExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, rhs;
+            return this._or(function() {
+                lhs = this._apply("FilterDivExpression");
+                this._apply("spaces");
+                this._applyWithArgs("exactly", "d");
+                this._applyWithArgs("exactly", "i");
+                this._applyWithArgs("exactly", "v");
+                this._apply("spaces");
+                rhs = this._apply("FilterMulExpression");
+                return [ "div", lhs, rhs ];
+            }, function() {
+                return this._apply("FilterMulExpression");
+            });
+        },
+        FilterMulExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, rhs;
+            return this._or(function() {
+                lhs = this._apply("FilterMulExpression");
+                this._apply("spaces");
+                this._applyWithArgs("exactly", "m");
+                this._applyWithArgs("exactly", "u");
+                this._applyWithArgs("exactly", "l");
+                this._apply("spaces");
+                rhs = this._apply("FilterByValue");
+                return [ "mul", lhs, rhs ];
+            }, function() {
                 return this._apply("FilterByValue");
+            });
+        },
+        FilterByValue: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._apply("FilterNegateExpression");
+            }, function() {
+                return this._apply("Number");
+            }, function() {
+                return this._apply("QuotedText");
+            }, function() {
+                return this._apply("PropertyPath");
             });
         },
         FilterAndOperand: function() {
@@ -351,18 +438,6 @@
             }.call(this);
             this._apply("spaces");
             return op;
-        },
-        FilterByValue: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return this._apply("FilterNegateExpression");
-            }, function() {
-                return this._apply("Number");
-            }, function() {
-                return this._apply("QuotedText");
-            }, function() {
-                return this._apply("PropertyPath");
-            });
         },
         FilterNegateExpression: function() {
             var $elf = this, _fromIdx = this.input.idx, expr, value;
