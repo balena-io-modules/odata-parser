@@ -89,23 +89,50 @@ ometa ODataParser <: OMeta { // Cheating
   ,
 
   FilterByExpression =
-    PropertyPath:lhs
+    FilterAndExpression
+  ,
+
+  FilterAndExpression =
+    FilterAndExpression:lhs
+    FilterAndOperand:op
+    FilterLogicalExpression:rhs -> [ op, lhs, rhs ]
+  | FilterLogicalExpression
+  ,
+
+  FilterLogicalExpression =
+    FilterLogicalExpression:lhs
     FilterByOperand:op
-    FilterByValue:rhs           -> [ op, lhs, rhs ]
+    FilterByValue:rhs -> [ op, lhs, rhs ]
+  | FilterByValue
+
+  ,
+    
+  FilterAndOperand =
+    spaces
+    (
+      seq("and")
+    | seq("or")
+    ):op 
+    spaces -> op
   ,
 
   FilterByOperand =
-    seq(" eq ") -> "eq"
-  | seq(" ne ") -> "ne"
-  | seq(" gt ") -> "gt"
-  | seq(" lt ") -> "lt"
-  | seq(" le ") -> "le"
-  ,
+    spaces
+    (
+      seq("eq")
+    | seq("ne")
+    | seq("gt")
+    | seq("ge")
+    | seq("lt")
+    | seq("le")
+    ):op 
+    spaces -> op
+    ,
 
   FilterByValue = 
     Number
   | QuotedText
-
+  | PropertyPath
   ,
 
   PropertyPath = 

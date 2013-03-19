@@ -21,6 +21,7 @@ function operandTest(op) {
 operandTest("eq")
 operandTest("ne")
 operandTest("gt")
+operandTest("ge")
 operandTest("lt")
 operandTest("le")
 
@@ -38,3 +39,30 @@ test("/some/resource?$filterby=Foo eq 'bar'", "OData", function(result) {
      assert.equal(result.options.$filterby[2], 'bar')
   })
 })
+
+test("/some/resource?$filterby=Price gt 5 and Price lt 10", "OData", function(result) {
+  console.log(JSON.stringify(result))
+
+  it("A filter should be present", function() {
+     assert.notEqual(result.options.$filterby, null)
+  })
+  it("Filter should be an instance of 'and'", function() {
+     assert.equal(result.options.$filterby[0], "and")
+  })
+
+  it("Left hand side should be Price gt 5", function() {
+     var lhs = result.options.$filterby[1] 
+     assert.equal(lhs[0], "gt")
+     assert.equal(lhs[1].name, "Price")
+     assert.equal(lhs[2], 5)
+  })
+
+  it("Right hand side should be less than 10", function() {
+     var rhs = result.options.$filterby[2] 
+     assert.equal(rhs[0], "lt")
+     assert.equal(rhs[1].name, "Price")
+     assert.equal(rhs[2], 10)
+  })
+})
+
+

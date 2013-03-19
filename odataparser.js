@@ -250,69 +250,107 @@
             };
         },
         FilterByExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
-            lhs = this._apply("PropertyPath");
-            op = this._apply("FilterByOperand");
-            rhs = this._apply("FilterByValue");
-            return [ op, lhs, rhs ];
-        },
-        FilterByOperand: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return function() {
+            return this._apply("FilterAndExpression");
+        },
+        FilterAndExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
+            return this._or(function() {
+                lhs = this._apply("FilterAndExpression");
+                op = this._apply("FilterAndOperand");
+                rhs = this._apply("FilterLogicalExpression");
+                return [ op, lhs, rhs ];
+            }, function() {
+                return this._apply("FilterLogicalExpression");
+            });
+        },
+        FilterLogicalExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
+            return this._or(function() {
+                lhs = this._apply("FilterLogicalExpression");
+                op = this._apply("FilterByOperand");
+                rhs = this._apply("FilterByValue");
+                return [ op, lhs, rhs ];
+            }, function() {
+                return this._apply("FilterByValue");
+            });
+        },
+        FilterAndOperand: function() {
+            var $elf = this, _fromIdx = this.input.idx, op;
+            this._apply("spaces");
+            op = function() {
                 switch (this._apply("anything")) {
-                  case " ":
+                  case "a":
                     return function() {
-                        switch (this._apply("anything")) {
-                          case "e":
-                            return function() {
-                                this._applyWithArgs("exactly", "q");
-                                this._applyWithArgs("exactly", " ");
-                                return "eq";
-                            }.call(this);
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "d");
+                        return "and";
+                    }.call(this);
 
-                          case "g":
-                            return function() {
-                                this._applyWithArgs("exactly", "t");
-                                this._applyWithArgs("exactly", " ");
-                                return "gt";
-                            }.call(this);
-
-                          case "l":
-                            return function() {
-                                switch (this._apply("anything")) {
-                                  case "e":
-                                    return function() {
-                                        this._applyWithArgs("exactly", " ");
-                                        return "le";
-                                    }.call(this);
-
-                                  case "t":
-                                    return function() {
-                                        this._applyWithArgs("exactly", " ");
-                                        return "lt";
-                                    }.call(this);
-
-                                  default:
-                                    throw this._fail();
-                                }
-                            }.call(this);
-
-                          case "n":
-                            return function() {
-                                this._applyWithArgs("exactly", "e");
-                                this._applyWithArgs("exactly", " ");
-                                return "ne";
-                            }.call(this);
-
-                          default:
-                            throw this._fail();
-                        }
+                  case "o":
+                    return function() {
+                        this._applyWithArgs("exactly", "r");
+                        return "or";
                     }.call(this);
 
                   default:
                     throw this._fail();
                 }
             }.call(this);
+            this._apply("spaces");
+            return op;
+        },
+        FilterByOperand: function() {
+            var $elf = this, _fromIdx = this.input.idx, op;
+            this._apply("spaces");
+            op = function() {
+                switch (this._apply("anything")) {
+                  case "e":
+                    return function() {
+                        this._applyWithArgs("exactly", "q");
+                        return "eq";
+                    }.call(this);
+
+                  case "g":
+                    return function() {
+                        switch (this._apply("anything")) {
+                          case "e":
+                            return "ge";
+
+                          case "t":
+                            return "gt";
+
+                          default:
+                            throw this._fail();
+                        }
+                    }.call(this);
+
+                  case "l":
+                    return function() {
+                        switch (this._apply("anything")) {
+                          case "e":
+                            return "le";
+
+                          case "t":
+                            return "lt";
+
+                          default:
+                            throw this._fail();
+                        }
+                    }.call(this);
+
+                  case "n":
+                    return function() {
+                        this._applyWithArgs("exactly", "e");
+                        return "ne";
+                    }.call(this);
+
+                  default:
+                    throw this._fail();
+                }
+            }.call(this);
+            this._apply("spaces");
+            return op;
         },
         FilterByValue: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -320,6 +358,8 @@
                 return this._apply("Number");
             }, function() {
                 return this._apply("QuotedText");
+            }, function() {
+                return this._apply("PropertyPath");
             });
         },
         PropertyPath: function() {
