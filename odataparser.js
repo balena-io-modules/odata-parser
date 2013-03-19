@@ -78,9 +78,15 @@
             }, function() {
                 return this._apply("SkipOption");
             }, function() {
+                return this._apply("ExpandOption");
+            }, function() {
                 return this._apply("InlineCountOption");
             }, function() {
                 return this._apply("FilterByOption");
+            }, function() {
+                return this._apply("FormatOption");
+            }, function() {
+                return this._apply("SelectOption");
             }, function() {
                 return this._apply("OperationParam");
             });
@@ -231,6 +237,48 @@
                 value: value
             };
         },
+        ExpandOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, properties;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "e");
+            this._applyWithArgs("exactly", "x");
+            this._applyWithArgs("exactly", "p");
+            this._applyWithArgs("exactly", "a");
+            this._applyWithArgs("exactly", "n");
+            this._applyWithArgs("exactly", "d");
+            this._applyWithArgs("exactly", "=");
+            properties = this._applyWithArgs("listOf", "PropertyPath", ",");
+            return {
+                name: "$expand",
+                value: {
+                    properties: properties
+                }
+            };
+        },
+        SelectOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, properties, value;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "s");
+            this._applyWithArgs("exactly", "e");
+            this._applyWithArgs("exactly", "l");
+            this._applyWithArgs("exactly", "e");
+            this._applyWithArgs("exactly", "c");
+            this._applyWithArgs("exactly", "t");
+            this._applyWithArgs("exactly", "=");
+            value = this._or(function() {
+                this._applyWithArgs("token", "*");
+                return "*";
+            }, function() {
+                properties = this._applyWithArgs("listOf", "PropertyPath", ",");
+                return {
+                    properties: properties
+                };
+            });
+            return {
+                name: "$select",
+                value: value
+            };
+        },
         FilterByOption: function() {
             var $elf = this, _fromIdx = this.input.idx, expr;
             this._applyWithArgs("exactly", "$");
@@ -247,6 +295,22 @@
             return {
                 name: "$filterby",
                 value: expr
+            };
+        },
+        FormatOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, type;
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "f");
+            this._applyWithArgs("exactly", "o");
+            this._applyWithArgs("exactly", "r");
+            this._applyWithArgs("exactly", "m");
+            this._applyWithArgs("exactly", "a");
+            this._applyWithArgs("exactly", "t");
+            this._applyWithArgs("exactly", "=");
+            type = this._apply("ContentType");
+            return {
+                name: "$format",
+                value: type
             };
         },
         FilterByExpression: function() {
@@ -720,6 +784,24 @@
                 link: link,
                 property: next
             };
+        },
+        ContentType: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._consumedBy(function() {
+                this._many1(function() {
+                    return this._apply("letter");
+                });
+                this._applyWithArgs("exactly", "/");
+                this._many1(function() {
+                    return this._apply("letter");
+                });
+                return this._opt(function() {
+                    this._applyWithArgs("exactly", "+");
+                    return this._many1(function() {
+                        return this._apply("letter");
+                    });
+                });
+            });
         },
         ResourcePart: function() {
             var $elf = this, _fromIdx = this.input.idx, resourcePart;

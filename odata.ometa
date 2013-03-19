@@ -40,8 +40,11 @@ ometa ODataParser <: OMeta { // Cheating
       SortOption
     | TopOption
     | SkipOption
+    | ExpandOption
     | InlineCountOption
     | FilterByOption
+    | FormatOption
+    | SelectOption
     | OperationParam
   ,
 
@@ -83,9 +86,28 @@ ometa ODataParser <: OMeta { // Cheating
     ):value -> { name: "$inlinecount", value: value }
   ,
 
+  ExpandOption = 
+    seq("$expand=")
+    listOf(`PropertyPath, ','):properties -> { name: "$expand", value: { properties: properties }}
+  ,
+
+  SelectOption =
+    seq("$select=")
+    (
+      "*"                                 -> '*' 
+    | listOf(`PropertyPath, ','):properties  -> { properties: properties }
+    ):value -> { name: "$select", value: value }
+  ,
+
+
   FilterByOption = 
     seq("$filterby=")
     FilterByExpression:expr -> { name: "$filterby", value: expr }
+  ,
+
+  FormatOption = 
+    seq("$format=")
+    ContentType:type -> { name: "$format", value: type }
   ,
 
   FilterByExpression =
@@ -340,6 +362,15 @@ ometa ODataParser <: OMeta { // Cheating
         ) -> { resource: resource, key: key, link: link, property: next }
   ,
 
+  ContentType = 
+    < letter+
+      '/' 
+      letter+
+      (
+        '+' letter+
+      )?
+    >
+  ,
   ResourcePart =
     <	(	letter
       |	'_'
