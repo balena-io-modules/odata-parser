@@ -41,7 +41,6 @@ test("/some/resource?$filterby=Foo eq 'bar'", "OData", function(result) {
 })
 
 test("/some/resource?$filterby=Price gt 5 and Price lt 10", "OData", function(result) {
-  console.log(JSON.stringify(result))
 
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
@@ -65,4 +64,32 @@ test("/some/resource?$filterby=Price gt 5 and Price lt 10", "OData", function(re
   })
 })
 
+test("/some/resource?$filterby=not Published", "OData", function(result) {
 
+  it("A filter should be present", function() {
+     assert.notEqual(result.options.$filterby, null)
+  })
+  it("Filter should be an instance of 'not'", function() {
+     assert.equal(result.options.$filterby[0], "not")
+  })
+
+  it("value should be 'Published'", function() {
+    assert.equal(result.options.$filterby[1].name, "Published")
+  })
+})
+
+test("/some/resource?$filterby=not (Price gt 5)", "OData", function(result) {
+
+  it("A filter should be present", function() {
+     assert.notEqual(result.options.$filterby, null)
+  })
+  it("Filter should be an instance of 'not'", function() {
+     assert.equal(result.options.$filterby[0], "not")
+  })
+  it("Value should be Price gt 5", function() {
+     var rhs = result.options.$filterby[1] 
+     assert.equal(rhs[0], "gt")
+     assert.equal(rhs[1].name, "Price")
+     assert.equal(rhs[2], 5)
+  })
+})

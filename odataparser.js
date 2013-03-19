@@ -355,12 +355,42 @@
         FilterByValue: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
+                return this._apply("FilterNegateExpression");
+            }, function() {
                 return this._apply("Number");
             }, function() {
                 return this._apply("QuotedText");
             }, function() {
                 return this._apply("PropertyPath");
             });
+        },
+        FilterNegateExpression: function() {
+            var $elf = this, _fromIdx = this.input.idx, expr, value;
+            this._apply("spaces");
+            this._applyWithArgs("exactly", "n");
+            this._applyWithArgs("exactly", "o");
+            this._applyWithArgs("exactly", "t");
+            this._apply("spaces");
+            value = this._or(function() {
+                return this._apply("FilterByValue");
+            }, function() {
+                return function() {
+                    switch (this._apply("anything")) {
+                      case "(":
+                        return function() {
+                            this._apply("spaces");
+                            expr = this._apply("FilterByExpression");
+                            this._apply("spaces");
+                            this._applyWithArgs("exactly", ")");
+                            return expr;
+                        }.call(this);
+
+                      default:
+                        throw this._fail();
+                    }
+                }.call(this);
+            });
+            return [ "not", value ];
         },
         PropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, next, resource;

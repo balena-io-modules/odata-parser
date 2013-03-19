@@ -104,9 +104,8 @@ ometa ODataParser <: OMeta { // Cheating
     FilterByOperand:op
     FilterByValue:rhs -> [ op, lhs, rhs ]
   | FilterByValue
-
   ,
-    
+
   FilterAndOperand =
     spaces
     (
@@ -130,10 +129,22 @@ ometa ODataParser <: OMeta { // Cheating
     ,
 
   FilterByValue = 
-    Number
+    FilterNegateExpression
+  |  Number
   | QuotedText
   | PropertyPath
   ,
+
+  FilterNegateExpression = 
+    spaces
+    seq("not")
+    spaces
+    (
+      FilterByValue
+    | '(' spaces FilterByExpression:expr spaces ')' -> expr
+    ):value ->  [ "not", value ]
+  ,
+    
 
   PropertyPath = 
           ResourceName:resource
