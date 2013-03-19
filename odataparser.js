@@ -481,24 +481,160 @@
             return [ "not", value ];
         },
         FilterMethodCallExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, methodcall;
-            methodcall = this._apply("FilterSubstringOf");
-            return [ "call", methodcall ];
+            var $elf = this, _fromIdx = this.input.idx, method;
+            method = this._or(function() {
+                return this._apply("SubstringOfMethodCall");
+            }, function() {
+                return this._apply("EndsWithMethodCall");
+            }, function() {
+                return this._apply("StartsWithMethodCall");
+            }, function() {
+                return this._apply("LengthMethodCall");
+            }, function() {
+                return this._apply("IndexOfMethodCall");
+            }, function() {
+                return this._apply("ReplaceMethodCall");
+            }, function() {
+                return this._apply("SubstringMethodCall");
+            }, function() {
+                return this._apply("TolowerMethodCall");
+            }, function() {
+                return this._apply("ToupperMethodCall");
+            }, function() {
+                return this._apply("TrimMethodCall");
+            }, function() {
+                return this._apply("ConcatMethodCall");
+            }, function() {
+                return this._apply("DayMethodCall");
+            }, function() {
+                return this._apply("HourMethodCall");
+            }, function() {
+                return this._apply("MinuteMethodCall");
+            }, function() {
+                return this._apply("MonthMethodCall");
+            }, function() {
+                return this._apply("SecondMethodCall");
+            }, function() {
+                return this._apply("YearMethodCall");
+            }, function() {
+                return this._apply("RoundMethodCall");
+            }, function() {
+                return this._apply("FloorMethodCall");
+            }, function() {
+                return this._apply("CeilingMethodCall");
+            }, function() {
+                return this._apply("IsOfMethodCall");
+            });
+            return [ "call", method ];
         },
-        FilterSubstringOf: function() {
-            var $elf = this, _fromIdx = this.input.idx, method, one, two;
-            this._applyWithArgs("exactly", "s");
-            this._applyWithArgs("exactly", "u");
-            this._applyWithArgs("exactly", "b");
-            this._applyWithArgs("exactly", "s");
-            this._applyWithArgs("exactly", "t");
-            this._applyWithArgs("exactly", "r");
-            this._applyWithArgs("exactly", "i");
-            this._applyWithArgs("exactly", "n");
-            this._applyWithArgs("exactly", "g");
-            this._applyWithArgs("exactly", "o");
-            this._applyWithArgs("exactly", "f");
-            method = "substringof";
+        SubstringOfMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("TwoArgMethodCall", "substringof");
+        },
+        EndsWithMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("TwoArgMethodCall", "endswith");
+        },
+        StartsWithMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("TwoArgMethodCall", "startswith");
+        },
+        LengthMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "length");
+        },
+        IndexOfMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("TwoArgMethodCall", "indexof");
+        },
+        ReplaceMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("ThreeArgMethodCall", "replace");
+        },
+        SubstringMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._applyWithArgs("TwoArgMethodCall", "substring");
+            }, function() {
+                return this._applyWithArgs("ThreeArgMethodCall", "substring");
+            });
+        },
+        TolowerMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "tolower");
+        },
+        ToupperMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "toupper");
+        },
+        TrimMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "trim");
+        },
+        ConcatMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "concat");
+        },
+        DayMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("TwoArgMethodCall", "day");
+        },
+        HourMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "hour");
+        },
+        MinuteMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "minute");
+        },
+        MonthMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "month");
+        },
+        SecondMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "second");
+        },
+        YearMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "year");
+        },
+        RoundMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "round");
+        },
+        FloorMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "floor");
+        },
+        CeilingMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("SingleArgMethodCall", "ceiling");
+        },
+        IsOfMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._applyWithArgs("SingleArgMethodCall", "isof");
+            }, function() {
+                return this._applyWithArgs("TwoArgMethodCall", "isof");
+            });
+        },
+        SingleArgMethodCall: function(name) {
+            var $elf = this, _fromIdx = this.input.idx, one;
+            this._applyWithArgs("seq", name);
+            this._applyWithArgs("exactly", "(");
+            this._apply("spaces");
+            one = this._apply("FilterByExpression");
+            this._apply("spaces");
+            this._applyWithArgs("exactly", ")");
+            return {
+                args: [ one ],
+                method: name
+            };
+        },
+        TwoArgMethodCall: function(name) {
+            var $elf = this, _fromIdx = this.input.idx, one, two;
+            this._applyWithArgs("seq", name);
             this._applyWithArgs("exactly", "(");
             this._apply("spaces");
             one = this._apply("FilterByExpression");
@@ -510,7 +646,28 @@
             this._applyWithArgs("exactly", ")");
             return {
                 args: [ one, two ],
-                method: method
+                method: name
+            };
+        },
+        ThreeArgMethodCall: function(name) {
+            var $elf = this, _fromIdx = this.input.idx, one, three, two;
+            this._applyWithArgs("seq", name);
+            this._applyWithArgs("exactly", "(");
+            this._apply("spaces");
+            one = this._apply("FilterByExpression");
+            this._apply("spaces");
+            this._applyWithArgs("exactly", ",");
+            this._apply("spaces");
+            two = this._apply("FilterByExpression");
+            this._apply("spaces");
+            this._applyWithArgs("exactly", ",");
+            this._apply("spaces");
+            three = this._apply("FilterByExpression");
+            this._apply("spaces");
+            this._applyWithArgs("exactly", ")");
+            return {
+                args: [ one, two, three ],
+                method: name
             };
         },
         PropertyPath: function() {

@@ -186,11 +186,113 @@ ometa ODataParser <: OMeta { // Cheating
   ,
 
   FilterMethodCallExpression = 
-    FilterSubstringOf:methodcall  -> [ "call", methodcall  ]
+    (
+      SubstringOfMethodCall
+    | EndsWithMethodCall 
+    | StartsWithMethodCall 
+    | LengthMethodCall 
+    | IndexOfMethodCall
+    | ReplaceMethodCall
+    | SubstringMethodCall
+    | TolowerMethodCall 
+    | ToupperMethodCall 
+    | TrimMethodCall 
+    | ConcatMethodCall 
+    | DayMethodCall 
+    | HourMethodCall 
+    | MinuteMethodCall 
+    | MonthMethodCall 
+    | SecondMethodCall 
+    | YearMethodCall 
+    | RoundMethodCall 
+    | FloorMethodCall 
+    | CeilingMethodCall 
+    | IsOfMethodCall
+    ):method -> [ "call", method ]
   ,
 
-  FilterSubstringOf = 
-    seq('substringof'):method 
+  SubstringOfMethodCall = 
+    TwoArgMethodCall("substringof")
+  ,
+
+  EndsWithMethodCall = 
+    TwoArgMethodCall("endswith")
+  ,
+
+  StartsWithMethodCall = 
+    TwoArgMethodCall("startswith")
+  ,
+
+  LengthMethodCall = 
+    SingleArgMethodCall("length")
+  ,
+
+  IndexOfMethodCall = 
+    TwoArgMethodCall("indexof")
+  ,
+  ReplaceMethodCall = 
+    ThreeArgMethodCall("replace")
+  ,
+  SubstringMethodCall = 
+    TwoArgMethodCall("substring")
+  | ThreeArgMethodCall("substring")
+  ,
+  TolowerMethodCall = 
+    SingleArgMethodCall("tolower")
+  ,
+  ToupperMethodCall = 
+    SingleArgMethodCall("toupper")
+  ,
+  TrimMethodCall = 
+    SingleArgMethodCall("trim")
+  ,
+  ConcatMethodCall = 
+    SingleArgMethodCall("concat")
+  ,
+  DayMethodCall = 
+    TwoArgMethodCall("day")
+  ,
+  HourMethodCall = 
+    SingleArgMethodCall("hour")
+  ,
+  MinuteMethodCall = 
+    SingleArgMethodCall("minute")
+  ,
+  MonthMethodCall = 
+    SingleArgMethodCall("month")
+  ,
+  SecondMethodCall = 
+    SingleArgMethodCall("second")
+  ,
+  YearMethodCall = 
+    SingleArgMethodCall("year")
+  ,
+  RoundMethodCall = 
+    SingleArgMethodCall("round")
+  ,
+  FloorMethodCall = 
+    SingleArgMethodCall("floor")
+  ,
+  CeilingMethodCall = 
+    SingleArgMethodCall("ceiling")
+  ,
+
+  IsOfMethodCall = 
+    SingleArgMethodCall("isof")
+  | TwoArgMethodCall("isof")
+  ,
+
+  SingleArgMethodCall :name =
+    seq(name) 
+    '(' 
+    spaces 
+    FilterByExpression:one 
+    spaces
+    ')' -> { args: [ one ], method: name }
+  ,
+
+  TwoArgMethodCall :name = 
+    seq(name)
     '(' 
     spaces 
     FilterByExpression:one 
@@ -199,8 +301,24 @@ ometa ODataParser <: OMeta { // Cheating
     spaces 
     FilterByExpression:two 
     spaces 
-    ')' -> { args: [ one, two ], method: method }
+    ')' -> { args: [ one, two ], method: name }
+  , 
 
+  ThreeArgMethodCall :name = 
+    seq(name)
+    '(' 
+    spaces 
+    FilterByExpression:one 
+    spaces 
+    ',' 
+    spaces 
+    FilterByExpression:two 
+    spaces 
+    ','
+    spaces
+    FilterByExpression:three 
+    spaces 
+    ')' -> { args: [ one, two, three ], method: name }
   , 
 
   PropertyPath = 
