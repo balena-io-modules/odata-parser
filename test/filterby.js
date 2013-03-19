@@ -182,22 +182,119 @@ test("/some/resource?$filterby=(Price div Price) mul 5 gt 10", "OData", function
   })
 })
 
-test("/resource?$filterby=substringof('alfred', Product) eq 'cake'", "OData", function(result) {
-  it("A filter should be present", function() {
-     assert.notEqual(result.options.$filterby, null)
+methodTestWithTwoArgs("substringof")
+methodTestWithTwoArgs("endswith")
+methodTestWithTwoArgs("startswith")
+methodTestWithOneArg("length")
+methodTestWithTwoArgs("indexof")
+methodTestWithThreeArgs("replace")
+methodTestWithTwoArgs("substring")
+methodTestWithThreeArgs("substring")
+methodTestWithOneArg("tolower")
+methodTestWithOneArg("toupper")
+methodTestWithOneArg("trim")
+methodTestWithOneArg("concat")
+methodTestWithTwoArgs("day")
+methodTestWithOneArg("hour")
+methodTestWithOneArg("minute")
+methodTestWithOneArg("month")
+methodTestWithOneArg("second")
+methodTestWithOneArg("year")
+methodTestWithOneArg("round")
+methodTestWithOneArg("floor")
+methodTestWithOneArg("ceiling")
+methodTestWithOneArg("isof")
+methodTestWithTwoArgs("isof")
+
+/* Not sure about whether I want this or not - up to you but it's here
+methodTestWithThreeArgs("substringof", true)
+methodTestWithThreeArgs("endswith", true)
+methodTestWithThreeArgs("startswith", true)
+methodTestWithTwoArgs("length", true)
+methodTestWithThreeArgs("indexof", true)
+*/
+
+function methodTestWithThreeArgs(methodName, expectFailure) {
+  test("/resource?$filterby=" + methodName + "('alfred', Product, 2) eq 'cake'", "OData", function(result, err) {
+    if(expectFailure)
+      it("Should fail because it's invalid", function() {
+        assert.notEqual(err, null)
+      })
+    else if(err)
+      throw err
+    it("A filter should be present", function() {
+       assert.notEqual(result.options.$filterby, null)
+    })
+    it("Filter should be an instance of 'eq'", function() {
+       assert.equal(result.options.$filterby[0], "eq")
+    })
+    it("lhs should be a function call", function() {
+       assert.equal(result.options.$filterby[1][0], "call")
+    })
+    it("lhs should be " + methodName + " with correct args", function() {
+       assert.equal(result.options.$filterby[1][1].method, methodName)
+       assert.equal(result.options.$filterby[1][1].args[0], 'alfred')
+       assert.equal(result.options.$filterby[1][1].args[1].name, 'Product')
+       assert.equal(result.options.$filterby[1][1].args[2],2)
+    })
+    it("rhs should be cake", function() {
+       assert.equal(result.options.$filterby[2], "cake")
+    }) 
   })
-  it("Filter should be an instance of 'eq'", function() {
-     assert.equal(result.options.$filterby[0], "eq")
+}
+
+function methodTestWithTwoArgs(methodName, expectFailure) {
+  test("/resource?$filterby=" + methodName + "('alfred', Product) eq 'cake'", "OData", function(result, err) {
+    if(expectFailure)
+      it("Should fail because it's invalid", function() {
+        assert.notEqual(err, null)
+      })
+    else if(err)
+      throw err
+    it("A filter should be present", function() {
+       assert.notEqual(result.options.$filterby, null)
+    })
+    it("Filter should be an instance of 'eq'", function() {
+       assert.equal(result.options.$filterby[0], "eq")
+    })
+    it("lhs should be a function call", function() {
+       assert.equal(result.options.$filterby[1][0], "call")
+    })
+    it("lhs should be " + methodName + " with correct args", function() {
+       assert.equal(result.options.$filterby[1][1].method, methodName)
+       assert.equal(result.options.$filterby[1][1].args[0], 'alfred')
+       assert.equal(result.options.$filterby[1][1].args[1].name, 'Product')
+    })
+    it("rhs should be cake", function() {
+       assert.equal(result.options.$filterby[2], "cake")
+    }) 
   })
-  it("lhs should be a function call", function() {
-     assert.equal(result.options.$filterby[1][0], "call")
+}
+
+function methodTestWithOneArg(methodName, expectFailure) {
+  test("/resource?$filterby=" + methodName + "('alfred') eq 'cake'", "OData", function(result, err) {
+    if(expectFailure)
+      it("Should fail because it's invalid", function() {
+        assert.notEqual(err, null)
+      })
+    else if(err)
+      throw err
+    it("A filter should be present", function() {
+       assert.notEqual(result.options.$filterby, null)
+    })
+    it("Filter should be an instance of 'eq'", function() {
+       assert.equal(result.options.$filterby[0], "eq")
+    })
+    it("lhs should be a function call", function() {
+       assert.equal(result.options.$filterby[1][0], "call")
+    })
+    it("lhs should be " + methodName + " with correct args", function() {
+       assert.equal(result.options.$filterby[1][1].method, methodName)
+       assert.equal(result.options.$filterby[1][1].args[0], 'alfred')
+    })
+    it("rhs should be cake", function() {
+       assert.equal(result.options.$filterby[2], "cake")
+    }) 
   })
-  it("lhs should be substringof with correct args", function() {
-     assert.equal(result.options.$filterby[1][1].method, 'substringof')
-     assert.equal(result.options.$filterby[1][1].args[0], 'alfred')
-     assert.equal(result.options.$filterby[1][1].args[1].name, 'Product')
-  })
-  it("rhs should be cake", function() {
-     assert.equal(result.options.$filterby[2], "cake")
-  }) 
-})
+}
+

@@ -141,8 +141,8 @@ ometa ODataParser <: OMeta { // Cheating
   ,
 
   FilterByValue = 
-    FilterMethodCallExpression
-  | FilterNegateExpression
+     FilterMethodCallExpression
+  |  FilterNegateExpression
   | Number
   | QuotedText
   | PropertyPath
