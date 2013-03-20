@@ -1,19 +1,4 @@
 ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and make writing this file easier
-  Number = <digit+>:d -> parseInt(d, 10),
-  Text =
-    <	(	~'\''
-        (	'\\' anything
-        |	letter
-        )
-      )*
-    >:text
-  ,
-
-  QuotedText =
-    '\''
-    Text:t 
-    '\'' -> t
-  ,
 
   OData = (
     (
@@ -346,20 +331,43 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
       )?
     >
   ,
-  ResourcePart =
-    <	(	letter
-      |	'_'
-      )+
-    >:resourcePart
-    -> resourcePart.replace(new RegExp('_', 'g'), ' ')
-  ,
 
   ResourceName =
-    <	ResourcePart
-      (	'-'
-        ResourcePart
-      )*
-    >
+    <(	
+      ~(ReservedUriComponent | ' ')
+      anything
+    )+
+    >:resourceName -> decodeURIComponent(resourceName)
+  ,
+
+  Number = <digit+>:d -> parseInt(d, 10)
+  ,
+
+  ReservedUriComponent  =
+    GenDelim
+  | SubDelim
+  ,
+
+  GenDelim = 
+    ":" | "/" | "?" | "#" | "[" | "]" | "@"
+  ,
+  
+  SubDelim = 
+    "!" | '$' | '*' | "'" | "&" | "(" | ")" | "+" | "," | ";" | "="
+  ,
+
+  Text =
+    <
+     (~ReservedUriComponent
+     anything)*
+    >:text -> decodeURIComponent(text)
+  ,
+
+  QuotedText =
+    '\''
+    Text:t 
+    '\'' -> t
+  
 }
 
 ODataParser.numberOf = function(rule, count, seperator) {
