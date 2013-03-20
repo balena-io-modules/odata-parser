@@ -13,7 +13,7 @@
         },
         Text: function() {
             var $elf = this, _fromIdx = this.input.idx, text;
-            text = this._consumedBy(function() {
+            return text = this._consumedBy(function() {
                 return this._many(function() {
                     this._not(function() {
                         return this._applyWithArgs("exactly", "'");
@@ -33,7 +33,6 @@
                     });
                 });
             });
-            return text;
         },
         QuotedText: function() {
             var $elf = this, _fromIdx = this.input.idx, t;
@@ -124,35 +123,30 @@
             var $elf = this, _fromIdx = this.input.idx, order, property;
             property = this._apply("PropertyPath");
             order = this._opt(function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case " ":
-                        return function() {
-                            switch (this._apply("anything")) {
-                              case "a":
-                                return function() {
-                                    this._applyWithArgs("exactly", "s");
-                                    this._applyWithArgs("exactly", "c");
-                                    return "asc";
-                                }.call(this);
+                return this._or(function() {
+                    this._apply("spaces");
+                    this._applyWithArgs("exactly", "a");
+                    this._applyWithArgs("exactly", "s");
+                    this._applyWithArgs("exactly", "c");
+                    return "asc";
+                }, function() {
+                    return function() {
+                        switch (this._apply("anything")) {
+                          case "d":
+                            return function() {
+                                this._applyWithArgs("exactly", "e");
+                                this._applyWithArgs("exactly", "s");
+                                this._applyWithArgs("exactly", "c");
+                                return "desc";
+                            }.call(this);
 
-                              case "d":
-                                return function() {
-                                    this._applyWithArgs("exactly", "e");
-                                    this._applyWithArgs("exactly", "s");
-                                    this._applyWithArgs("exactly", "c");
-                                    return "desc";
-                                }.call(this);
-
-                              default:
-                                throw this._fail();
-                            }
-                        }.call(this);
-
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                          default:
+                            throw this._fail();
+                        }
+                    }.call(this);
+                }, function() {
+                    return "desc";
+                });
             });
             return function() {
                 property.order = order;
@@ -247,7 +241,7 @@
             this._applyWithArgs("exactly", "n");
             this._applyWithArgs("exactly", "d");
             this._applyWithArgs("exactly", "=");
-            properties = this._applyWithArgs("listOf", "PropertyPath", ",");
+            properties = this._apply("PropertyPathList");
             return {
                 name: "$expand",
                 value: {
@@ -269,7 +263,7 @@
                 this._applyWithArgs("token", "*");
                 return "*";
             }, function() {
-                properties = this._applyWithArgs("listOf", "PropertyPath", ",");
+                properties = this._apply("PropertyPathList");
                 return {
                     properties: properties
                 };
@@ -593,146 +587,112 @@
         },
         SubstringOfMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("TwoArgMethodCall", "substringof");
+            return this._applyWithArgs("MethodCall", "substringof", 2);
         },
         EndsWithMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("TwoArgMethodCall", "endswith");
+            return this._applyWithArgs("MethodCall", "endswith", 2);
         },
         StartsWithMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("TwoArgMethodCall", "startswith");
+            return this._applyWithArgs("MethodCall", "startswith", 2);
         },
         LengthMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "length");
+            return this._applyWithArgs("MethodCall", "length", 1);
         },
         IndexOfMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("TwoArgMethodCall", "indexof");
+            return this._applyWithArgs("MethodCall", "indexof", 2);
         },
         ReplaceMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("ThreeArgMethodCall", "replace");
+            return this._applyWithArgs("MethodCall", "replace", 3);
         },
         SubstringMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
-                return this._applyWithArgs("TwoArgMethodCall", "substring");
+                return this._applyWithArgs("MethodCall", "substring", 2);
             }, function() {
-                return this._applyWithArgs("ThreeArgMethodCall", "substring");
+                return this._applyWithArgs("MethodCall", "substring", 3);
             });
         },
         TolowerMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "tolower");
+            return this._applyWithArgs("MethodCall", "tolower", 1);
         },
         ToupperMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "toupper");
+            return this._applyWithArgs("MethodCall", "toupper", 1);
         },
         TrimMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "trim");
+            return this._applyWithArgs("MethodCall", "trim", 1);
         },
         ConcatMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "concat");
+            return this._applyWithArgs("MethodCall", "concat", 1);
         },
         DayMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("TwoArgMethodCall", "day");
+            return this._applyWithArgs("MethodCall", "day", 2);
         },
         HourMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "hour");
+            return this._applyWithArgs("MethodCall", "hour", 1);
         },
         MinuteMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "minute");
+            return this._applyWithArgs("MethodCall", "minute", 1);
         },
         MonthMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "month");
+            return this._applyWithArgs("MethodCall", "month", 1);
         },
         SecondMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "second");
+            return this._applyWithArgs("MethodCall", "second", 1);
         },
         YearMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "year");
+            return this._applyWithArgs("MethodCall", "year", 1);
         },
         RoundMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "round");
+            return this._applyWithArgs("MethodCall", "round", 1);
         },
         FloorMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "floor");
+            return this._applyWithArgs("MethodCall", "floor", 1);
         },
         CeilingMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("SingleArgMethodCall", "ceiling");
+            return this._applyWithArgs("MethodCall", "ceiling", 1);
         },
         IsOfMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
-                return this._applyWithArgs("SingleArgMethodCall", "isof");
+                return this._applyWithArgs("MethodCall", "isof", 1);
             }, function() {
-                return this._applyWithArgs("TwoArgMethodCall", "isof");
+                return this._applyWithArgs("MethodCall", "isof", 2);
             });
         },
-        SingleArgMethodCall: function(name) {
-            var $elf = this, _fromIdx = this.input.idx, one;
+        MethodCall: function(name, arity) {
+            var $elf = this, _fromIdx = this.input.idx, args;
             this._applyWithArgs("seq", name);
             this._applyWithArgs("exactly", "(");
             this._apply("spaces");
-            one = this._apply("FilterByExpression");
+            args = this._applyWithArgs("numberOf", "FilterByExpression", arity, ",");
             this._apply("spaces");
             this._applyWithArgs("exactly", ")");
             return {
-                args: [ one ],
+                args: args,
                 method: name
             };
         },
-        TwoArgMethodCall: function(name) {
-            var $elf = this, _fromIdx = this.input.idx, one, two;
-            this._applyWithArgs("seq", name);
-            this._applyWithArgs("exactly", "(");
-            this._apply("spaces");
-            one = this._apply("FilterByExpression");
-            this._apply("spaces");
-            this._applyWithArgs("exactly", ",");
-            this._apply("spaces");
-            two = this._apply("FilterByExpression");
-            this._apply("spaces");
-            this._applyWithArgs("exactly", ")");
-            return {
-                args: [ one, two ],
-                method: name
-            };
-        },
-        ThreeArgMethodCall: function(name) {
-            var $elf = this, _fromIdx = this.input.idx, one, three, two;
-            this._applyWithArgs("seq", name);
-            this._applyWithArgs("exactly", "(");
-            this._apply("spaces");
-            one = this._apply("FilterByExpression");
-            this._apply("spaces");
-            this._applyWithArgs("exactly", ",");
-            this._apply("spaces");
-            two = this._apply("FilterByExpression");
-            this._apply("spaces");
-            this._applyWithArgs("exactly", ",");
-            this._apply("spaces");
-            three = this._apply("FilterByExpression");
-            this._apply("spaces");
-            this._applyWithArgs("exactly", ")");
-            return {
-                args: [ one, two, three ],
-                method: name
-            };
+        PropertyPathList: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("listOf", "PropertyPath", ",");
         },
         PropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, next, resource;
@@ -835,5 +795,16 @@
             });
         }
     });
+    ODataParser.numberOf = function(rule, count, seperator) {
+        for (var ret = [], i = 0; count > i; i++) {
+            ret.push(this._apply(rule));
+            if (count - 1 > i) {
+                this._apply("spaces");
+                this._applyWithArgs("exactly", seperator);
+                this._apply("spaces");
+            }
+        }
+        return ret;
+    };
     exports.ODataParser = ODataParser;
 });

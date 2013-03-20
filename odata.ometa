@@ -1,4 +1,4 @@
-ometa ODataParser <: OMeta { // Cheating
+ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and make writing this file easier
   Number = <digit+>:d -> parseInt(d, 10),
   Text =
     <	(	~'\''
@@ -7,7 +7,6 @@ ometa ODataParser <: OMeta { // Cheating
         )
       )*
     >:text
-    -> text
   ,
 
   QuotedText =
@@ -60,8 +59,10 @@ ometa ODataParser <: OMeta { // Cheating
   SortProperty = 
     PropertyPath:property
     (
-      seq(" asc") -> "asc"
-    | seq(" desc") -> "desc"
+      spaces
+      seq("asc")
+    | seq("desc")
+    | -> 'desc'
     )?:order
     -> {
          property.order = order;
@@ -80,22 +81,22 @@ ometa ODataParser <: OMeta { // Cheating
   InlineCountOption =
     seq("$inlinecount=") 
     (
-      seq("allpages") -> "allpages"
-    | seq("none") -> "none"
+      seq("allpages") 
+    | seq("none")
     | Text -> ""
     ):value -> { name: "$inlinecount", value: value }
   ,
 
   ExpandOption = 
     seq("$expand=")
-    listOf(`PropertyPath, ','):properties -> { name: "$expand", value: { properties: properties }}
+    PropertyPathList:properties -> { name: "$expand", value: { properties: properties }}
   ,
 
   SelectOption =
     seq("$select=")
     (
       "*"                                 -> '*' 
-    | listOf(`PropertyPath, ','):properties  -> { properties: properties }
+    | PropertyPathList:properties  -> { properties: properties }
     ):value -> { name: "$select", value: value }
   ,
 
@@ -234,132 +235,106 @@ ometa ODataParser <: OMeta { // Cheating
   ,
 
   SubstringOfMethodCall = 
-    TwoArgMethodCall("substringof")
+    MethodCall("substringof", 2)
   ,
 
   EndsWithMethodCall = 
-    TwoArgMethodCall("endswith")
+    MethodCall("endswith", 2)
   ,
 
   StartsWithMethodCall = 
-    TwoArgMethodCall("startswith")
+    MethodCall("startswith", 2)
   ,
 
   LengthMethodCall = 
-    SingleArgMethodCall("length")
+    MethodCall("length", 1)
   ,
 
   IndexOfMethodCall = 
-    TwoArgMethodCall("indexof")
+    MethodCall("indexof", 2)
   ,
   ReplaceMethodCall = 
-    ThreeArgMethodCall("replace")
+    MethodCall("replace", 3)
   ,
   SubstringMethodCall = 
-    TwoArgMethodCall("substring")
-  | ThreeArgMethodCall("substring")
+    MethodCall("substring", 2)
+  | MethodCall("substring", 3)
   ,
   TolowerMethodCall = 
-    SingleArgMethodCall("tolower")
+    MethodCall("tolower", 1)
   ,
   ToupperMethodCall = 
-    SingleArgMethodCall("toupper")
+    MethodCall("toupper", 1)
   ,
   TrimMethodCall = 
-    SingleArgMethodCall("trim")
+    MethodCall("trim", 1)
   ,
   ConcatMethodCall = 
-    SingleArgMethodCall("concat")
+    MethodCall("concat", 1)
   ,
   DayMethodCall = 
-    TwoArgMethodCall("day")
+    MethodCall("day", 2)
   ,
   HourMethodCall = 
-    SingleArgMethodCall("hour")
+    MethodCall("hour", 1)
   ,
   MinuteMethodCall = 
-    SingleArgMethodCall("minute")
+    MethodCall("minute", 1)
   ,
   MonthMethodCall = 
-    SingleArgMethodCall("month")
+    MethodCall("month", 1)
   ,
   SecondMethodCall = 
-    SingleArgMethodCall("second")
+    MethodCall("second", 1)
   ,
   YearMethodCall = 
-    SingleArgMethodCall("year")
+    MethodCall("year", 1)
   ,
   RoundMethodCall = 
-    SingleArgMethodCall("round")
+    MethodCall("round", 1)
   ,
   FloorMethodCall = 
-    SingleArgMethodCall("floor")
+    MethodCall("floor", 1)
   ,
   CeilingMethodCall = 
-    SingleArgMethodCall("ceiling")
+    MethodCall("ceiling", 1)
   ,
 
   IsOfMethodCall = 
-    SingleArgMethodCall("isof")
-  | TwoArgMethodCall("isof")
+    MethodCall("isof", 1)
+  | MethodCall("isof", 2)
   ,
 
-  SingleArgMethodCall :name =
-    seq(name) 
-    '(' 
-    spaces 
-    FilterByExpression:one 
-    spaces
-    ')' -> { args: [ one ], method: name }
+  MethodCall :name :arity =
+    seq(name)
+    '('
+      spaces
+      numberOf(`FilterByExpression, arity, ','):args
+      spaces
+    ')' -> { args: args, method: name }
   ,
 
-  TwoArgMethodCall :name = 
-    seq(name)
-    '(' 
-    spaces 
-    FilterByExpression:one 
-    spaces 
-    ',' 
-    spaces 
-    FilterByExpression:two 
-    spaces 
-    ')' -> { args: [ one, two ], method: name }
-  , 
+  PropertyPathList = 
+    listOf(`PropertyPath, ',')
 
-  ThreeArgMethodCall :name = 
-    seq(name)
-    '(' 
-    spaces 
-    FilterByExpression:one 
-    spaces 
-    ',' 
-    spaces 
-    FilterByExpression:two 
-    spaces 
-    ','
-    spaces
-    FilterByExpression:three 
-    spaces 
-    ')' -> { args: [ one, two, three ], method: name }
-  , 
-
+ ,
   PropertyPath = 
-          ResourceName:resource
-          (
-            '/'
-            PropertyPath: next
-          )? -> { name: resource, property: next}
+    ResourceName:resource
+    (
+      '/'
+      PropertyPath: next
+    )? -> { name: resource, property: next}
   ,
   PathSegment = 
-        '/'
-        ResourceName:resource
-        (
-          ("(" Number:key ")")?
-          (
-            (seq("/$links") PathSegment:link)
-          | PathSegment: next
-          )?
-        ) -> { resource: resource, key: key, link: link, property: next }
+    '/'
+    ResourceName:resource
+    (
+      ("(" Number:key ")")?
+      (
+        (seq("/$links") PathSegment:link)
+      | PathSegment: next
+      )?
+    ) -> { resource: resource, key: key, link: link, property: next }
   ,
 
   ContentType = 
@@ -385,6 +360,19 @@ ometa ODataParser <: OMeta { // Cheating
         ResourcePart
       )*
     >
+}
+
+ODataParser.numberOf = function(rule, count, seperator) {
+  var ret = [];
+  for(var i = 0; i < count; i++) {
+    ret.push(this._apply(rule));
+    if(i < count-1) {
+      this._apply("spaces");
+      this._applyWithArgs('exactly', seperator)
+      this._apply("spaces");
+    }
+  }
+  return ret;
 }
 
 exports.ODataParser = ODataParser
