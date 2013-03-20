@@ -364,14 +364,13 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 
 ODataParser.numberOf = function(rule, count, seperator) {
   var ret = [];
-  for(var i = 0; i < count; i++) {
+  for(var i = 1; i < count; i++) {
     ret.push(this._apply(rule));
-    if(i < count-1) {
-      this._apply("spaces");
-      this._applyWithArgs('exactly', seperator)
-      this._apply("spaces");
-    }
+    this._apply("spaces");
+    this._applyWithArgs('exactly', seperator)
+    this._apply("spaces");
   }
+  ret.push(this._apply(rule));
   return ret;
 }
 

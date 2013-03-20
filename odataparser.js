@@ -796,14 +796,13 @@
         }
     });
     ODataParser.numberOf = function(rule, count, seperator) {
-        for (var ret = [], i = 0; count > i; i++) {
+        for (var ret = [], i = 1; count > i; i++) {
             ret.push(this._apply(rule));
-            if (count - 1 > i) {
-                this._apply("spaces");
-                this._applyWithArgs("exactly", seperator);
-                this._apply("spaces");
-            }
+            this._apply("spaces");
+            this._applyWithArgs("exactly", seperator);
+            this._apply("spaces");
         }
+        ret.push(this._apply(rule));
         return ret;
     };
     exports.ODataParser = ODataParser;
