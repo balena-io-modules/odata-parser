@@ -340,7 +340,18 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
     >:resourceName -> decodeURIComponent(resourceName)
   ,
 
-  Number = <digit+>:d -> parseInt(d, 10)
+  Number = Decimal | Integer
+  ,
+
+  Decimal = 
+    <
+      digit+
+      '.'
+      digit+
+    >:d     -> new Number(d)
+  , 
+
+  Integer = <digit+>:d -> parseInt(d, 10)
   ,
 
   ReservedUriComponent  =

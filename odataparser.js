@@ -749,6 +749,27 @@
             return decodeURIComponent(resourceName);
         },
         Number: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._apply("Decimal");
+            }, function() {
+                return this._apply("Integer");
+            });
+        },
+        Decimal: function() {
+            var $elf = this, _fromIdx = this.input.idx, d;
+            d = this._consumedBy(function() {
+                this._many1(function() {
+                    return this._apply("digit");
+                });
+                this._applyWithArgs("exactly", ".");
+                return this._many1(function() {
+                    return this._apply("digit");
+                });
+            });
+            return new Number(d);
+        },
+        Integer: function() {
             var $elf = this, _fromIdx = this.input.idx, d;
             d = this._consumedBy(function() {
                 return this._many1(function() {
