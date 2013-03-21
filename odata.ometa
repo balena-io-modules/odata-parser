@@ -37,7 +37,7 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
   ,
 
   SortOption = 
-    seq("$orderby=")
+    RecognisedOption("$orderby=")
     listOf(`SortProperty, ','):properties -> { name: '$orderby', value: { properties: properties }  }
   ,
 
@@ -56,15 +56,15 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
   ,
 
   TopOption = 
-    seq("$top=") Number:value -> { name: "$top", value: value }
+    RecognisedOption("$top=") Number:value -> { name: "$top", value: value }
   ,
 
   SkipOption = 
-    seq("$skip=") Number:value -> { name: "$skip", value: value }
+    RecognisedOption("$skip=") Number:value -> { name: "$skip", value: value }
   ,
 
   InlineCountOption =
-    seq("$inlinecount=") 
+    RecognisedOption("$inlinecount=") 
     (
       seq("allpages") 
     | seq("none")
@@ -73,12 +73,12 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
   ,
 
   ExpandOption = 
-    seq("$expand=")
+    RecognisedOption("$expand=")
     PropertyPathList:properties -> { name: "$expand", value: { properties: properties }}
   ,
 
   SelectOption =
-    seq("$select=")
+    RecognisedOption("$select=")
     (
       "*"                                 -> '*' 
     | PropertyPathList:properties  -> { properties: properties }
@@ -87,13 +87,17 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 
 
   FilterByOption = 
-    seq("$filterby=")
+    RecognisedOption("$filterby=")
     FilterByExpression:expr -> { name: "$filterby", value: expr }
   ,
 
   FormatOption = 
-    seq("$format=")
+    RecognisedOption("$format=")
     ContentType:type -> { name: "$format", value: type }
+  ,
+
+  RecognisedOption :name = 
+    seq(name)
   ,
 
   FilterByExpression =
@@ -116,34 +120,34 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 
   FilterSubExpression =
     FilterSubExpression:lhs
-    spaces seq("sub") spaces
+    spaces FilterRecognisedMathOperand("sub") spaces
     FilterAddExpression:rhs -> [ "sub", lhs, rhs ]
   | FilterAddExpression
   ,
 
   FilterAddExpression =
     FilterAddExpression:lhs
-    spaces seq("add") spaces
+    spaces FilterRecognisedMathOperand("add") spaces
     FilterModExpression:rhs -> [ "add", lhs, rhs ]
   | FilterModExpression
   ,
 
   FilterModExpression =
     FilterModExpression:lhs
-    spaces seq("mod") spaces
+    spaces FilterRecognisedMathOperand("mod") spaces
     FilterDivExpression:rhs -> [ "mod", lhs, rhs ]
   | FilterDivExpression
   ,
   FilterDivExpression =
     FilterDivExpression:lhs
-    spaces seq("div") spaces
+    spaces FilterRecognisedMathOperand("div") spaces
     FilterMulExpression:rhs -> [ "div", lhs, rhs ]
   | FilterMulExpression
   ,
 
   FilterMulExpression =
     FilterMulExpression:lhs
-    spaces seq("mul") spaces
+    spaces FilterRecognisedMathOperand("mul") spaces
     FilterByValue:rhs -> [ "mul", lhs, rhs ]
   | FilterByValue
   ,
@@ -159,6 +163,10 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 
   GroupedPrecedenceExpression = 
     "(" spaces FilterByExpression:expr spaces ")" -> expr
+  ,
+
+  FilterRecognisedMathOperand :name =
+    seq(name)
   ,
 
   FilterAndOperand =
@@ -392,5 +400,9 @@ ODataParser.numberOf = function(rule, count, seperator) {
   ret.push(this._apply(rule));
   return ret;
 }
+
+ODataParser._enableTokens = function() {
+  OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterAndOperand', 'FilterByOperand', 'FilterRecognisedMathOperand']);
+};
 
 exports.ODataParser = ODataParser

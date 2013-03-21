@@ -2,7 +2,7 @@
   "name": "odata-parser",
   "version": "0.0.0",
   "description": "An OData parser written in OMeta",
-  "main": "ometa.js",
+  "main": "odetaparser.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

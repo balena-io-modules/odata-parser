@@ -63,15 +63,7 @@
         },
         SortOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "o");
-            this._applyWithArgs("exactly", "r");
-            this._applyWithArgs("exactly", "d");
-            this._applyWithArgs("exactly", "e");
-            this._applyWithArgs("exactly", "r");
-            this._applyWithArgs("exactly", "b");
-            this._applyWithArgs("exactly", "y");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$orderby=");
             properties = this._applyWithArgs("listOf", "SortProperty", ",");
             return {
                 name: "$orderby",
@@ -116,11 +108,7 @@
         },
         TopOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "t");
-            this._applyWithArgs("exactly", "o");
-            this._applyWithArgs("exactly", "p");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$top=");
             value = this._apply("Number");
             return {
                 name: "$top",
@@ -129,12 +117,7 @@
         },
         SkipOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "s");
-            this._applyWithArgs("exactly", "k");
-            this._applyWithArgs("exactly", "i");
-            this._applyWithArgs("exactly", "p");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$skip=");
             value = this._apply("Number");
             return {
                 name: "$skip",
@@ -143,19 +126,7 @@
         },
         InlineCountOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "i");
-            this._applyWithArgs("exactly", "n");
-            this._applyWithArgs("exactly", "l");
-            this._applyWithArgs("exactly", "i");
-            this._applyWithArgs("exactly", "n");
-            this._applyWithArgs("exactly", "e");
-            this._applyWithArgs("exactly", "c");
-            this._applyWithArgs("exactly", "o");
-            this._applyWithArgs("exactly", "u");
-            this._applyWithArgs("exactly", "n");
-            this._applyWithArgs("exactly", "t");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$inlinecount=");
             value = this._or(function() {
                 return function() {
                     switch (this._apply("anything")) {
@@ -194,14 +165,7 @@
         },
         ExpandOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "e");
-            this._applyWithArgs("exactly", "x");
-            this._applyWithArgs("exactly", "p");
-            this._applyWithArgs("exactly", "a");
-            this._applyWithArgs("exactly", "n");
-            this._applyWithArgs("exactly", "d");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$expand=");
             properties = this._apply("PropertyPathList");
             return {
                 name: "$expand",
@@ -212,14 +176,7 @@
         },
         SelectOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties, value;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "s");
-            this._applyWithArgs("exactly", "e");
-            this._applyWithArgs("exactly", "l");
-            this._applyWithArgs("exactly", "e");
-            this._applyWithArgs("exactly", "c");
-            this._applyWithArgs("exactly", "t");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$select=");
             value = this._or(function() {
                 this._applyWithArgs("token", "*");
                 return "*";
@@ -236,16 +193,7 @@
         },
         FilterByOption: function() {
             var $elf = this, _fromIdx = this.input.idx, expr;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "f");
-            this._applyWithArgs("exactly", "i");
-            this._applyWithArgs("exactly", "l");
-            this._applyWithArgs("exactly", "t");
-            this._applyWithArgs("exactly", "e");
-            this._applyWithArgs("exactly", "r");
-            this._applyWithArgs("exactly", "b");
-            this._applyWithArgs("exactly", "y");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$filterby=");
             expr = this._apply("FilterByExpression");
             return {
                 name: "$filterby",
@@ -254,19 +202,16 @@
         },
         FormatOption: function() {
             var $elf = this, _fromIdx = this.input.idx, type;
-            this._applyWithArgs("exactly", "$");
-            this._applyWithArgs("exactly", "f");
-            this._applyWithArgs("exactly", "o");
-            this._applyWithArgs("exactly", "r");
-            this._applyWithArgs("exactly", "m");
-            this._applyWithArgs("exactly", "a");
-            this._applyWithArgs("exactly", "t");
-            this._applyWithArgs("exactly", "=");
+            this._applyWithArgs("RecognisedOption", "$format=");
             type = this._apply("ContentType");
             return {
                 name: "$format",
                 value: type
             };
+        },
+        RecognisedOption: function(name) {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("seq", name);
         },
         FilterByExpression: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -299,9 +244,7 @@
             return this._or(function() {
                 lhs = this._apply("FilterSubExpression");
                 this._apply("spaces");
-                this._applyWithArgs("exactly", "s");
-                this._applyWithArgs("exactly", "u");
-                this._applyWithArgs("exactly", "b");
+                this._applyWithArgs("FilterRecognisedMathOperand", "sub");
                 this._apply("spaces");
                 rhs = this._apply("FilterAddExpression");
                 return [ "sub", lhs, rhs ];
@@ -314,9 +257,7 @@
             return this._or(function() {
                 lhs = this._apply("FilterAddExpression");
                 this._apply("spaces");
-                this._applyWithArgs("exactly", "a");
-                this._applyWithArgs("exactly", "d");
-                this._applyWithArgs("exactly", "d");
+                this._applyWithArgs("FilterRecognisedMathOperand", "add");
                 this._apply("spaces");
                 rhs = this._apply("FilterModExpression");
                 return [ "add", lhs, rhs ];
@@ -329,9 +270,7 @@
             return this._or(function() {
                 lhs = this._apply("FilterModExpression");
                 this._apply("spaces");
-                this._applyWithArgs("exactly", "m");
-                this._applyWithArgs("exactly", "o");
-                this._applyWithArgs("exactly", "d");
+                this._applyWithArgs("FilterRecognisedMathOperand", "mod");
                 this._apply("spaces");
                 rhs = this._apply("FilterDivExpression");
                 return [ "mod", lhs, rhs ];
@@ -344,9 +283,7 @@
             return this._or(function() {
                 lhs = this._apply("FilterDivExpression");
                 this._apply("spaces");
-                this._applyWithArgs("exactly", "d");
-                this._applyWithArgs("exactly", "i");
-                this._applyWithArgs("exactly", "v");
+                this._applyWithArgs("FilterRecognisedMathOperand", "div");
                 this._apply("spaces");
                 rhs = this._apply("FilterMulExpression");
                 return [ "div", lhs, rhs ];
@@ -359,9 +296,7 @@
             return this._or(function() {
                 lhs = this._apply("FilterMulExpression");
                 this._apply("spaces");
-                this._applyWithArgs("exactly", "m");
-                this._applyWithArgs("exactly", "u");
-                this._applyWithArgs("exactly", "l");
+                this._applyWithArgs("FilterRecognisedMathOperand", "mul");
                 this._apply("spaces");
                 rhs = this._apply("FilterByValue");
                 return [ "mul", lhs, rhs ];
@@ -393,6 +328,10 @@
             this._apply("spaces");
             this._applyWithArgs("token", ")");
             return expr;
+        },
+        FilterRecognisedMathOperand: function(name) {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("seq", name);
         },
         FilterAndOperand: function() {
             var $elf = this, _fromIdx = this.input.idx, op;
@@ -868,6 +807,9 @@
         }
         ret.push(this._apply(rule));
         return ret;
+    };
+    ODataParser._enableTokens = function() {
+        OMeta._enableTokens.call(this, [ "Text", "ResourceName", "Number", "RecognisedOption", "FilterAndOperand", "FilterByOperand", "FilterRecognisedMathOperand" ]);
     };
     exports.ODataParser = ODataParser;
 });

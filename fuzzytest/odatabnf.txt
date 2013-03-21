@@ -1,0 +1,936 @@
+; ABNF core definitions [RFC5234]
+ALPHA = %x41-5A / %x61-7A 
+DIGIT = %x30-39 
+HEXDIG = DIGIT / "A" / "B" / "C" / "D" / "E" / "F" 
+DQUOTE = %x22 
+SP = %x20 
+HTAB = %x09 
+WSP = SP / HTAB 
+LWSP = *(WSP / CRLF WSP) 
+VCHAR = %x21-7E 
+CHAR = %x01-7F 
+OCTET = %x00-FF 
+CTL = %x00-1F / %x7F 
+CR = %x0D 
+LF = %x0A 
+CRLF = CR LF 
+BIT = "0" / "1" 
+
+; URI syntax [RFC3986]
+URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
+hier-part     = "//" authority path-abempty
+                 / path-absolute
+                 / path-rootless
+                 / path-empty
+URI-reference = URI / relative-ref
+absolute-URI  = scheme ":" hier-part [ "?" query ]
+relative-ref  = relative-part [ "?" query ] [ "#" fragment ]
+relative-part = "//" authority path-abempty
+                 / path-absolute
+                 / path-noscheme
+                 / path-empty
+scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+authority     = [ userinfo "@" ] host [ ":" port ]
+userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
+host          = IP-literal / IPv4address / reg-name
+port          = *DIGIT
+IP-literal    = "[" ( IPv6address / IPvFuture  ) "]"
+IPvFuture     = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
+IPv6address   =                            6( h16 ":" ) ls32
+                 /                       "::" 5( h16 ":" ) ls32
+                 / [               h16 ] "::" 4( h16 ":" ) ls32
+                 / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+                 / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+                 / [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
+                 / [ *4( h16 ":" ) h16 ] "::"              ls32
+                 / [ *5( h16 ":" ) h16 ] "::"              h16
+                 / [ *6( h16 ":" ) h16 ] "::"
+h16           = 1*4HEXDIG
+ls32          = ( h16 ":" h16 ) / IPv4address
+IPv4address   = dec-octet "." dec-octet "." dec-octet "." dec-octet
+dec-octet     = DIGIT                 ; 0-9
+                 / %x31-39 DIGIT         ; 10-99
+                 / "1" 2DIGIT            ; 100-199
+                 / "2" %x30-34 DIGIT     ; 200-249
+                 / "25" %x30-35          ; 250-255
+reg-name      = *( unreserved / pct-encoded / sub-delims )
+path          = path-abempty    ; begins with "/" or is empty
+                 / path-absolute   ; begins with "/" but not "//"
+                 / path-noscheme   ; begins with a non-colon segment
+                 / path-rootless   ; begins with a segment
+                 / path-empty      ; zero characters
+path-abempty  = *( "/" segment )
+path-absolute = "/" [ segment-nz *( "/" segment ) ]
+path-noscheme = segment-nz-nc *( "/" segment )
+path-rootless = segment-nz *( "/" segment )
+path-empty    = ""
+segment       = *pchar
+segment-nz    = 1*pchar
+segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
+                 ; non-zero-length segment without any colon ":"
+pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
+query         = *( pchar / "/" / "?" )
+fragment      = *( pchar / "/" / "?" )
+pct-encoded   = "%" HEXDIG HEXDIG
+unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+reserved      = gen-delims / sub-delims
+gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
+                 / "*" / "+" / "," / ";" / "="
+
+; UTF-8 syntax [RFC3629]
+UTF8-octets = *( UTF8-char )
+UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
+UTF8-1      = %x00-7F
+UTF8-2      = %xC2-DF UTF8-tail
+UTF8-3      = %xE0 %xA0-BF UTF8-tail / %xE1-EC 2( UTF8-tail ) /
+              %xED %x80-9F UTF8-tail / %xEE-EF 2( UTF8-tail )
+UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
+              %xF4 %x80-8F 2( UTF8-tail )
+UTF8-tail   = %x80-BF
+
+; Punctuation
+SQUOTE = %x27              
+EQ = %x3D              
+SEMI = %x3B              
+COMMA = %x2C
+sign = "+" / "-"
+begin-object = "{"
+end-object = "}"
+value-separator = COMMA
+name-separator = ":"
+star = "*"
+
+; Unrepresentable numeric values
+nan = "NaN"
+negativeInfinity = "-INF"
+positiveInfinity = "INF"
+nanInfinity = nan / negativeInfinity / positiveInfinity
+
+; Dates and times
+year = 4*DIGIT;
+oneToNine = "1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9" 
+zeroToTwelve = [ "0" ] oneToNine / "1" ( "0" / "1" / "2" ) 
+zeroToThirteen = zeroToTwelve / "13"     
+zeroToSixty = [ "0" ] oneToNine  / ( "1" / "2" / "3" / "4" / "5" ) DIGIT / "60"
+zeroToThirtyOne = [ "0" ] oneToNine / ( "1" / "2" ) DIGIT / "30" / "31"
+zeroToTwentyFour = [ "0" ] oneToNine / "1" DIGIT / "2" ( "1" / "2" / "3" / "4" ) 
+month = zeroToTwelve
+day = zeroToThirtyOne
+hour = zeroToTwentyFour
+minute = zeroToSixty
+second = zeroToSixty        
+nanoSeconds = 1*7DIGIT
+
+; Names and identifiers
+odataIdentifier = 1*479pchar
+namespacePart = odataIdentifier
+namespace = namespacePart *("." namespacePart)
+entitySetName = odataIdentifier
+entityTypeName = odataIdentifier
+complexTypeName = odataIdentifier 
+operationQualifier = [ namespace "." ] entityContainerName "."
+allOperationsInContainer = operationQualifier "*"                  
+qualifiedTypeName = qualifiedEntityTypeName /
+ qualifiedComplexTypeName / 
+ primitiveTypeName /
+  "collection(" (
+  qualifiedEntityTypeName /
+  qualifiedComplexTypeName / 
+  primitiveTypeName 
+  ) ")"
+qualifiedEntityTypeName = namespace "." entityTypeName
+qualifiedComplexTypeName = namespace "." complexTypeName
+primitiveTypeName = ["edm."] (
+ "binary" /
+ "boolean" /
+ "byte" /
+ "datetime" /
+ "decimal" /
+ "double" /
+ "single" /
+ "float" /
+ "guid" /
+ "int16" /
+ "int32" /
+ "int64" /
+ "sbyte" /
+ "string" /
+ "time" /
+ "datetimeoffset" /
+ "stream" /
+ concreteSpatialTypeName /
+ abstractSpatialTypeName
+ )
+concreteSpatialTypeName = "point" /
+ "linestring" /
+ "polygon" /
+ "geographycollection" /
+ "multipoint" /
+ "multilinedtring" /
+ "multipolygon" /
+ "geometricpoint" /
+ "geometriclinestring" /
+ "geometricpolygon" /
+ "geometrycollection" /
+ "geometricmultipoint" /
+ "geometricmultilinestring" /
+ "geometricmultipolygon" 
+abstractSpatialTypeName = "geography" / "geometry"      
+primitiveKeyProperty = odataIdentifier
+primitiveNonKeyProperty = odataIdentifier
+primitiveColProperty = odataIdentifier
+complexProperty = odataIdentifier
+complexColProperty = odataIdentifier
+streamProperty = odataIdentifier
+propertyName = primitiveKeyProperty / 
+ primitiveNonKeyProperty /
+ primitiveColProperty / 
+ complexProperty / 
+ complexColProperty /
+ streamProperty
+entityContainerName = odataIdentifier
+serviceOperation = entityServiceOp / 
+ entityColServiceOp /
+ complexServiceOp / 
+ complexColServiceOp /
+ primitiveServiceOp /
+ primitiveColServiceOp 
+entityServiceOp = odataIdentifier        
+entityColServiceOp = odataIdentifier        
+complexServiceOp = odataIdentifier        
+complexColServiceOp = odataIdentifier        
+primitiveServiceOp = odataIdentifier        
+primitiveColServiceOp = odataIdentifier
+entityNavigationProperty = odataIdentifier
+entityColNavigationProperty = odataIdentifier
+navigationProperty = entityNavigationProperty / entityColNavigationProperty  
+entityFunction = odataIdentifier
+entityColFunction = odataIdentifier
+complexFunction = odataIdentifier
+complexColFunction = odataIdentifier
+primitiveFunction = odataIdentifier
+primitiveColFunction = odataIdentifier
+function = entityFunction / 
+ entityColFunction /
+ complexFunction / 
+ complexColFunction /
+ primitiveFunction /
+ primitiveColFunction
+fullEntityFunction = [ operationQualifier ] entityFunction
+fullEntityColFunction = [ operationQualifier ] entityColFunction
+fullComplexFunction = [ operationQualifier ] complexFunction
+fullComplexColFunction = [ operationQualifier ] complexColFunction
+fullPrimitiveFunction = [ operationQualifier ] primitiveFunction
+fullPrimitiveColFunction = [ operationQualifier ] primitiveColFunction
+fullFunction = fullEntityFunction / 
+ fullEntityColFunction /
+ fullComplexFunction / 
+ fullComplexColFunction /
+ fullPrimitiveFunction /
+ fullPrimitiveColFunction            
+entityAction = odataIdentifier
+entityColAction = odataIdentifier
+complexAction = odataIdentifier
+complexColAction = odataIdentifier
+primitiveAction = odataIdentifier
+primitiveColAction = odataIdentifier
+voidAction = odataIdentifier
+action = entityAction / 
+ entityColAction /
+ complexAction /
+ complexColAction /
+ primitiveAction / 
+ primitiveColAction / 
+ voidAction
+fullAction = [ operationQualifier ] action
+boundAction = fullAction
+qualifiedActionName = fullAction [ "(" parameterTypeNames ")" ]
+qualifiedFunctionName = fullFunction [ "(" parameterTypeNames ")" ]
+                                                ; the parameterTypeNames are required to uniquely identify the Function
+                                                ; only if the Function in question has overloads.
+parameterTypeNames = [ parameterTypeName *( "," parameterTypeName ) ]
+                                                ; the types of all the parameters to the corresponding functionImport 
+                                                ; in the order they are declared in the function import
+parameterTypeName = qualifiedTypeName 
+
+; Literal data values
+primitiveLiteral = null /
+ binary / 
+ boolean /
+ byte /
+ dateTime /
+ dateTimeOffset /
+ decimal /
+ double /
+ geography /
+ geographyCollection / 
+ geographyLineString /
+ geographyMultiLineString /
+ geographyMultiPoint /
+ geographyMultiPolygon /
+ geographyPoint / 
+ geographyPolygon /
+ geometry /
+ geometryCollection / 
+ geometryLineString /
+ geometryMultiLineString /
+ geometryMultiPoint /
+ geometryMultiPolygon /
+ geometryPoint / 
+ geometryPolygon /
+ guid / 
+ int16 /
+ int32 /
+ int64 / 
+ sbyte /
+ single /
+ string / 
+ time 
+
+null = "null" [ "'" qualifiedTypeName "'" ] 
+ ; The optional qualifiedTypeName is used to specify what type this null value should be considered. 
+ ; Knowing the type is useful for function overload resolution purposes. 
+                                                
+binary = ( %d88 / "binary" ) SQUOTE 2*HEXDIG SQUOTE ; note: "X" is case sensitive "binary" is not hence using the character code.
+boolean = ( "true" / "1" ) / ( "false" / "0" )
+byte = 3*DIGIT ; numbers in the range from 0 to 257
+dateTime = "datetime" SQUOTE dateTimeBody SQUOTE
+dateTimeOffset = "datetimeoffset" SQUOTE dateTimeOffsetBody SQUOTE
+dateTimeBody = year "-" month "-" day "T" hour ":" minute [ ":" second [ "." nanoSeconds ] ] 
+dateTimeOffsetBody = dateTimeBody "Z" / ; TODO: is the Z optional?
+ dateTimeBody sign zeroToThirteen [ ":00" ] /
+ dateTimeBody sign zeroToTwelve [ ":" zeroToSixty ] 
+decimal = sign 1*29DIGIT ["." 1*29DIGIT] ("M"/"m")
+double = (  
+ sign 1*17DIGIT /
+ sign *DIGIT "." *DIGIT /
+ sign 1*DIGIT "." 16*DIGIT ( "e" / "E" ) sign 1*3DIGIT
+ ) ("D" / "d") /
+ nanInfinity [ "D" / "d" ]
+
+geography = "{TODO1}"       ; Format specific
+geographyCollection = "{TODO2}"       ; Format specific
+geographyLineString = "{TODO3}"       ; Format specific
+geographyMultiLineString = "{TODO4}"       ; Format specific
+geographyMultiPoint = "{TODO5}"       ; Format specific
+geographyMultiPolygon = "{TODO6}"       ; Format specific
+geographyPoint = "{TODO7}"       ; Format specific
+geographyPolygon = "{TODO8}"       ; Format specific
+geometry = "{TODO9}"       ; Format specific
+geometryCollection = "{TODO10}"       ; Format specific
+geometryLineString = "{TODO11}"       ; Format specific
+geometryMultiLineString = "{TODO12}"       ; Format specific
+geometryMultiPoint = "{TODO13}"       ; Format specific
+geometryMultiPolygon = "{TODO14}"       ; Format specific
+geometryPoint = "{TODO15}"       ; Format specific
+geometryPolygon = "{TODO16}"       ; Format specific
+
+guid = "guid" SQUOTE 8*HEXDIG "-" 4*HEXDIG "-" 4*HEXDIG "-" 12*HEXDIG SQUOTE
+int16 = [ sign ] 5*DIGIT ; numbers in the range from -32768 to 32767        
+int32 = [ sign ] 10*DIGIT ; numbers in the range from -2147483648 to 2147483647
+int64 = [ sign ] 19*DIGIT ( "L" / "l" ) ; numbers in the range from -9223372036854775808 to 9223372036854775807
+sbyte = [ sign ] 3*DIGIT ; numbers in the range from -128 to 127
+single = (  
+ sign 1*8DIGIT /
+ sign *DIGIT "." *DIGIT /
+ sign 1*DIGIT "." 8*DIGIT ( "e" / "E" ) sign 1*2DIGIT
+ ) ("F" / "f") /
+ nanInfinity [ "F" / "f" ]
+
+string = SQUOTE *UTF8-char SQUOTE
+time = SQUOTE sign "P" [ 1*DIGIT "Y" ] [ 1*DIGIT "M" ] [ 1*DIGIT "D" ] [ "T" [ 1*DIGIT "H" ] [ 1*DIGIT "M" ] [ 1*DIGIT "S" ] ] SQUOTE
+ ; the above is an approximation of the rules for an xml duration.
+ ; see the lexical representation for duration in http://www.w3.org/TR/xmlschema-2 for more information
+
+odataUri = scheme host [ ":" port ] serviceRoot [ "$metadata" / "$batch" / odataRelativeUri ]  
+
+serviceRoot = *( "/" segment-nz ) 
+odataRelativeUri = resourcePath ["?" queryOptions ]
+queryOptions = queryOption *("&" queryOption)        
+queryOption = systemQueryOption / 
+ customQueryOption / 
+ sopParameterNameAndValue / 
+ aliasAndValue /
+ parameterNameAndValue
+        
+systemQueryOption = expand / 
+ filter /
+ orderby /
+ skip /
+ top /
+ format /
+ inlinecount /
+ select /
+ skiptoken
+
+expand = "$expand=" expandClause 
+
+expandClause                            =       expandItem *("," expandItem)
+
+expandItemPath                          =       [ qualifiedEntityTypeName "/" ] navigationPropertyName 
+                                                                        *([ "/" qualifiedEntityTypeName ] "/" navigationPropertyName) 
+
+count                                           =       "/$count" 
+
+filter                                          =       "$filter" [ WSP ] "=" [ WSP] boolCommonExpr
+        
+orderby                                         =       "$orderby" [ WSP ] "=" [ WSP] 
+                                                                        commonExpr [WSP] [ "asc" / "desc" ] *( COMMA [ WSP ]  commonExpr [ WSP ] [ "asc" / "desc" ])
+
+skip                                            =   "$skip=" 1*DIGIT
+
+top                                                     =       "$top=" 1*DIGIT
+
+format = "$format=" (
+ "json" / 
+ "atom" / 
+ "xml" / 
+ "{TODO17}" / ; <a data service specific value indicating a format specific to the specific data service>
+ "{TODO18}" ; <An IANA-defined [IANA-MMT] content type>
+ )
+        
+inlinecount                                     =       "$inlinecount=" ( "allpages" / "none" )
+
+select                                          =       "$select=" selectClause
+
+selectClause                            =       selectItem *( COMMA selectItem )
+
+selectItem                              =       star / 
+                                                                        [ qualifiedEntityTypeName "/" ] (
+                                                                                propertyName / 
+                                                                                qualifiedActionName / 
+                                                                                qualifiedFunctionName / 
+                                                                                allOperationsInContainer /
+                                                                                ( navigationProperty [ "/" selectItem ] )
+                                                                        )
+
+skiptoken                                       =       "$skiptoken=" 1*pchar
+
+customQueryOption               =       customName [ WSP ] [ "=" [ WSP ] customValue ]
+
+customName                                      =       ( unreserved / pct-encoded / ":" / "@" / "!" / "'" / "(" / ")" / "*" / "+" / "," / ";" ) 
+                                                                        *( unreserved / pct-encoded / ":" / "@" / "!" / "$" / "'" / "(" / ")" / "*" / "+" / "," / ";" )                 
+                                                                        ; MUST not start with '$'
+
+customValue                                     =       *( unreserved / pct-encoded / ":" / "@" / "!" / "$" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "=" )
+
+resourcePath                            =       "/"     
+                                                                        [ entityContainerName "." ] entitySetName [collectionNavigation] /
+                                                                        ( entityColServiceOpCall / entityColFunctionCall ) [ collectionNavigation ] /
+                                                                        ( entityServiceOpCall   / entityFunctionCall ) [ singleNavigation ] /
+                                                                        ( complexColServiceOpCall / complexColFunctionCall ) [ boundOperation ] /
+                                                                        ( complexServiceOpCall / complexFunctionCall ) [ boundOperation / complexPropertyPath ] /
+                                                                        ( primitiveColServiceOpCall / primitiveColFunctionCall ) [ boundOperation ] /
+                                                                        ( primitiveServiceOpCall / primitiveFunctionCall ) [ boundOperation / value ] /
+                                                                        actionCall 
+
+collectionNavigation        =       [ "/" qualifiedEntityTypeName ] "/" 
+                                                                        (
+                                                                                ( "(" keyPredicate ")"  [ singleNavigation ] ) / 
+                                                boundEntityFuncCall [ singleNavigation ] /
+                                                                                boundEntityColFuncCall [ collectionNavigation ] /
+                                                                                boundPrimitiveFuncCall [ boundOperation / value ] /
+                                                                                boundPrimitiveColFuncCall [ boundOperation ] /
+                                                                                boundComplexFuncCall [ complexPropertyPath / boundOperation ] /
+                                                                                boundComplexColFuncCall [ boundOperation ] /
+                                                                                boundActionCall
+                                                                        )
+
+singleNavigation                        =       [ "/" qualifiedEntityTypeName ] "/"
+                                    ( 
+                                                ( "$links" / navigationPropertyName ) / 
+                                        ( entityColNavigationProperty [ collectionNavigation ] ) /
+                                        ( entityNavigationProperty [ singleNavigation ] ) /
+                                                                                primitivePropertyPath / 
+                                        complexPropertyPath /
+                                                                                collectionPropertyPath / 
+                                        streamPropertyPath / 
+                                        value /
+                                        boundOperation 
+                                        )
+                        
+boundOperation              =       [ "/" qualifiedEntityTypeName ] 
+                                                                        "/" 
+                                                                        (
+                                                                                boundActionCall / 
+                                                                                boundEntityColFuncCall [ singleNavigation ] /
+                                                                                boundEntityFuncCall [ collectionNavigation ] /
+                                                                                boundPrimitiveFuncCall [ boundOperation / value ] /
+                                                                                boundPrimitiveColFuncCall [ boundOperation ] /
+                                                                                boundComplexFuncCall [ complexPropertyPath / boundOperation ] /
+                                                                                boundComplexColFuncCall [ boundOperation ]
+                                                                        )
+                                    ; boundOperation segments can only be composed if the type of the previous segment matches 
+                                    ; the type of the first parameter of the action or function being called.
+                                                                        ; NOTE: the qualifiedEntityTypeName is only permitted if the previous segment is an entity or collection of entities.
+
+primitivePropertyPath       =       [ "/ qualifiedEntityTypeName" ] "/" ( primitiveKeyProperty / primitiveNonKeyProperty ) [ value ]
+    
+complexPropertyPath         =       [ "/ qualifiedEntityTypeName" ] "/" complexProperty 
+                                                                        [ 
+                                                                                primitivePropertyPath / 
+                                                                                complexPropertyPath /
+                                                                                collectionPropertyPath /
+                                                                                boundOperation
+                                                                        ] 
+
+collectionPropertyPath          =       [ "/" qualifiedEntityType ] "/" ( primitiveColProperty / complexColProperty ) [ boundOperation ]
+
+streamPropertyPath                  =       [ "/" qualifiedEntityType ] "/" streamProperty
+
+value                       =       "/$value"
+
+key                                             =       simpleKey / compoundKey
+
+simpleKey                                       =       "(" primitiveLiteral ")"
+
+compoundKey                             =       "(" keyValuePair 1*("," keyValuePair) ")"
+
+keyValuePair                                =       primitiveKeyProperty "=" keyPropertyValue
+
+keyPropertyValue                        =       primitiveLiteral
+
+actionCall                                      =       [ operationQualifier ] action [ "()" ]
+
+boundActionCall                         =       [ operationQualifier ] action [ "()" ]
+                                                                        ; with the added restriction that the binding parameter MUST be either an entity or collection of entities
+                                    ; and is specified by reference using the URL immediately preceding (to the left) of the boundActionCall
+
+entityFunctionCall                      =       fullEntityFunctionCall functionParameters
+
+entityColFunctionCall           =       fullEntityColFunctionCall functionParameters
+
+complexFunctionCall                     =       fullComplexFunctionCall functionParameters
+
+complexColFunctionCall          =       fullComplexColFunctionCall functionParameters
+
+primitiveFunctionCall           =       fullPrimitiveFunctionCall functionParameters
+
+primitiveColFunctionCall        =       fullPrimitiveFunctionCall functionParameters
+
+functionCall                            =       entityFunctionCall / 
+                                                                        entityColFunctionCall /
+                                                                        complexFunctionCall / 
+                                                                        complexColFunctionCall /
+                                                                        primitiveFunctionCall /
+                                                                        primitiveColFunctionCall
+
+boundEntityFuncCall                     =       fullEntityFunctionCall functionParameters
+                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
+                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundEntityFuncCall
+                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
+
+boundEntityColFuncCall          =       fullEntityColFunctionCall functionParameters
+                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
+                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundEntityColFuncCall
+                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
+
+boundComplexFuncCall            =       fullComplexFunctionCall functionParameters
+                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
+                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundComplexFuncCall
+                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
+
+boundComplexColFuncCall         =       fullComplexColFunctionCall functionParameters
+                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
+                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundComplexColFuncCall
+                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
+
+boundPrimitiveFuncCall          =       fullPrimitiveFunctionCall functionParameters
+                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
+                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundPrimitiveFuncCall
+                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
+
+boundPrimitiveColFuncCall       =       fullPrimitiveFunctionCall functionParameters
+                                                                        ; with the added restrictions that the Function MUST support binding, and the binding parameter type 
+                                                                        ; MUST match the type of resource identified by Uri immediately preceding (to the left) of the boundPrimitiveColFuncCall
+                                                                        ; and the functionParameters MUST NOT include the bindingParameter.
+
+boundFunctionCall                       =       boundEntityFuncCall / 
+                                                                        boundEntityColFuncCall /
+                                                                        boundComplexFuncCall / 
+                                                                        boundComplexColFuncCall /
+                                                                        boundPrimitiveFuncCall /
+                                                                        boundPrimitiveColFuncCall
+
+functionParameters                      =       "(" [ functionParameter *( "," functionParameter ) ] ")"
+
+functionParameter                       =       functionParameterName "=" ( primitiveParameterValue / parameterAlias )
+
+primitiveParameterValue     =       primitiveLiteral
+
+parameterAlias                              =       "@" *pchar
+
+aliasAndValue                           =       parameterAlias "=" parameterValue
+
+parameterAndValue                       =       functionParameterName "=" parameterValue
+
+primitivePropInJSONLight        = "{TODO19}"       ; arlo JSON Light format
+                                                                        ; unreferenced until complexInJSONLight is defined.
+
+primitivePropertyInVJSON        =       quotation-mark ( primitiveKeyProperty / primitiveNonKeyProperty ) quotation-mark name-separator primitiveLiteralInVJSON
+
+complexPropertyInJSON           =       complexPropertyInVJSON / complexPropertyInJSONLight
+
+complexPropertyInVJSON          =       quotation-mark complexProperty quotation-mark name-separator complexInVJSON
+
+complexPropertyInJSONLight      = "{TODO20}"       ; arlo JSON Light format.
+
+collectionPropertyInJSON        =       colPropertyInJSONLight / collectionPropertyInVJSON
+
+collectionPropertyInVJSON       =       ( quotation-mark primitiveColProperty quotation-mark name-separator "[" [ primitiveVJSONLiteral *( COMMA primitiveLiteralInVJSON ) ] "]" ) /
+                                                                        ( quotation-mark complexColProperty quotation-mark name-separator "[" [ complexInVJSON *( COMMA complexInVJSON ) ] "]" )
+                
+colPropertyInJSONLight          = "{TODO21}"       ; alro JSON Light format
+
+primitiveLiteralInVJSON         = "{TODO22}"       ; arlo VJSON format.
+
+primitiveLiteralInJSONLight     = "{TODO23}"       ; arlo JSON Light format.
+                                                        
+complexTypeMetadataInVJSON      =       quotation-mark "__metadata" quotation-mark
+                                                        name-separator
+                                                        begin-object
+                                                        [typeNVPInVJSON]
+                                                        end-object
+
+typeNVPInVJSON                          =       quotation-mark "type" quotation-mark
+                                                name-separator
+                                                quotation-mark qualifiedTypeName quotation-mark
+
+parameterValue                          =       primitiveLiteral /                                              ; note this is a Uri literal not a JSON literal
+                                                                        complexTypeInJSON / 
+                                                                        primitiveColInJSON /
+                                                                        complexColInJSON
+
+complexInJSON                           =       complexInVJSON / complexInJSONLight
+
+complexInJSONLight                      = "{TODO24}"       ; arlo JSON light format
+
+complexInVJSON                          =       begin-object
+                                                        [
+                                                        (
+                                                                complexTypeMetadataInVJSON / 
+                                                                                        primitivePropertyInVJSON /
+                                                                                        complexPropertyInVJSON /
+                                                                                        collectionPropertyInVJSON  
+                                                            )
+                                                            *( 
+                                                                value-separator 
+                                                                                        ( 
+                                                                                                primitivePropertyInVJSON /
+                                                                                                complexPropertyInVJSON /
+                                                                                                collectionPropertyInVJSON  
+                                                                                        ) 
+                                                            )
+                                                        ]  
+                                                                        end-object
+
+
+entityServiceOpCall                     =       [ operationQualifier ] entityServiceOp [ "()" ]
+        
+entityColServiceOpCall          =       [ operationQualifier ] entityColServiceOp [ "()" ]
+        
+complexServiceOpCall            =       [ operationQualifier ] complexServiceOp [ "()" ]
+        
+complexColServiceOpCall         =       [ operationQualifier ] complexColServiceOp [ "()" ]
+        
+primitiveServiceOpCall          =       [ operationQualifier ] primitiveServiceOp [ "()" ]
+        
+primitiveColServiceOpCall       =       [ operationQualifier ] primitiveServiceOp [ "()" ]
+
+serviceOperationCall            =       entityServiceOpCall / 
+                                                                        entityColServiceOpCall /
+                                                                        complexServiceOpCall / 
+                                                                        complexColServiceOpCall /
+                                                                        primitiveServiceOpCall /
+                                                                        primitiveColServiceOpCall 
+
+serviceOpParameterName          =       odataIdentifier;
+                                                                        ; identifies by name a parameter to a ServiceOperation
+        
+sopParameterNameAndValue        =       serviceOperationParameterName "=" primitiveParameterValue
+                                                                        ; when a serviceOperation Parameter is omitted the parameter value MUST be assumed to be null           
+    
+commonExpr = [ WSP ] (
+ boolCommonExpr / 
+ methodCallExpr /
+ parenExpr / 
+ literalExpr / 
+ addExpr /
+ subExpr / 
+ mulExpr / 
+ divExpr /
+ modExpr /  
+ negateExpr / 
+ memberExpr / 
+ firstMemberExpr / 
+ castExpr / 
+ functionCallExpr 
+ ) [ WSP ]
+
+boolCommonExpr                          =       [ WSP ] (
+                                                                                boolLiteralExpr / 
+                                                                                andExpr /
+                                                                orExpr /
+                                                                boolPrimitiveMemberExpr / 
+                                                                                eqExpr / 
+                                                                                neExpr /
+                                                                ltExpr / 
+                                                                                leExpr / 
+                                                                                gtExpr /
+                                                                geExpr / 
+                                                                                notExpr / 
+                                                                                isofExpr /
+                                                                boolCastExpr / 
+                                                                                boolMethodCallExpr  /
+                                                                firstBoolPrimitiveMemExpr / 
+                                                                                boolParenExpr /
+                                                                boolFunctionCallExpr
+                                                                        ) [ WSP ]
+
+boolLiteralExpr                         =   boolean
+
+literalExpr                                     =       primitiveLiteral
+
+parenExpr                                       =       "(" [ WSP ] commonExpr [ WSP ] ")"
+
+boolParenExpr                           =       "(" [ WSP ] boolCommonExpr [ WSP ] ")"
+
+andExpr                                         =       boolCommonExpr WSP "and" WSP boolCommonExpr
+
+orExpr                                          =       boolCommonExpr WSP "or" WSP boolCommonExpr
+
+eqExpr                                  =       commonExpr WSP "eq" WSP commonExpr      
+
+neExpr                                  =       commonExpr WSP "ne" WSP commonExpr
+
+ltExpr                                  =       commonExpr WSP "lt" WSP commonExpr
+
+leExpr                                  =       commonExpr WSP "le" WSP commonExpr
+
+gtExpr                                  =       commonExpr WSP "gt" WSP commonExpr
+
+geExpr                                  =       commonExpr WSP "ge" WSP commonExpr
+
+addExpr                                 =       commonExpr WSP "add" WSP commonExpr
+
+subExpr                                 =       commonExpr WSP "sub" WSP commonExpr
+
+mulExpr                                 =       commonExpr WSP "mul" WSP commonExpr
+
+divExpr                                 =       commonExpr WSP "div" WSP commonExpr
+
+modExpr                                 =       commonExpr WSP "mod" WSP commonExpr
+
+negateExpr                              =       "-" [ WSP ] commonExpr
+
+notExpr                                 =       "not" WSP commonExpr
+
+isofExpr                                =       "isof" [ WSP ] "(" [ [ WSP ] commonExpr [ WSP ] "," ] [ WSP ] qualifiedTypeName [ WSP ] ")"
+
+castExpr                                =       "cast" [ WSP ] "(" [ [ WSP ] commonExpr [ WSP ] "," ] [ WSP ] qualifiedTypeName [ WSP ] ")"
+
+boolCastExpr                            =       "cast" [ WSP ] "(" [ [ WSP ] commonExpr [ WSP ] "," ] [ WSP ] "Edm.Boolean" [ WSP ] ")"
+
+firstMemberExpr = [ WSP ] [ qualifiedEntityTypeName "/"]
+                  [ lambdaPredicatePrefixExpr ] ; A lambdaPredicatePrefixExpr is only defined inside a 
+                                                ; lambdaPredicateExpr. A lambdaPredicateExpr is required   
+                                                ; inside a lambdaPredicateExpr.
+                  entityColNavigationProperty [ collectionNavigationExpr ] /
+                  entityNavigationProperty [ singleNavigationExpr ] /
+                  primitivePropertyPath / 
+                  complexPropertyPath /
+                  collectionPropertyPath [ anyExpr / allExpr ]
+
+firstBoolPrimitiveMemExpr = [ qualifiedEntityTypeName "/"] entityProperty
+
+boolPrimitiveMemberExpr = commonExpr [ WSP ]  "/" [WSP] [ qualifiedEntityTypeName "/" ] primitivePropertyPath
+
+memberExpr = commonExpr [ WSP ]  "/" [ WSP ] [ qualifiedEntityTypeName "/" ]
+             entityColNavigationProperty [ collectionNavigationExpr ] /
+             entityNavigationProperty [ singleNavigationExpr ] /
+             primitivePropertyPath / 
+             complexPropertyPath /
+             collectionPropertyPath [ anyExpr / allExpr ]
+
+collectionNavigationExpr = [ "/" qualifiedEntityTypeName ] "/" ( boundFunctionExpr / anyExpr / allExpr )
+
+singleNavigationExpr            =       [ "/" qualifiedEntityTypeName ] "/"
+                                    ( 
+                                        ( entityColNavigationProperty [ collectionNavigationExpr ] ) /
+                                        ( entityNavigationProperty [ singleNavigationExpr ] ) /
+                                                                                primitivePropertyPath / 
+                                        complexPropertyPath /
+                                                                                collectionPropertyPath [ anyExpr / allExpr ] / 
+                                        streamPropertyPath / 
+                                        boundFunctionExpr 
+                                        )
+        
+functionExpr                            =       (
+                                                                                entityColFuncCall [ singleNavigationExpr ] /
+                                                                                entityFuncCall [ collectionNavigationExpr ] /
+                                                                                primitiveFuncCall [ boundFunctionExpr ] /
+                                                                                primitiveColFuncCall [ boundFunctionExpr ] /
+                                                                                complexFuncCall [ complexPropertyPath / boundFunctionExpr ] /
+                                                                                complexColFuncCall [ boundFunctionExpr ]
+                                                                        )
+
+boolFunctionExpr                        =       functionExpr
+                                                ; with the added restriction that the boolFunctionExpr MUST return a boolean value
+        
+boundFunctionExpr                       =       [ "/" qualifiedEntityTypeName ] 
+                                                                        "/" 
+                                                                        (
+                                                                                boundEntityColFuncCall [ singleNavigationExpr ] /
+                                                                                boundEntityFuncCall [ collectionNavigationExpr ] /
+                                                                                boundPrimitiveFuncCall [ boundFunctionExpr ] /
+                                                                                boundPrimitiveColFuncCall [ boundFunctionExpr ] /
+                                                                                boundComplexFuncCall [ complexPropertyPath / boundFunctionExpr ] /
+                                                                                boundComplexColFuncCall [ boundFunctionExpr ]
+                                                                        )
+                                    ; boundOperation segments can only be composed if the type of the previous segment matches 
+                                    ; the type of the first parameter of the action or function being called.
+                                                                        ; NOTE: the qualifiedEntityTypeName is only permitted if the previous segment is an Entity or Collection of Entities.
+
+boolBoundFunctionExpr           =       boundFunctionExpr
+                                                                        ; with the added restriction that the boolBoundFunctionExpr MUST return a boolean value
+
+anyExpr = "any(" [ lambdaVariableExpr ":" lambdaPredicateExpr ] ")"
+
+allExpr = "all(" lambdaVariableExpr ":" lambdaPredicateExpr ")"
+
+implicitVariableExpr = "$it" ; references the unnamed outer variable of the query
+
+lambdaVariableExpr = odataIdentifier
+inscopeVariableExpr = implicitVariableExpr / lambdaVariableExpr
+lambdaPredicateExpr = boolCommonExpr
+   
+methodCallExpr = boolMethodExpr /
+                                                indexOfMethodCallExpr /
+                                                replaceMethodCallExpr / 
+                                                toLowerMethodCallExpr /
+                                                toUpperMethodCallExpr / 
+                                                trimMethodCallExpr /
+                                                substringMethodCallExpr /
+                                                concatMethodCallExpr /
+                                                lengthMethodCallExpr /
+                                                yearMethodCallExpr /
+                                                monthMethodCallExpr /
+                                                dayMethodCallExpr /
+                                                hourMethodCallExpr /
+                                                minuteMethodCallExpr /
+                                                secondMethodCallExpr /
+                                                roundMethodCallExpr /
+                                                floorMethodCallExpr /
+                                                ceilingMethodCallExpr /
+                                                distanceMethodCallExpr /
+                                                geoLengthMethodCallExpr /
+                                                getTotalOffsetMinutesExpr
+
+boolMethodExpr = endsWithMethodCallExpr /
+                                                startsWithMethodCallExpr /
+                                                substringOfMethodCallExpr /                                         
+                                                intersectsMethodCallExpr /
+                                                anyMethodCallExpr /
+                                                allMethodCallExpr
+
+endsWithMethodCallExpr = "endswith" [WSP]
+                                        "(" [WSP] commonExpr [WSP]
+                                        "," [WSP] commonExpr  [WSP] ")"
+
+indexOfMethodCallExpr = "indexof" [WSP]
+                                        "(" [WSP] commonExpr [WSP]
+                                        "," [WSP] commonExpr [WSP] ")"
+
+replaceMethodCallExpr = "replace" [WSP]
+                                        "(" [WSP] commonExpr [WSP]
+                                        "," [WSP] commonExpr [WSP]
+                                        "," [WSP] commonExpr [WSP] ")"
+
+startsWithMethodCallExpr = "startswith" [WSP]
+                                        "(" [WSP] commonExpr [WSP]
+                                        "," [WSP] commonExpr  [WSP] ")"
+
+toLowerMethodCallExpr = "tolower" [WSP]
+                                        "(" [WSP] commonExpr [WSP] ")"
+
+toUpperMethodCallExpr = "toupper" [WSP]
+                                        "(" [WSP] commonExpr [WSP] ")"
+
+trimMethodCallExpr = "trim" [WSP]
+                                                "(" [WSP] commonExpr [WSP] ")"
+
+substringMethodCallExp = "substring" [WSP]
+                                        "(" [WSP] commonExpr [WSP]
+                                        "," [WSP] commonExpr [WSP]
+                                        [ "," [WSP] commonExpr  [WSP] ] ")"
+
+substringOfMethodCallExpr = "substringof" [WSP]
+                                        "(" [WSP] commonExpr [WSP]
+                                        [ "," [WSP] commonExpr [WSP] ] ")"
+
+concatMethodCallExpr = "concat" [WSP]
+                                        "(" [WSP] commonExpr [WSP]
+                                        [ "," [WSP] commonExpr [WSP] ] ")"
+
+lengthMethodCallExpr = "length" [WSP]
+                                        "(" [WSP] commonExpr [WSP] ")"
+
+getTotalOffsetMinutesExpr = "gettotaloffsetminutes" [WSP] "(" [WSP] commonExpr [WSP] ")" 
+
+yearMethodCallExpr = "year" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+monthMethodCallExpr = "month" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+dayMethodCallExpr = "day" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+hourMethodCallExpr = "hour" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+minuteMethodCallExpr = "minute" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+secondMethodCallExpr = "second" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+roundMethodCallExpr = "round" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+floorMethodCallExpr = "floor" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+ceilingMethodCallExpr = "ceiling" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+distanceMethodCallExpr = "geo.distance" [WSP] "(" [WSP] commonExpr [WSP] "," [WSP] commonExpr  [WSP] ")"
+
+geoLengthMethodCallExpr = "geo.length" [WSP] "(" [WSP] commonExpr [WSP] ")"
+
+intersectsMethodCallExpr = "geo.intersects" [WSP] "(" [WSP] commonExpr [WSP] "," [WSP] commonExpr  [WSP] ")"
+
+; Other undefined terms
+allMethodCallExpr = "{TODO25}"
+anyMethodCallExpr = "{TODO26}"
+boolFunctionCallExpr = "{TODO27}"
+boolMethodCallExpr = "{TODO28}"
+complexColFuncCall = "{TODO29}"
+complexColInJSON = "{TODO30}"
+complexFuncCall = "{TODO31}"
+complexTypeInJSON = "{TODO32}"
+entityColFuncCall = "{TODO33}"
+entityFuncCall = "{TODO34}"
+entityProperty = "{TODO35}"
+expandItem = "{TODO36}"
+fullComplexColFunctionCall = "{TODO37}"
+fullComplexFunctionCall = "{TODO38}"
+fullEntityColFunctionCall = "{TODO39}"
+fullEntityFunctionCall = "{TODO40}"
+fullPrimitiveFunctionCall = "{TODO41}"
+functionCallExpr = "{TODO42}"
+functionParameterName = "{TODO43}"
+keyPredicate = "{TODO44}"
+lambdaPredicatePrefixExpr = "{TODO45}"
+navigationPropertyName = "{TODO46}"
+parameterNameAndValue = "{TODO47}"
+primitiveColFuncCall = "{TODO48}"
+primitiveColInJSON = "{TODO49}"
+primitiveFuncCall = "{TODO50}"
+primitiveVJSONLiteral = "{TODO51}"
+qualifiedEntityType = "{TODO52}"
+quotation-mark = "{TODO53}"
+serviceOperationParameterName = "{TODO54}"
+substringMethodCallExpr = "{TODO55}"
