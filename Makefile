@@ -1,7 +1,7 @@
 default: build
 
 build:
-	ometajs2js -i odata.ometa > odataparser.js
+	ometajs2js -i odata.ometajs > odataparser.js
 
 
 test: build
