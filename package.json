@@ -4,12 +4,12 @@
   "description": "An OData parser written in OMeta",
   "main": "odetaparser.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": "",
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "ometa-js" :""
+    "ometa-js": "1.x"
   }
 }

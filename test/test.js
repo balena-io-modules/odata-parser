@@ -1,4 +1,5 @@
-var ODataParser = require('../odataparser.js').ODataParser
+require('ometa-js')
+var ODataParser = require('../odata.ometajs').ODataParser
 
 module.exports = function(input, entry, expectation) {
   describe("Parsing " + input, function() {
