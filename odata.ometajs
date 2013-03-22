@@ -1,22 +1,18 @@
-ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and make writing this file easier
+ometa ODataParser {
 
-	OData = (
+	OData =
 			PathSegment:model
 			(	'?'
-				(	listOf(`QueryOption, '&'):options
-				)
-			)?
-			-> { 
-				if(options) {
+				listOf(`QueryOption, '&'):options
+				{
 					model.options = {};
 					for(var i in options) {
 						model.options[options[i].name] = options[i].value;
 					}
 				}
-				return model
-			}
+			)?
+			-> model
 		|	'/'
-	)
 	,
 
 	QueryOption =
@@ -44,15 +40,13 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 
 	SortProperty =
 		PropertyPath:property
-		(	spaces
-			seq('asc')
+		spaces
+		(	seq('asc')
 		|	seq('desc')
 		|	-> 'desc'
-		)?:order
-		-> {
-			property.order = order;
-			return property;
-		}
+		):order
+		{property.order = order}
+		-> property
 	,
 
 	TopOption =
@@ -85,7 +79,6 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 	SelectOption =
 		RecognisedOption('$select=')
 		(	'*'
-			-> '*'
 		|	PropertyPathList:properties
 			-> { properties: properties }
 		):value
@@ -131,40 +124,40 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 
 	FilterSubExpression =
 		FilterSubExpression:lhs
-		spaces FilterRecognisedMathOperand('sub') spaces
+		spaces FilterRecognisedMathOperand('sub'):op spaces
 		FilterAddExpression:rhs
-		-> [ 'sub', lhs, rhs ]
+		-> [ op, lhs, rhs ]
 	|	FilterAddExpression
 	,
 
 	FilterAddExpression =
 		FilterAddExpression:lhs
-		spaces FilterRecognisedMathOperand('add') spaces
+		spaces FilterRecognisedMathOperand('add'):op spaces
 		FilterModExpression:rhs
-		-> [ 'add', lhs, rhs ]
+		-> [ op, lhs, rhs ]
 	|	FilterModExpression
 	,
 
 	FilterModExpression =
 		FilterModExpression:lhs
-		spaces FilterRecognisedMathOperand('mod') spaces
+		spaces FilterRecognisedMathOperand('mod'):op spaces
 		FilterDivExpression:rhs
-		-> [ 'mod', lhs, rhs ]
+		-> [ op, lhs, rhs ]
 	|	FilterDivExpression
 	,
 	FilterDivExpression =
 		FilterDivExpression:lhs
-		spaces FilterRecognisedMathOperand('div') spaces
+		spaces FilterRecognisedMathOperand('div'):op spaces
 		FilterMulExpression:rhs
-		-> [ 'div', lhs, rhs ]
+		-> [ op, lhs, rhs ]
 	|	FilterMulExpression
 	,
 
 	FilterMulExpression =
 		FilterMulExpression:lhs
-		spaces FilterRecognisedMathOperand('mul') spaces
+		spaces FilterRecognisedMathOperand('mul'):op spaces
 		FilterByValue:rhs
-		-> [ 'mul', lhs, rhs ]
+		-> [ op, lhs, rhs ]
 	|	FilterByValue
 	,
 
@@ -339,9 +332,8 @@ ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and ma
 		'/'
 		ResourceName:resource
 		("(" Number:key ")")?
-		(	(	seq('/$links')
+		(	seq('/$links')
 			PathSegment:link
-			)
 		|	PathSegment: next
 		)?
 		-> { resource: resource, key: key, link: link, property: next }
