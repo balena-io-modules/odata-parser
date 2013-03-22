@@ -1,408 +1,429 @@
 ometa ODataParser <: OMeta { // Cheating as this will break Syntastic etc and make writing this file easier
 
-  OData = (
-    (
-      PathSegment:model 
-      (
-        '?'
-        ( listOf(`QueryOption, '&'):options
-        )
-      )?
-    ) -> { 
-            if(options) {
-             model.options = {}
-             for(var i in options)
-               model.options[options[i].name] = options[i].value;
-            }
-           return model
-         }
-    | '/'
-  ) 
-  ,
+	OData = (
+			PathSegment:model
+			(	'?'
+				(	listOf(`QueryOption, '&'):options
+				)
+			)?
+			-> { 
+				if(options) {
+					model.options = {};
+					for(var i in options) {
+						model.options[options[i].name] = options[i].value;
+					}
+				}
+				return model
+			}
+		|	'/'
+	)
+	,
 
-  QueryOption = 
-      SortOption
-    | TopOption
-    | SkipOption
-    | ExpandOption
-    | InlineCountOption
-    | FilterByOption
-    | FormatOption
-    | SelectOption
-    | OperationParam
-  ,
+	QueryOption =
+			SortOption
+		|	TopOption
+		|	SkipOption
+		|	ExpandOption
+		|	InlineCountOption
+		|	FilterByOption
+		|	FormatOption
+		|	SelectOption
+		|	OperationParam
+	,
 
-  OperationParam = 
-    Text:name '=' Text:value -> { name: name, value: value }
-  ,
+	OperationParam =
+		Text:name '=' Text:value
+		-> { name: name, value: value }
+	,
 
-  SortOption = 
-    RecognisedOption("$orderby=")
-    listOf(`SortProperty, ','):properties -> { name: '$orderby', value: { properties: properties }  }
-  ,
+	SortOption =
+		RecognisedOption('$orderby=')
+		listOf(`SortProperty, ','):properties
+		-> { name: '$orderby', value: { properties: properties } }
+	,
 
-  SortProperty = 
-    PropertyPath:property
-    (
-      spaces
-      seq("asc")
-    | seq("desc")
-    | -> 'desc'
-    )?:order
-    -> {
-         property.order = order;
-         return property;
-       }
-  ,
+	SortProperty =
+		PropertyPath:property
+		(	spaces
+			seq('asc')
+		|	seq('desc')
+		|	-> 'desc'
+		)?:order
+		-> {
+			property.order = order;
+			return property;
+		}
+	,
 
-  TopOption = 
-    RecognisedOption("$top=") Number:value -> { name: "$top", value: value }
-  ,
+	TopOption =
+		RecognisedOption('$top=')
+		Number:value
+		-> { name: '$top', value: value }
+	,
 
-  SkipOption = 
-    RecognisedOption("$skip=") Number:value -> { name: "$skip", value: value }
-  ,
+	SkipOption =
+		RecognisedOption('$skip=')
+		Number:value
+		-> { name: '$skip', value: value }
+	,
 
-  InlineCountOption =
-    RecognisedOption("$inlinecount=") 
-    (
-      seq("allpages") 
-    | seq("none")
-    | Text -> ""
-    ):value -> { name: "$inlinecount", value: value }
-  ,
+	InlineCountOption =
+		RecognisedOption('$inlinecount=')
+		(	seq('allpages')
+		|	seq('none')
+		|	Text -> ''
+		):value
+		-> { name: '$inlinecount', value: value }
+	,
 
-  ExpandOption = 
-    RecognisedOption("$expand=")
-    PropertyPathList:properties -> { name: "$expand", value: { properties: properties }}
-  ,
+	ExpandOption =
+		RecognisedOption('$expand=')
+		PropertyPathList:properties
+		-> { name: '$expand', value: { properties: properties } }
+	,
 
-  SelectOption =
-    RecognisedOption("$select=")
-    (
-      "*"                                 -> '*' 
-    | PropertyPathList:properties  -> { properties: properties }
-    ):value -> { name: "$select", value: value }
-  ,
+	SelectOption =
+		RecognisedOption('$select=')
+		(	'*'
+			-> '*'
+		|	PropertyPathList:properties
+			-> { properties: properties }
+		):value
+		-> { name: '$select', value: value }
+	,
 
 
-  FilterByOption = 
-    RecognisedOption("$filterby=")
-    FilterByExpression:expr -> { name: "$filterby", value: expr }
-  ,
+	FilterByOption =
+		RecognisedOption('$filterby=')
+		FilterByExpression:expr
+		-> { name: '$filterby', value: expr }
+	,
 
-  FormatOption = 
-    RecognisedOption("$format=")
-    ContentType:type -> { name: "$format", value: type }
-  ,
+	FormatOption =
+		RecognisedOption('$format=')
+		ContentType:type
+		-> { name: '$format', value: type }
+	,
 
-  RecognisedOption :name = 
-    seq(name)
-  ,
+	RecognisedOption :name =
+		seq(name)
+	,
 
-  FilterByExpression =
-    FilterAndExpression
-  ,
+	FilterByExpression =
+		FilterAndExpression
+	,
 
-  FilterAndExpression =
-    FilterAndExpression:lhs
-    FilterAndOperand:op
-    FilterLogicalExpression:rhs -> [ op, lhs, rhs ]
-  | FilterLogicalExpression
-  ,
+	FilterAndExpression =
+		FilterAndExpression:lhs
+		FilterAndOperand:op
+		FilterLogicalExpression:rhs
+		-> [ op, lhs, rhs ]
+	|	FilterLogicalExpression
+	,
 
-  FilterLogicalExpression =
-    FilterLogicalExpression:lhs
-    FilterByOperand:op
-    FilterAddExpression:rhs -> [op, lhs, rhs ]
-  | FilterAddExpression
-  ,
+	FilterLogicalExpression =
+		FilterLogicalExpression:lhs
+		FilterByOperand:op
+		FilterAddExpression:rhs
+		-> [op, lhs, rhs ]
+	|	FilterAddExpression
+	,
 
-  FilterSubExpression =
-    FilterSubExpression:lhs
-    spaces FilterRecognisedMathOperand("sub") spaces
-    FilterAddExpression:rhs -> [ "sub", lhs, rhs ]
-  | FilterAddExpression
-  ,
+	FilterSubExpression =
+		FilterSubExpression:lhs
+		spaces FilterRecognisedMathOperand('sub') spaces
+		FilterAddExpression:rhs
+		-> [ 'sub', lhs, rhs ]
+	|	FilterAddExpression
+	,
 
-  FilterAddExpression =
-    FilterAddExpression:lhs
-    spaces FilterRecognisedMathOperand("add") spaces
-    FilterModExpression:rhs -> [ "add", lhs, rhs ]
-  | FilterModExpression
-  ,
+	FilterAddExpression =
+		FilterAddExpression:lhs
+		spaces FilterRecognisedMathOperand('add') spaces
+		FilterModExpression:rhs
+		-> [ 'add', lhs, rhs ]
+	|	FilterModExpression
+	,
 
-  FilterModExpression =
-    FilterModExpression:lhs
-    spaces FilterRecognisedMathOperand("mod") spaces
-    FilterDivExpression:rhs -> [ "mod", lhs, rhs ]
-  | FilterDivExpression
-  ,
-  FilterDivExpression =
-    FilterDivExpression:lhs
-    spaces FilterRecognisedMathOperand("div") spaces
-    FilterMulExpression:rhs -> [ "div", lhs, rhs ]
-  | FilterMulExpression
-  ,
+	FilterModExpression =
+		FilterModExpression:lhs
+		spaces FilterRecognisedMathOperand('mod') spaces
+		FilterDivExpression:rhs
+		-> [ 'mod', lhs, rhs ]
+	|	FilterDivExpression
+	,
+	FilterDivExpression =
+		FilterDivExpression:lhs
+		spaces FilterRecognisedMathOperand('div') spaces
+		FilterMulExpression:rhs
+		-> [ 'div', lhs, rhs ]
+	|	FilterMulExpression
+	,
 
-  FilterMulExpression =
-    FilterMulExpression:lhs
-    spaces FilterRecognisedMathOperand("mul") spaces
-    FilterByValue:rhs -> [ "mul", lhs, rhs ]
-  | FilterByValue
-  ,
+	FilterMulExpression =
+		FilterMulExpression:lhs
+		spaces FilterRecognisedMathOperand('mul') spaces
+		FilterByValue:rhs
+		-> [ 'mul', lhs, rhs ]
+	|	FilterByValue
+	,
 
-  FilterByValue = 
-     FilterMethodCallExpression
-  |  FilterNegateExpression
-  | Number
-  | QuotedText
-  | PropertyPath
-  | GroupedPrecedenceExpression
-  ,
+	FilterByValue =
+		FilterMethodCallExpression
+	|	FilterNegateExpression
+	|	Number
+	|	QuotedText
+	|	PropertyPath
+	|	GroupedPrecedenceExpression
+	,
 
-  GroupedPrecedenceExpression = 
-    "(" spaces FilterByExpression:expr spaces ")" -> expr
-  ,
+	GroupedPrecedenceExpression =
+		"(" spaces FilterByExpression:expr spaces ")"
+		-> expr
+	,
 
-  FilterRecognisedMathOperand :name =
-    seq(name)
-  ,
+	FilterRecognisedMathOperand :name =
+		seq(name)
+	,
 
-  FilterAndOperand =
-    spaces
-    (
-      seq("and")
-    | seq("or")
-    ):op 
-    spaces -> op
-  ,
+	FilterAndOperand =
+		spaces
+		(	seq('and')
+		|	seq('or')
+		):op
+		spaces -> op
+	,
 
-  FilterByOperand =
-    spaces
-    (
-      seq("eq")
-    | seq("ne")
-    | seq("gt")
-    | seq("ge")
-    | seq("lt")
-    | seq("le")
-    ):op 
-    spaces -> op
-    ,
+	FilterByOperand =
+		spaces
+		(	seq('eq')
+		|	seq('ne')
+		|	seq('gt')
+		|	seq('ge')
+		|	seq('lt')
+		|	seq('le')
+		):op
+		spaces
+		-> op
+	,
 
-  FilterNegateExpression = 
-    spaces
-    seq("not")
-    spaces
-    (
-      FilterByValue
-    | '(' spaces FilterByExpression:expr spaces ')' -> expr
-    ):value ->  [ "not", value ]
-  ,
+	FilterNegateExpression =
+		spaces
+		seq('not')
+		spaces
+		(	FilterByValue
+		|	'(' spaces FilterByExpression:expr spaces ')'
+			-> expr
+		):value
+		-> [ 'not', value ]
+	,
 
-  FilterMethodCallExpression = 
-    (
-      SubstringOfMethodCall
-    | EndsWithMethodCall 
-    | StartsWithMethodCall 
-    | LengthMethodCall 
-    | IndexOfMethodCall
-    | ReplaceMethodCall
-    | SubstringMethodCall
-    | TolowerMethodCall 
-    | ToupperMethodCall 
-    | TrimMethodCall 
-    | ConcatMethodCall 
-    | DayMethodCall 
-    | HourMethodCall 
-    | MinuteMethodCall 
-    | MonthMethodCall 
-    | SecondMethodCall 
-    | YearMethodCall 
-    | RoundMethodCall 
-    | FloorMethodCall 
-    | CeilingMethodCall 
-    | IsOfMethodCall
-    ):method -> [ "call", method ]
-  ,
+	FilterMethodCallExpression =
+		(	SubstringOfMethodCall
+		|	EndsWithMethodCall
+		|	StartsWithMethodCall
+		|	LengthMethodCall
+		|	IndexOfMethodCall
+		|	ReplaceMethodCall
+		|	SubstringMethodCall
+		|	TolowerMethodCall
+		|	ToupperMethodCall
+		|	TrimMethodCall
+		|	ConcatMethodCall
+		|	DayMethodCall
+		|	HourMethodCall
+		|	MinuteMethodCall
+		|	MonthMethodCall
+		|	SecondMethodCall
+		|	YearMethodCall
+		|	RoundMethodCall
+		|	FloorMethodCall
+		|	CeilingMethodCall
+		|	IsOfMethodCall
+		):method
+		-> [ 'call', method ]
+	,
 
-  SubstringOfMethodCall = 
-    MethodCall("substringof", 2)
-  ,
+	SubstringOfMethodCall =
+		MethodCall('substringof', 2)
+	,
 
-  EndsWithMethodCall = 
-    MethodCall("endswith", 2)
-  ,
+	EndsWithMethodCall =
+		MethodCall('endswith', 2)
+	,
 
-  StartsWithMethodCall = 
-    MethodCall("startswith", 2)
-  ,
+	StartsWithMethodCall =
+		MethodCall('startswith', 2)
+	,
 
-  LengthMethodCall = 
-    MethodCall("length", 1)
-  ,
+	LengthMethodCall =
+		MethodCall('length', 1)
+	,
 
-  IndexOfMethodCall = 
-    MethodCall("indexof", 2)
-  ,
-  ReplaceMethodCall = 
-    MethodCall("replace", 3)
-  ,
-  SubstringMethodCall = 
-    MethodCall("substring", 2)
-  | MethodCall("substring", 3)
-  ,
-  TolowerMethodCall = 
-    MethodCall("tolower", 1)
-  ,
-  ToupperMethodCall = 
-    MethodCall("toupper", 1)
-  ,
-  TrimMethodCall = 
-    MethodCall("trim", 1)
-  ,
-  ConcatMethodCall = 
-    MethodCall("concat", 1)
-  ,
-  DayMethodCall = 
-    MethodCall("day", 2)
-  ,
-  HourMethodCall = 
-    MethodCall("hour", 1)
-  ,
-  MinuteMethodCall = 
-    MethodCall("minute", 1)
-  ,
-  MonthMethodCall = 
-    MethodCall("month", 1)
-  ,
-  SecondMethodCall = 
-    MethodCall("second", 1)
-  ,
-  YearMethodCall = 
-    MethodCall("year", 1)
-  ,
-  RoundMethodCall = 
-    MethodCall("round", 1)
-  ,
-  FloorMethodCall = 
-    MethodCall("floor", 1)
-  ,
-  CeilingMethodCall = 
-    MethodCall("ceiling", 1)
-  ,
+	IndexOfMethodCall =
+		MethodCall('indexof', 2)
+	,
+	ReplaceMethodCall =
+		MethodCall('replace', 3)
+	,
+	SubstringMethodCall =
+		MethodCall('substring', 2)
+	| MethodCall('substring', 3)
+	,
+	TolowerMethodCall =
+		MethodCall('tolower', 1)
+	,
+	ToupperMethodCall =
+		MethodCall('toupper', 1)
+	,
+	TrimMethodCall =
+		MethodCall('trim', 1)
+	,
+	ConcatMethodCall =
+		MethodCall('concat', 1)
+	,
+	DayMethodCall =
+		MethodCall('day', 2)
+	,
+	HourMethodCall =
+		MethodCall('hour', 1)
+	,
+	MinuteMethodCall =
+		MethodCall('minute', 1)
+	,
+	MonthMethodCall =
+		MethodCall('month', 1)
+	,
+	SecondMethodCall =
+		MethodCall('second', 1)
+	,
+	YearMethodCall =
+		MethodCall('year', 1)
+	,
+	RoundMethodCall =
+		MethodCall('round', 1)
+	,
+	FloorMethodCall =
+		MethodCall('floor', 1)
+	,
+	CeilingMethodCall =
+		MethodCall('ceiling', 1)
+	,
 
-  IsOfMethodCall = 
-    MethodCall("isof", 1)
-  | MethodCall("isof", 2)
-  ,
+	IsOfMethodCall =
+			MethodCall('isof', 1)
+		|	MethodCall('isof', 2)
+	,
 
-  MethodCall :name :arity =
-    seq(name)
-    '('
-      spaces
-      numberOf(`FilterByExpression, arity, ','):args
-      spaces
-    ')' -> { args: args, method: name }
-  ,
+	MethodCall :name :arity =
+		seq(name)
+		'('
+			spaces
+			numberOf(`FilterByExpression, arity, ','):args
+			spaces
+		')'
+		-> { args: args, method: name }
+	,
 
-  PropertyPathList = 
-    listOf(`PropertyPath, ',')
+	PropertyPathList =
+		listOf(`PropertyPath, ',')
+	,
+	PropertyPath =
+		ResourceName:resource
+		(	'/'
+			PropertyPath: next
+		)?
+		-> { name: resource, property: next}
+	,
+	PathSegment =
+		'/'
+		ResourceName:resource
+		("(" Number:key ")")?
+		(	(	seq('/$links')
+			PathSegment:link
+			)
+		|	PathSegment: next
+		)?
+		-> { resource: resource, key: key, link: link, property: next }
+	,
 
- ,
-  PropertyPath = 
-    ResourceName:resource
-    (
-      '/'
-      PropertyPath: next
-    )? -> { name: resource, property: next}
-  ,
-  PathSegment = 
-    '/'
-    ResourceName:resource
-    (
-      ("(" Number:key ")")?
-      (
-        (seq("/$links") PathSegment:link)
-      | PathSegment: next
-      )?
-    ) -> { resource: resource, key: key, link: link, property: next }
-  ,
+	ContentType =
+		<	letter+
+			'/'
+			letter+
+			('+' letter+)?
+		>
+	,
 
-  ContentType = 
-    < letter+
-      '/' 
-      letter+
-      (
-        '+' letter+
-      )?
-    >
-  ,
+	ResourceName =
+		<	(
+				~(ReservedUriComponent | ' ')
+				anything
+			)+
+		>:resourceName
+		-> decodeURIComponent(resourceName)
+	,
 
-  ResourceName =
-    <(	
-      ~(ReservedUriComponent | ' ')
-      anything
-    )+
-    >:resourceName -> decodeURIComponent(resourceName)
-  ,
+	Number =
+			Decimal
+		|	Integer
+	,
 
-  Number = Decimal | Integer
-  ,
+	Decimal =
+		<	digit+
+			'.'
+			digit+
+		>:d
+		-> new Number(d)
+	,
 
-  Decimal = 
-    <
-      digit+
-      '.'
-      digit+
-    >:d     -> new Number(d)
-  , 
+	Integer =
+		<digit+>:d
+		-> parseInt(d, 10)
+	,
 
-  Integer = <digit+>:d -> parseInt(d, 10)
-  ,
+	ReservedUriComponent =
+			GenDelim
+		|	SubDelim
+	,
 
-  ReservedUriComponent  =
-    GenDelim
-  | SubDelim
-  ,
+	GenDelim =
+		":" | "/" | "?" | "#" | "[" | "]" | "@"
+	,
 
-  GenDelim = 
-    ":" | "/" | "?" | "#" | "[" | "]" | "@"
-  ,
-  
-  SubDelim = 
-    "!" | '$' | '*' | "'" | "&" | "(" | ")" | "+" | "," | ";" | "="
-  ,
+	SubDelim =
+		"!" | '$' | '*' | "'" | "&" | "(" | ")" | "+" | "," | ";" | "="
+	,
 
-  Text =
-    <
-     (~ReservedUriComponent
-     anything)*
-    >:text -> decodeURIComponent(text)
-  ,
+	Text =
+		<	(	~ReservedUriComponent
+				anything
+			)*
+		>:text
+		-> decodeURIComponent(text)
+	,
 
-  QuotedText =
-    '\''
-    Text:t 
-    '\'' -> t
-  
+	QuotedText =
+		'\''
+		Text:t
+		'\''
+		-> t
 }
 
-ODataParser.numberOf = function(rule, count, seperator) {
-  var ret = [];
-  for(var i = 1; i < count; i++) {
-    ret.push(this._apply(rule));
-    this._apply("spaces");
-    this._applyWithArgs('exactly', seperator)
-    this._apply("spaces");
-  }
-  ret.push(this._apply(rule));
-  return ret;
+ODataParser.numberOf = function(rule, count, separator) {
+	var ret = [];
+	for(var i = 1; i < count; i++) {
+		ret.push(this._apply(rule));
+		this._apply('spaces');
+		this._applyWithArgs('exactly', separator);
+		this._apply('spaces');
+	}
+	ret.push(this._apply(rule));
+	return ret;
 }
 
 ODataParser._enableTokens = function() {
-  OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterAndOperand', 'FilterByOperand', 'FilterRecognisedMathOperand']);
+	OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterAndOperand', 'FilterByOperand', 'FilterRecognisedMathOperand']);
 };
 
 exports.ODataParser = ODataParser
