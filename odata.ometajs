@@ -327,7 +327,7 @@ ometa ODataParser {
 	PropertyPath =
 		ResourceName:resource
 		(	'/'
-			PropertyPath: next
+			PropertyPath:next
 		)?
 		-> { name: resource, property: next}
 	,
@@ -370,7 +370,7 @@ ometa ODataParser {
 			'.'
 			digit+
 		>:d
-		-> new Number(d)
+		-> Number(d)
 	,
 
 	Integer =
