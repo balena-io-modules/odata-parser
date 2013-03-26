@@ -11,8 +11,11 @@ ometa ODataParser {
 					}
 				}
 			)?
+			end
 			-> model
 		|	'/'
+			end
+			-> {}
 	,
 
 	QueryOption =
@@ -331,10 +334,11 @@ ometa ODataParser {
 	PathSegment =
 		'/'
 		ResourceName:resource
-		("(" Number:key ")")?
-		(	seq('/$links')
-			PathSegment:link
-		|	PathSegment: next
+		(	"(" Number:key ")"
+			(	seq('/$links')
+				PathSegment:link
+			|	PathSegment:next
+			)?
 		)?
 		-> { resource: resource, key: key, link: link, property: next }
 	,

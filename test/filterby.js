@@ -3,7 +3,7 @@ var assert = require('assert')
 
 
 function operandTest(op) {
-  test("/some/resource?$filterby=Foo " + op + " 2", "OData", function(result) {
+  test("/resource?$filterby=Foo " + op + " 2", "OData", function(result) {
     it("A filter should be present", function() {
        assert.notEqual(result.options.$filterby, null)
     })
@@ -25,7 +25,7 @@ operandTest("ge")
 operandTest("lt")
 operandTest("le")
 
-test("/some/resource?$filterby=Foo eq 'bar'", "OData", function(result) {
+test("/resource?$filterby=Foo eq 'bar'", "OData", function(result) {
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
   })
@@ -40,7 +40,7 @@ test("/some/resource?$filterby=Foo eq 'bar'", "OData", function(result) {
   })
 })
 
-test("/some/resource?$filterby=Foo eq 2.5", "OData", function(result) {
+test("/resource?$filterby=Foo eq 2.5", "OData", function(result) {
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
   })
@@ -55,7 +55,7 @@ test("/some/resource?$filterby=Foo eq 2.5", "OData", function(result) {
   })
 })
 
-test("/some/resource?$filterby=Price gt 5 and Price lt 10", "OData", function(result) {
+test("/resource?$filterby=Price gt 5 and Price lt 10", "OData", function(result) {
 
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
@@ -79,7 +79,7 @@ test("/some/resource?$filterby=Price gt 5 and Price lt 10", "OData", function(re
   })
 })
 
-test("/some/resource?$filterby=not Published", "OData", function(result) {
+test("/resource?$filterby=not Published", "OData", function(result) {
 
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
@@ -93,7 +93,7 @@ test("/some/resource?$filterby=not Published", "OData", function(result) {
   })
 })
 
-test("/some/resource?$filterby=not (Price gt 5)", "OData", function(result) {
+test("/resource?$filterby=not (Price gt 5)", "OData", function(result) {
 
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
@@ -109,7 +109,7 @@ test("/some/resource?$filterby=not (Price gt 5)", "OData", function(result) {
   })
 })
 
-test("/some/resource?$filterby=Price add 5 gt 10", "OData", function(result) {
+test("/resource?$filterby=Price add 5 gt 10", "OData", function(result) {
 
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
@@ -128,7 +128,7 @@ test("/some/resource?$filterby=Price add 5 gt 10", "OData", function(result) {
   })
 })
 
-test("/some/resource?$filterby=Price mul 5 gt 10", "OData", function(result) {
+test("/resource?$filterby=Price mul 5 gt 10", "OData", function(result) {
 
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
@@ -147,7 +147,7 @@ test("/some/resource?$filterby=Price mul 5 gt 10", "OData", function(result) {
   })
 })
 
-test("/some/resource?$filterby=Price div Price mul 5 gt 10", "OData", function(result) {
+test("/resource?$filterby=Price div Price mul 5 gt 10", "OData", function(result) {
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
   })
@@ -172,7 +172,7 @@ test("/some/resource?$filterby=Price div Price mul 5 gt 10", "OData", function(r
   })
 })
 
-test("/some/resource?$filterby=(Price div Price) mul 5 gt 10", "OData", function(result) {
+test("/resource?$filterby=(Price div Price) mul 5 gt 10", "OData", function(result) {
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filterby, null)
   })

@@ -13,6 +13,12 @@ test("/model", "OData", function(result) {
   })
 })
 
+test("/model/child", "OData", function(result) {
+  it("should have the resource specified", function() {
+    assert(result instanceof SyntaxError)
+  })
+})
+
 test("/model(1)", "OData", function(result) {
   it("should have the resource specified", function() {
      assert.equal(result.resource, 'model')
