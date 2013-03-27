@@ -422,4 +422,4 @@ ODataParser._enableTokens = function() {
 	OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterAndOperand', 'FilterByOperand', 'FilterRecognisedMathOperand']);
 };
 
-exports.ODataParser = ODataParser
+module.exports = ODataParser
