@@ -5,7 +5,7 @@
 	"main": "odata-parser.js",
 	"scripts": {
 		"test": "mocha",
-		"postinstall": "node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
+		"postinstall": "npm install ometa-js@1.x && node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
 	},
 	"repository": "",
 	"author": "",
