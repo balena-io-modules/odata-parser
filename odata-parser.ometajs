@@ -1,5 +1,7 @@
 ometa ODataParser {
 
+	Process = OData,
+
 	OData =
 			PathSegment:model
 			(	'?'
