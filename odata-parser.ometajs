@@ -1,4 +1,4 @@
-ometa ODataParser {
+export ometa ODataParser {
 
 	Process = OData,
 
@@ -423,5 +423,3 @@ ODataParser.numberOf = function(rule, count, separator) {
 ODataParser._enableTokens = function() {
 	OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterAndOperand', 'FilterByOperand', 'FilterRecognisedMathOperand']);
 };
-
-module.exports = ODataParser
