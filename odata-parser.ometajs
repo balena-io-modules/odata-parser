@@ -92,9 +92,9 @@ export ometa ODataParser {
 
 
 	FilterByOption =
-		RecognisedOption('$filterby=')
+		RecognisedOption('$filter=')
 		FilterByExpression:expr
-		-> { name: '$filterby', value: expr }
+		-> { name: '$filter', value: expr }
 	,
 
 	FormatOption =
