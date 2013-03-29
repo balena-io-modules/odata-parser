@@ -152,6 +152,24 @@ test("/resource?$filter=Price add 5 gt 10", "OData", function(result) {
   })
 })
 
+test("/resource?$filter=Price sub 5 gt 10", "OData", function(result) {
+  it("A filter should be present", function() {
+     assert.notEqual(result.options.$filter, null)
+  })
+  it("Filter should be an instance of 'gt'", function() {
+     assert.equal(result.options.$filter[0], "gt")
+  })
+  it("lhr should be Price sub 5", function() {
+     var rhs = result.options.$filter[1] 
+     assert.equal(rhs[0], "sub")
+     assert.equal(rhs[1].name, "Price")
+     assert.equal(rhs[2], 5)
+  })
+  it("rhr should be 10", function() {
+     assert.equal(result.options.$filter[2], 10)
+  })
+})
+
 test("/resource?$filter=Price mul 5 gt 10", "OData", function(result) {
 
   it("A filter should be present", function() {

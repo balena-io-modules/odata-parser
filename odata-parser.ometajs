@@ -122,9 +122,9 @@ export ometa ODataParser {
 	FilterLogicalExpression =
 		FilterLogicalExpression:lhs
 		FilterByOperand:op
-		FilterAddExpression:rhs
+		FilterSubExpression:rhs
 		-> [op, lhs, rhs ]
-	|	FilterAddExpression
+	|	FilterSubExpression
 	,
 
 	FilterSubExpression =
