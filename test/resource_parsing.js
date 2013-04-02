@@ -7,6 +7,12 @@ test("/", "OData", function(result) {
   })
 })
 
+test("/$metadata", "OData", function(result) {
+  it("$metadata should point to $metadata", function() {
+     assert.equal(result.resource, '$metadata')
+  })
+})
+
 test("/model", "OData", function(result) {
   it("should have the resource specified", function() {
      assert.equal(result.resource, 'model')

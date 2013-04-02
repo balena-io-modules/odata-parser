@@ -15,6 +15,8 @@ export ometa ODataParser {
 			)?
 			end
 			-> model
+		|	seq('/$metadata')
+			-> {resource: '$metadata'}
 		|	'/'
 			end
 			-> {}
