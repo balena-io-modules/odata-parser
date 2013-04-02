@@ -36,6 +36,19 @@ test("/resource?$orderby=PropertyOne desc", "OData", function(result) {
 })
 
 
+test("/resource?$orderby=PropertyOne%20desc", "OData", function(result) {
+  it("sort options are present on the result", function() {
+     assert.notEqual(result.options.$orderby, null)
+  })
+  it("sort options have the property specified", function() {
+     assert.equal(result.options.$orderby.properties[0].name, "PropertyOne")
+  })
+  it("sort options have the property ordering specified", function() {
+     assert.equal(result.options.$orderby.properties[0].order, "desc")
+  })
+})
+
+
 test("/resource?$orderby=PropertyOne asc", "OData", function(result) {
   it("sort options are present on the result", function() {
      assert.notEqual(result.options.$orderby, null)

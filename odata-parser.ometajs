@@ -355,7 +355,7 @@ export ometa ODataParser {
 
 	ResourceName =
 		<	(
-				~(ReservedUriComponent | ' ')
+				~(ReservedUriComponent | space)
 				anything
 			)+
 		>:resourceName
@@ -406,6 +406,12 @@ export ometa ODataParser {
 		Text:t
 		'\''
 		-> t
+	,
+
+	space =
+			^space
+		|	seq('%20')
+			-> ' '
 }
 
 ODataParser.numberOf = function(rule, count, separator) {

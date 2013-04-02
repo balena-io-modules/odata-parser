@@ -8,7 +8,7 @@ test("/something?foo=hello%20world", "OData", function(result) {
 })
 
 test("/some%20thing?foo=hello%20world", "OData", function(result) {
-    it("should equal 'some thing' without the encoding", function() {
-        assert.equal(result.resource, "some thing")
+    it("should fail as we do not allow spaces in resource names", function() {
+        assert(result instanceof SyntaxError)
     })
 })
