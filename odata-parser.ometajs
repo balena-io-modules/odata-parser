@@ -4,14 +4,8 @@ export ometa ODataParser {
 
 	OData =
 			PathSegment:model
-			(	'?'
-				listOf(`QueryOption, '&'):options
-				{
-					model.options = {};
-					for(var i in options) {
-						model.options[options[i].name] = options[i].value;
-					}
-				}
+			(	QueryOptions:options
+				{model.options = options}
 			)?
 			end
 			-> model
@@ -20,6 +14,17 @@ export ometa ODataParser {
 		|	'/'
 			end
 			-> {}
+	,
+	
+	QueryOptions =
+		'?'
+		listOf(`QueryOption, '&'):options
+		{{}}:optionsObj
+		{	for(var i in options) {
+				optionsObj[options[i].name] = options[i].value;
+			}
+		}
+		-> optionsObj
 	,
 
 	QueryOption =
