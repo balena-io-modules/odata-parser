@@ -20,7 +20,7 @@ test("/model", "OData", function(result) {
 })
 
 test("/model/child", "OData", function(result) {
-  it("should have the resource specified", function() {
+  it("should fail, since a key needs to be specified for the first collection", function() {
     assert(result instanceof SyntaxError)
   })
 })
@@ -43,6 +43,21 @@ test("/model(1)/child", "OData", function(result) {
   })
   it("should have the child specified", function() {
      assert.equal(result.property.resource, 'child')
+  })
+})
+
+test("/model(1)/child/grandchild", "OData", function(result) {
+  it("should have the resource specified", function() {
+     assert.equal(result.resource, 'model')
+  })
+  it("should have the key specified for the resource", function() {
+     assert.equal(result.key, '1')
+  })
+  it("should have the child specified", function() {
+     assert.equal(result.property.resource, 'child')
+  })
+  it("should have the grandchild specified", function() {
+     assert.equal(result.property.property.resource, 'grandchild')
   })
 })
   
