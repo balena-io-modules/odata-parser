@@ -4,9 +4,6 @@ export ometa ODataParser {
 
 	OData =
 			PathSegment:model
-			(	QueryOptions:options
-				{model.options = options}
-			)?
 			end
 			-> model
 		|	seq('/$metadata')
@@ -349,7 +346,8 @@ export ometa ODataParser {
 			|	SubPathSegment:next
 			)?
 		)?
-		-> { resource: resource, key: key, link: link, property: next }
+		QueryOptions?:options
+		-> { resource: resource, key: key, link: link, property: next, options: options }
 	,
 	SubPathSegment =
 		'/'
@@ -361,7 +359,8 @@ export ometa ODataParser {
 			SubPathSegment:link
 		|	SubPathSegment:next
 		)?
-		-> { resource: resource, key: key, link: link, property: next }
+		QueryOptions?:options
+		-> { resource: resource, key: key, link: link, property: next, options: options }
 	,
 
 	ContentType =

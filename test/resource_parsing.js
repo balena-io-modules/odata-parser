@@ -88,7 +88,7 @@ test("/method(1)/child?foo=bar", "OData", function(result) {
   })
 
   it("should have the argument specified", function() {
-     assert.equal(result.options.foo, 'bar')
+     assert.equal(result.property.options.foo, 'bar')
   })
 })
 
