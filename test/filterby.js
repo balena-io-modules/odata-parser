@@ -40,6 +40,21 @@ test("/resource?$filter=Foo eq 'bar'", "OData", function(result) {
   })
 })
 
+test("/resource?$filter=Foo eq '%20'", "OData", function(result) {
+  it("A filter should be present", function() {
+     assert.notEqual(result.options.$filter, null)
+  })
+  it("Filter should be an instance of 'eq'", function() {
+     assert.equal(result.options.$filter[0], "eq")
+  })
+  it("lhr should be Foo", function() {
+     assert.equal(result.options.$filter[1].name, "Foo")
+  })
+  it("rhr should be 2", function() {
+     assert.equal(result.options.$filter[2], ' ')
+  })
+})
+
 test("/resource?$filter=Foo eq 2.5", "OData", function(result) {
   it("A filter should be present", function() {
      assert.notEqual(result.options.$filter, null)

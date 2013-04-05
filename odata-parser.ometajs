@@ -180,7 +180,7 @@ export ometa ODataParser {
 	,
 
 	GroupedPrecedenceExpression =
-		"(" spaces FilterByExpression:expr spaces ")"
+		'(' spaces FilterByExpression:expr spaces ')'
 		-> expr
 	,
 
@@ -270,7 +270,7 @@ export ometa ODataParser {
 	,
 	SubstringMethodCall =
 		MethodCall('substring', 2)
-	| MethodCall('substring', 3)
+	|	MethodCall('substring', 3)
 	,
 	TolowerMethodCall =
 		MethodCall('tolower', 1)
@@ -340,7 +340,7 @@ export ometa ODataParser {
 	PathSegment =
 		'/'
 		ResourceName:resource
-		(	"(" Number:key ")"
+		(	'(' Number:key ')'
 			(	seq('/$links')
 				SubPathSegment:link
 			|	SubPathSegment:next
@@ -353,7 +353,7 @@ export ometa ODataParser {
 		'/'
 		ResourceName:resource
 		// Really this is only optional if the multiplicity from the previous segment to this segment is at most 1
-		(	"(" Number:key ")"
+		(	'(' Number:key ')'
 		)?
 		(	seq('/$links')
 			SubPathSegment:link
@@ -404,11 +404,11 @@ export ometa ODataParser {
 	,
 
 	GenDelim =
-		":" | "/" | "?" | "#" | "[" | "]" | "@"
+		':' | '/' | '?' | '#' | '[' | ']' | '@'
 	,
 
 	SubDelim =
-		"!" | '$' | '*' | "'" | "&" | "(" | ")" | "+" | "," | ";" | "="
+		'!' | '$' | '*' | '\'' | '&' | '(' | ')' | '+' | ',' | ';' | '='
 	,
 
 	Text =
