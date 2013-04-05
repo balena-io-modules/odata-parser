@@ -282,7 +282,7 @@ export ometa ODataParser {
 		MethodCall('trim', 1)
 	,
 	ConcatMethodCall =
-		MethodCall('concat', 1)
+		MethodCall('concat', 2)
 	,
 	DayMethodCall =
 		MethodCall('day', 2)
