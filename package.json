@@ -1,16 +1,16 @@
 {
-	"name": "odata-parser",
-	"version": "0.0.0",
-	"description": "An OData parser written in OMeta",
-	"main": "odata-parser.js",
-	"scripts": {
-		"test": "mocha",
-		"postinstall": "npm install ometa-js@1.x && node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
-	},
-	"repository": "",
-	"author": "",
-	"license": "BSD",
-	"dependencies": {
-		"ometa-js": "1.x"
-	}
+  "name": "odata-parser",
+  "version": "0.0.1",
+  "description": "An OData parser written in OMeta",
+  "main": "odata-parser.js",
+  "scripts": {
+    "test": "mocha",
+    "postinstall": "npm install ometa-js@1.x && node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "ometa-js": "1.x"
+  }
 }
