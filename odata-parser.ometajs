@@ -175,6 +175,7 @@ export ometa ODataParser {
 	|	FilterNegateExpression
 	|	Number
 	|	QuotedText
+	|	LambdaPropertyPath
 	|	PropertyPath
 	|	GroupedPrecedenceExpression
 	,
@@ -327,6 +328,20 @@ export ometa ODataParser {
 		-> { args: args, method: name }
 	,
 
+	LambdaMethodCall =
+		(	seq('any')
+		|	seq('all')
+		):name
+		'('
+			spaces
+			anything:identifier
+			':'
+			FilterByExpression:expression
+			spaces
+		')'
+		-> { expression: expression, identifier: identifier, method: name }
+	,
+
 	PropertyPathList =
 		listOf(`PropertyPath, ',')
 	,
@@ -336,6 +351,15 @@ export ometa ODataParser {
 			PropertyPath:next
 		)?
 		-> { name: resource, property: next}
+	,
+	LambdaPropertyPath =
+		ResourceName:resource
+		'/'
+		(	LambdaPropertyPath:next
+			-> { name: resource, property: next}
+		|	LambdaMethodCall: lambda
+			-> { name: resource, lambda: lambda}
+		)
 	,
 	PathSegment =
 		'/'

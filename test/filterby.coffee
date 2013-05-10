@@ -342,3 +342,38 @@ methodTestWithThreeArgs("startswith", true)
 methodTestWithTwoArgs("length", true)
 methodTestWithThreeArgs("indexof", true)
 ###
+
+
+lambdaTest = (methodName) ->
+	test "/resource?$filter=child/" + methodName + "(d:d/name eq 'cake')", "OData", (result, err) ->
+		if err
+			throw err
+
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
+
+		it 'Filter should be on the child resource', ->
+			assert.equal(result.options.$filter.name, 'child')
+
+		it 'where it is a lambda', ->
+			assert.notEqual(result.options.$filter.lambda, null)
+
+		it 'of type "' + methodName + '"', ->
+			assert.equal(result.options.$filter.lambda.method, methodName)
+
+		it 'with the element identified by "d"', ->
+			assert.equal(result.options.$filter.lambda.identifier, 'd')
+
+		it 'and an expression that is d/name', ->
+			assert.equal(result.options.$filter.lambda.expression[1].name, 'd')
+			assert.equal(result.options.$filter.lambda.expression[1].property.name, 'name')
+			assert.equal(result.options.$filter.lambda.expression[1].property.property, null)
+
+		it '"eq"', ->
+			assert.equal(result.options.$filter.lambda.expression[0], 'eq')
+
+		it "'cake'", ->
+			assert.equal(result.options.$filter.lambda.expression[2], 'cake')
+
+lambdaTest('any')
+lambdaTest('all')
