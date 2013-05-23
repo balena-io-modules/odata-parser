@@ -7,11 +7,11 @@
     "test": "mocha",
     "postinstall": "npm install ometa-js@1.x && node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
   },
-  "repository": "",
+  "repository": "git@bitbucket.org:rulemotion/odata-parser.git",
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "ometa-js": "1.x"
+    "ometa-js": "~1.0.3"
   },
   "devDependencies": {
     "odata-parser": "git+ssh://git@bitbucket.org:rulemotion/odata-parser.git#v0.0.1"
