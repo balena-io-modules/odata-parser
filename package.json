@@ -1,6 +1,6 @@
 {
   "name": "odata-parser",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
   "scripts": {
