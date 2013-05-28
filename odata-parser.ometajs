@@ -175,6 +175,7 @@ export ometa ODataParser {
 	|	FilterNegateExpression
 	|	Number
 	|	QuotedText
+	|	Date
 	|	LambdaPropertyPath
 	|	PropertyPath
 	|	GroupedPrecedenceExpression
@@ -420,6 +421,16 @@ export ometa ODataParser {
 	Integer =
 		<digit+>:d
 		-> parseInt(d, 10)
+	,
+
+	Date =
+		(	seq('datetime')
+		|	seq('date')
+		)
+		QuotedText:date
+		{Date.parse(date)}:date
+		?(!isNaN(date))
+		-> new Date(date)
 	,
 
 	ReservedUriComponent =
