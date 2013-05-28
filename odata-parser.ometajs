@@ -10,7 +10,7 @@ export ometa ODataParser {
 			-> {resource: '$metadata'}
 		|	'/'
 			end
-			-> {}
+			-> {resource: '$serviceroot'}
 	,
 	
 	QueryOptions =
