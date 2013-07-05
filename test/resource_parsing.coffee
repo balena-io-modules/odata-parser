@@ -2,8 +2,8 @@ assert = require('assert')
 test = require('./test')
 
 test "/", "OData", (result) ->
-	it "Service root should have no model", ->
-		assert.equal(result.resource, null)
+	it "Service root should point to $serviceroot", ->
+		assert.equal(result.resource, '$serviceroot')
 
 
 test "/$metadata", "OData", (result) ->
