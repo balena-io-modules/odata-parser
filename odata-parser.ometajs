@@ -443,7 +443,7 @@ export ometa ODataParser {
 	,
 
 	SubDelim =
-		'!' | '$' | '*' | '\'' | '&' | '(' | ')' | '+' | ',' | ';' | '='
+		'!' | '$' | '*' | Apostrophe | '&' | '(' | ')' | '+' | ',' | ';' | '='
 	,
 
 	Text =
@@ -454,10 +454,17 @@ export ometa ODataParser {
 		-> decodeURIComponent(text)
 	,
 
+	// TODO: This should really be done treating everything the same, but for now this hack should allow FF to work passably.
+	Apostrophe =
+			'\''
+		|	seq('%27')
+			-> '\''
+	,
+
 	QuotedText =
-		'\''
+		Apostrophe
 		Text:t
-		'\''
+		Apostrophe
 		-> t
 	,
 
