@@ -11,6 +11,6 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "ometa-js": "~1.0.3"
+    "ometa-js": "~1.0.4"
   }
 }
