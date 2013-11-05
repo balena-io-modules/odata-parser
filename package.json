@@ -4,8 +4,9 @@
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
   "scripts": {
+    "pretest": "npm run-script prepublish",
     "test": "mocha",
-    "postinstall": "npm install ometa-js@1.x && node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
+    "prepublish": "node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
   },
   "repository": "git@bitbucket.org:rulemotion/odata-parser.git",
   "author": "",
