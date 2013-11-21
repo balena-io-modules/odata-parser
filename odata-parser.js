@@ -1,8 +1,8 @@
-(function(root, factory) {
+!function(root, factory) {
     "function" == typeof define && define.amd ? define([ "require", "exports", "ometa-core" ], factory) : "object" == typeof exports ? factory(require, exports, require("ometa-js").core) : factory(function(moduleName) {
         return root[moduleName];
     }, root, root.OMeta);
-})(this, function(require, exports, OMeta) {
+}(this, function(require, exports, OMeta) {
     var ODataParser = exports.ODataParser = OMeta._extend({
         Process: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -15,42 +15,36 @@
                 this._apply("end");
                 return model;
             }, function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "/":
-                        return this._or(function() {
-                            return function() {
-                                switch (this._apply("anything")) {
-                                  case "$":
-                                    return function() {
-                                        this._applyWithArgs("exactly", "m");
-                                        this._applyWithArgs("exactly", "e");
-                                        this._applyWithArgs("exactly", "t");
-                                        this._applyWithArgs("exactly", "a");
-                                        this._applyWithArgs("exactly", "d");
-                                        this._applyWithArgs("exactly", "a");
-                                        this._applyWithArgs("exactly", "t");
-                                        this._applyWithArgs("exactly", "a");
-                                        return {
-                                            resource: "$metadata"
-                                        };
-                                    }.call(this);
-
-                                  default:
-                                    throw this._fail();
-                                }
-                            }.call(this);
-                        }, function() {
-                            this._apply("end");
+                switch (this.anything()) {
+                  case "/":
+                    return this._or(function() {
+                        switch (this.anything()) {
+                          case "$":
+                            this._applyWithArgs("exactly", "m");
+                            this._applyWithArgs("exactly", "e");
+                            this._applyWithArgs("exactly", "t");
+                            this._applyWithArgs("exactly", "a");
+                            this._applyWithArgs("exactly", "d");
+                            this._applyWithArgs("exactly", "a");
+                            this._applyWithArgs("exactly", "t");
+                            this._applyWithArgs("exactly", "a");
                             return {
-                                resource: "$serviceroot"
+                                resource: "$metadata"
                             };
-                        });
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                          default:
+                            throw this._fail();
+                        }
+                    }, function() {
+                        this._apply("end");
+                        return {
+                            resource: "$serviceroot"
+                        };
+                    });
+
+                  default:
+                    throw this._fail();
+                }
             });
         },
         QueryOptions: function() {
@@ -111,27 +105,21 @@
             property = this._apply("PropertyPath");
             this._apply("spaces");
             order = this._or(function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "a":
-                        return function() {
-                            this._applyWithArgs("exactly", "s");
-                            this._applyWithArgs("exactly", "c");
-                            return "asc";
-                        }.call(this);
+                switch (this.anything()) {
+                  case "a":
+                    this._applyWithArgs("exactly", "s");
+                    this._applyWithArgs("exactly", "c");
+                    return "asc";
 
-                      case "d":
-                        return function() {
-                            this._applyWithArgs("exactly", "e");
-                            this._applyWithArgs("exactly", "s");
-                            this._applyWithArgs("exactly", "c");
-                            return "desc";
-                        }.call(this);
+                  case "d":
+                    this._applyWithArgs("exactly", "e");
+                    this._applyWithArgs("exactly", "s");
+                    this._applyWithArgs("exactly", "c");
+                    return "desc";
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                  default:
+                    throw this._fail();
+                }
             }, function() {
                 return "desc";
             });
@@ -160,32 +148,26 @@
             var $elf = this, _fromIdx = this.input.idx, value;
             this._applyWithArgs("RecognisedOption", "$inlinecount=");
             value = this._or(function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "a":
-                        return function() {
-                            this._applyWithArgs("exactly", "l");
-                            this._applyWithArgs("exactly", "l");
-                            this._applyWithArgs("exactly", "p");
-                            this._applyWithArgs("exactly", "a");
-                            this._applyWithArgs("exactly", "g");
-                            this._applyWithArgs("exactly", "e");
-                            this._applyWithArgs("exactly", "s");
-                            return "allpages";
-                        }.call(this);
+                switch (this.anything()) {
+                  case "a":
+                    this._applyWithArgs("exactly", "l");
+                    this._applyWithArgs("exactly", "l");
+                    this._applyWithArgs("exactly", "p");
+                    this._applyWithArgs("exactly", "a");
+                    this._applyWithArgs("exactly", "g");
+                    this._applyWithArgs("exactly", "e");
+                    this._applyWithArgs("exactly", "s");
+                    return "allpages";
 
-                      case "n":
-                        return function() {
-                            this._applyWithArgs("exactly", "o");
-                            this._applyWithArgs("exactly", "n");
-                            this._applyWithArgs("exactly", "e");
-                            return "none";
-                        }.call(this);
+                  case "n":
+                    this._applyWithArgs("exactly", "o");
+                    this._applyWithArgs("exactly", "n");
+                    this._applyWithArgs("exactly", "e");
+                    return "none";
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                  default:
+                    throw this._fail();
+                }
             }, function() {
                 this._apply("Text");
                 return "";
@@ -210,15 +192,13 @@
             var $elf = this, _fromIdx = this.input.idx, properties, value;
             this._applyWithArgs("RecognisedOption", "$select=");
             value = this._or(function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "*":
-                        return "*";
+                switch (this.anything()) {
+                  case "*":
+                    return "*";
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                  default:
+                    throw this._fail();
+                }
             }, function() {
                 properties = this._apply("PropertyPathList");
                 return {
@@ -380,19 +360,15 @@
             var $elf = this, _fromIdx = this.input.idx, op;
             this._apply("spaces");
             op = function() {
-                switch (this._apply("anything")) {
+                switch (this.anything()) {
                   case "a":
-                    return function() {
-                        this._applyWithArgs("exactly", "n");
-                        this._applyWithArgs("exactly", "d");
-                        return "and";
-                    }.call(this);
+                    this._applyWithArgs("exactly", "n");
+                    this._applyWithArgs("exactly", "d");
+                    return "and";
 
                   case "o":
-                    return function() {
-                        this._applyWithArgs("exactly", "r");
-                        return "or";
-                    }.call(this);
+                    this._applyWithArgs("exactly", "r");
+                    return "or";
 
                   default:
                     throw this._fail();
@@ -405,46 +381,38 @@
             var $elf = this, _fromIdx = this.input.idx, op;
             this._apply("spaces");
             op = function() {
-                switch (this._apply("anything")) {
+                switch (this.anything()) {
                   case "e":
-                    return function() {
-                        this._applyWithArgs("exactly", "q");
-                        return "eq";
-                    }.call(this);
+                    this._applyWithArgs("exactly", "q");
+                    return "eq";
 
                   case "g":
-                    return function() {
-                        switch (this._apply("anything")) {
-                          case "e":
-                            return "ge";
+                    switch (this.anything()) {
+                      case "e":
+                        return "ge";
 
-                          case "t":
-                            return "gt";
+                      case "t":
+                        return "gt";
 
-                          default:
-                            throw this._fail();
-                        }
-                    }.call(this);
+                      default:
+                        throw this._fail();
+                    }
 
                   case "l":
-                    return function() {
-                        switch (this._apply("anything")) {
-                          case "e":
-                            return "le";
+                    switch (this.anything()) {
+                      case "e":
+                        return "le";
 
-                          case "t":
-                            return "lt";
+                      case "t":
+                        return "lt";
 
-                          default:
-                            throw this._fail();
-                        }
-                    }.call(this);
+                      default:
+                        throw this._fail();
+                    }
 
                   case "n":
-                    return function() {
-                        this._applyWithArgs("exactly", "e");
-                        return "ne";
-                    }.call(this);
+                    this._applyWithArgs("exactly", "e");
+                    return "ne";
 
                   default:
                     throw this._fail();
@@ -463,21 +431,17 @@
             value = this._or(function() {
                 return this._apply("FilterByValue");
             }, function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "(":
-                        return function() {
-                            this._apply("spaces");
-                            expr = this._apply("FilterByExpression");
-                            this._apply("spaces");
-                            this._applyWithArgs("exactly", ")");
-                            return expr;
-                        }.call(this);
+                switch (this.anything()) {
+                  case "(":
+                    this._apply("spaces");
+                    expr = this._apply("FilterByExpression");
+                    this._apply("spaces");
+                    this._applyWithArgs("exactly", ")");
+                    return expr;
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                  default:
+                    throw this._fail();
+                }
             });
             return [ "not", value ];
         },
@@ -636,26 +600,20 @@
         LambdaMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx, expression, identifier, name;
             name = function() {
-                switch (this._apply("anything")) {
+                switch (this.anything()) {
                   case "a":
-                    return function() {
-                        switch (this._apply("anything")) {
-                          case "l":
-                            return function() {
-                                this._applyWithArgs("exactly", "l");
-                                return "all";
-                            }.call(this);
+                    switch (this.anything()) {
+                      case "l":
+                        this._applyWithArgs("exactly", "l");
+                        return "all";
 
-                          case "n":
-                            return function() {
-                                this._applyWithArgs("exactly", "y");
-                                return "any";
-                            }.call(this);
+                      case "n":
+                        this._applyWithArgs("exactly", "y");
+                        return "any";
 
-                          default:
-                            throw this._fail();
-                        }
-                    }.call(this);
+                      default:
+                        throw this._fail();
+                    }
 
                   default:
                     throw this._fail();
@@ -663,7 +621,7 @@
             }.call(this);
             this._applyWithArgs("exactly", "(");
             this._apply("spaces");
-            identifier = this._apply("anything");
+            identifier = this.anything();
             this._applyWithArgs("exactly", ":");
             expression = this._apply("FilterByExpression");
             this._apply("spaces");
@@ -718,23 +676,19 @@
                 this._applyWithArgs("exactly", ")");
                 return this._opt(function() {
                     return this._or(function() {
-                        return function() {
-                            switch (this._apply("anything")) {
-                              case "/":
-                                return function() {
-                                    this._applyWithArgs("exactly", "$");
-                                    this._applyWithArgs("exactly", "l");
-                                    this._applyWithArgs("exactly", "i");
-                                    this._applyWithArgs("exactly", "n");
-                                    this._applyWithArgs("exactly", "k");
-                                    this._applyWithArgs("exactly", "s");
-                                    return link = this._apply("SubPathSegment");
-                                }.call(this);
+                        switch (this.anything()) {
+                          case "/":
+                            this._applyWithArgs("exactly", "$");
+                            this._applyWithArgs("exactly", "l");
+                            this._applyWithArgs("exactly", "i");
+                            this._applyWithArgs("exactly", "n");
+                            this._applyWithArgs("exactly", "k");
+                            this._applyWithArgs("exactly", "s");
+                            return link = this._apply("SubPathSegment");
 
-                              default:
-                                throw this._fail();
-                            }
-                        }.call(this);
+                          default:
+                            throw this._fail();
+                        }
                     }, function() {
                         return next = this._apply("SubPathSegment");
                     });
@@ -762,23 +716,19 @@
             });
             this._opt(function() {
                 return this._or(function() {
-                    return function() {
-                        switch (this._apply("anything")) {
-                          case "/":
-                            return function() {
-                                this._applyWithArgs("exactly", "$");
-                                this._applyWithArgs("exactly", "l");
-                                this._applyWithArgs("exactly", "i");
-                                this._applyWithArgs("exactly", "n");
-                                this._applyWithArgs("exactly", "k");
-                                this._applyWithArgs("exactly", "s");
-                                return link = this._apply("SubPathSegment");
-                            }.call(this);
+                    switch (this.anything()) {
+                      case "/":
+                        this._applyWithArgs("exactly", "$");
+                        this._applyWithArgs("exactly", "l");
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "k");
+                        this._applyWithArgs("exactly", "s");
+                        return link = this._apply("SubPathSegment");
 
-                          default:
-                            throw this._fail();
-                        }
-                    }.call(this);
+                      default:
+                        throw this._fail();
+                    }
                 }, function() {
                     return next = this._apply("SubPathSegment");
                 });
@@ -823,7 +773,7 @@
                             return this._apply("space");
                         });
                     });
-                    return this._apply("anything");
+                    return this.anything();
                 });
             });
             return decodeURIComponent(resourceName);
@@ -861,50 +811,40 @@
         Date: function() {
             var $elf = this, _fromIdx = this.input.idx, date;
             (function() {
-                switch (this._apply("anything")) {
+                switch (this.anything()) {
                   case "d":
-                    return function() {
-                        switch (this._apply("anything")) {
-                          case "a":
-                            return function() {
-                                switch (this._apply("anything")) {
-                                  case "t":
-                                    return function() {
-                                        switch (this._apply("anything")) {
-                                          case "e":
-                                            return this._or(function() {
-                                                return function() {
-                                                    switch (this._apply("anything")) {
-                                                      case "t":
-                                                        return function() {
-                                                            this._applyWithArgs("exactly", "i");
-                                                            this._applyWithArgs("exactly", "m");
-                                                            this._applyWithArgs("exactly", "e");
-                                                            return "datetime";
-                                                        }.call(this);
+                    switch (this.anything()) {
+                      case "a":
+                        switch (this.anything()) {
+                          case "t":
+                            switch (this.anything()) {
+                              case "e":
+                                return this._or(function() {
+                                    switch (this.anything()) {
+                                      case "t":
+                                        this._applyWithArgs("exactly", "i");
+                                        this._applyWithArgs("exactly", "m");
+                                        this._applyWithArgs("exactly", "e");
+                                        return "datetime";
 
-                                                      default:
-                                                        throw this._fail();
-                                                    }
-                                                }.call(this);
-                                            }, function() {
-                                                return "date";
-                                            });
+                                      default:
+                                        throw this._fail();
+                                    }
+                                }, function() {
+                                    return "date";
+                                });
 
-                                          default:
-                                            throw this._fail();
-                                        }
-                                    }.call(this);
-
-                                  default:
-                                    throw this._fail();
-                                }
-                            }.call(this);
+                              default:
+                                throw this._fail();
+                            }
 
                           default:
                             throw this._fail();
                         }
-                    }.call(this);
+
+                      default:
+                        throw this._fail();
+                    }
 
                   default:
                     throw this._fail();
@@ -926,7 +866,7 @@
         GenDelim: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return function() {
-                switch (this._apply("anything")) {
+                switch (this.anything()) {
                   case "#":
                     return "#";
 
@@ -956,51 +896,47 @@
         SubDelim: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "!":
-                        return "!";
+                switch (this.anything()) {
+                  case "!":
+                    return "!";
 
-                      case "$":
-                        return "$";
+                  case "$":
+                    return "$";
 
-                      case "*":
-                        return "*";
+                  case "*":
+                    return "*";
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                  default:
+                    throw this._fail();
+                }
             }, function() {
                 return this._apply("Apostrophe");
             }, function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "&":
-                        return "&";
+                switch (this.anything()) {
+                  case "&":
+                    return "&";
 
-                      case "(":
-                        return "(";
+                  case "(":
+                    return "(";
 
-                      case ")":
-                        return ")";
+                  case ")":
+                    return ")";
 
-                      case "+":
-                        return "+";
+                  case "+":
+                    return "+";
 
-                      case ",":
-                        return ",";
+                  case ",":
+                    return ",";
 
-                      case ";":
-                        return ";";
+                  case ";":
+                    return ";";
 
-                      case "=":
-                        return "=";
+                  case "=":
+                    return "=";
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                  default:
+                    throw this._fail();
+                }
             });
         },
         Text: function() {
@@ -1010,7 +946,7 @@
                     this._not(function() {
                         return this._apply("ReservedUriComponent");
                     });
-                    return this._apply("anything");
+                    return this.anything();
                 });
             });
             return decodeURIComponent(text);
@@ -1018,13 +954,11 @@
         Apostrophe: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return function() {
-                switch (this._apply("anything")) {
+                switch (this.anything()) {
                   case "%":
-                    return function() {
-                        this._applyWithArgs("exactly", "2");
-                        this._applyWithArgs("exactly", "7");
-                        return "'";
-                    }.call(this);
+                    this._applyWithArgs("exactly", "2");
+                    this._applyWithArgs("exactly", "7");
+                    return "'";
 
                   case "'":
                     return "'";
@@ -1046,19 +980,15 @@
             return this._or(function() {
                 return OMeta._superApplyWithArgs(this, "space");
             }, function() {
-                return function() {
-                    switch (this._apply("anything")) {
-                      case "%":
-                        return function() {
-                            this._applyWithArgs("exactly", "2");
-                            this._applyWithArgs("exactly", "0");
-                            return " ";
-                        }.call(this);
+                switch (this.anything()) {
+                  case "%":
+                    this._applyWithArgs("exactly", "2");
+                    this._applyWithArgs("exactly", "0");
+                    return " ";
 
-                      default:
-                        throw this._fail();
-                    }
-                }.call(this);
+                  default:
+                    throw this._fail();
+                }
             });
         }
     });
