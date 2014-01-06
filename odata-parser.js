@@ -666,14 +666,23 @@
                 };
             });
         },
+        Key: function() {
+            var $elf = this, _fromIdx = this.input.idx, key;
+            this._applyWithArgs("exactly", "(");
+            key = this._or(function() {
+                return this._apply("Number");
+            }, function() {
+                return this._apply("QuotedText");
+            });
+            this._applyWithArgs("exactly", ")");
+            return key;
+        },
         PathSegment: function() {
             var $elf = this, _fromIdx = this.input.idx, key, link, next, options, resource;
             this._applyWithArgs("exactly", "/");
             resource = this._apply("ResourceName");
             this._opt(function() {
-                this._applyWithArgs("exactly", "(");
-                key = this._apply("Number");
-                this._applyWithArgs("exactly", ")");
+                key = this._apply("Key");
                 return this._opt(function() {
                     return this._or(function() {
                         switch (this.anything()) {
@@ -709,10 +718,8 @@
             var $elf = this, _fromIdx = this.input.idx, key, link, next, options, resource;
             this._applyWithArgs("exactly", "/");
             resource = this._apply("ResourceName");
-            this._opt(function() {
-                this._applyWithArgs("exactly", "(");
-                key = this._apply("Number");
-                return this._applyWithArgs("exactly", ")");
+            key = this._opt(function() {
+                return this._apply("Key");
             });
             this._opt(function() {
                 return this._or(function() {
