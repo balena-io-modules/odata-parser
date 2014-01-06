@@ -362,10 +362,18 @@ export ometa ODataParser {
 			-> { name: resource, lambda: lambda}
 		)
 	,
+	Key =
+		'('
+		(	Number
+		|	QuotedText
+		):key
+		')'
+		-> key
+	,
 	PathSegment =
 		'/'
 		ResourceName:resource
-		(	'(' Number:key ')'
+		(	Key:key
 			(	seq('/$links')
 				SubPathSegment:link
 			|	SubPathSegment:next
@@ -378,8 +386,7 @@ export ometa ODataParser {
 		'/'
 		ResourceName:resource
 		// Really this is only optional if the multiplicity from the previous segment to this segment is at most 1
-		(	'(' Number:key ')'
-		)?
+		Key?:key
 		(	seq('/$links')
 			SubPathSegment:link
 		|	SubPathSegment:next

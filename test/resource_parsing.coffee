@@ -29,6 +29,14 @@ test "/model(1)", "OData", (result) ->
 		assert.equal(result.key, '1')
 
 
+test "/model('TextKey')", "OData", (result) ->
+	it "should have the resource specified", ->
+		assert.equal(result.resource, 'model')
+
+	it "should have the key specified for the resource", ->
+		assert.equal(result.key, 'TextKey')
+
+
 test "/model(1)/child", "OData", (result) ->
 	it "should have the resource specified", ->
 		assert.equal(result.resource, 'model')
