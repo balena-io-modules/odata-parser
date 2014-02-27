@@ -242,7 +242,12 @@
                 lhs = this._apply("FilterAndExpression");
                 op = this._apply("FilterAndOperand");
                 rhs = this._apply("FilterLogicalExpression");
-                return [ op, lhs, rhs ];
+                return this._or(function() {
+                    this._pred(op == lhs[0]);
+                    return [ op ].concat(lhs.slice(1), [ rhs ]);
+                }, function() {
+                    return [ op, lhs, rhs ];
+                });
             }, function() {
                 return this._apply("FilterLogicalExpression");
             });
