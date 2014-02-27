@@ -119,7 +119,10 @@ export ometa ODataParser {
 		FilterAndExpression:lhs
 		FilterAndOperand:op
 		FilterLogicalExpression:rhs
-		-> [ op, lhs, rhs ]
+		(	?(op == lhs[0])
+			-> [ op ].concat(lhs.slice(1), [rhs])
+		|	-> [ op, lhs, rhs ]
+		)
 	|	FilterLogicalExpression
 	,
 
