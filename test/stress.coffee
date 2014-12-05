@@ -1,5 +1,5 @@
-assert = require('assert')
-test = require('./test')
+test = require './test'
+assert = require 'assert'
 
 filterString = [1..2000].map((i) -> 'id eq ' + i).join(' or ')
 test '/resource?$filter=' + filterString, 'OData', (result) ->
