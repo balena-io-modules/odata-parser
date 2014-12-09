@@ -214,83 +214,42 @@ test '/resource?$filter=(Price div Price) mul 5 gt 10', 'OData', (result) ->
 	it 'rhr should be 10', ->
 		assert.equal(result.options.$filter[2], 10)
 
+methodTest = (args, argsTest) ->
+	(methodName, expectFailure) ->
+		test "/resource?$filter=#{methodName}(#{args}) eq 'cake'", 'OData', (result, err) ->
+			if expectFailure
+				it "Should fail because it's invalid", ->
+					assert.notEqual(err, null)
+			else if err
+				throw err
 
-methodTestWithThreeArgs = (methodName, expectFailure) ->
-	test "/resource?$filter=#{methodName}('alfred', Product, 2) eq 'cake'", 'OData', (result, err) ->
-		if expectFailure
-			it "Should fail because it's invalid", ->
-				assert.notEqual(err, null)
-		else if err
-			throw err
+			it 'A filter should be present', ->
+				assert.notEqual(result.options.$filter, null)
 
-		it 'A filter should be present', ->
-			assert.notEqual(result.options.$filter, null)
+			it "Filter should be an instance of 'eq'", ->
+				assert.equal(result.options.$filter[0], 'eq')
 
-		it "Filter should be an instance of 'eq'", ->
-			assert.equal(result.options.$filter[0], 'eq')
+			it 'lhs should be a call', ->
+				assert.equal(result.options.$filter[1][0], 'call')
 
-		it 'lhs should be a call', ->
-			assert.equal(result.options.$filter[1][0], 'call')
+			it "lhs should be #{methodName} with correct args", ->
+				assert.equal(result.options.$filter[1][1].method, methodName)
+				argsTest(result.options.$filter[1][1].args)
 
-		it 'lhs should be ' + methodName + ' with correct args', ->
-			assert.equal(result.options.$filter[1][1].method, methodName)
-			assert.equal(result.options.$filter[1][1].args[0], 'alfred')
-			assert.equal(result.options.$filter[1][1].args[1].name, 'Product')
-			assert.equal(result.options.$filter[1][1].args[2],2)
+			it 'rhs should be cake', ->
+				assert.equal(result.options.$filter[2], 'cake')
 
-		it 'rhs should be cake', ->
-			assert.equal(result.options.$filter[2], 'cake')
+methodTestWithThreeArgs = methodTest "'alfred', Product, 2", (argsResult) ->
+	assert.equal(argsResult[0], 'alfred')
+	assert.equal(argsResult[1].name, 'Product')
+	assert.equal(argsResult[2], 2)
 
+methodTestWithTwoArgs = methodTest "'alfred', Product", (argsResult) ->
+	assert.equal(argsResult[0], 'alfred')
+	assert.equal(argsResult[1].name, 'Product')
 
-methodTestWithTwoArgs = (methodName, expectFailure) ->
-	test "/resource?$filter=#{methodName}('alfred', Product) eq 'cake'", 'OData', (result, err) ->
-		if expectFailure
-			it "Should fail because it's invalid", ->
-				assert.notEqual(err, null)
-		else if err
-			throw err
-
-		it 'A filter should be present', ->
-			assert.notEqual(result.options.$filter, null)
-
-		it "Filter should be an instance of 'eq'", ->
-			assert.equal(result.options.$filter[0], 'eq')
-
-		it 'lhs should be a call', ->
-			assert.equal(result.options.$filter[1][0], 'call')
-
-		it 'lhs should be ' + methodName + ' with correct args', ->
-			assert.equal(result.options.$filter[1][1].method, methodName)
-			assert.equal(result.options.$filter[1][1].args[0], 'alfred')
-			assert.equal(result.options.$filter[1][1].args[1].name, 'Product')
-
-		it 'rhs should be cake', ->
-			assert.equal(result.options.$filter[2], 'cake')
-
-
-methodTestWithOneArg = (methodName, expectFailure) ->
-	test "/resource?$filter=#{methodName}('alfred') eq 'cake'", 'OData', (result, err) ->
-		if expectFailure
-			it "Should fail because it's invalid", ->
-				assert.notEqual(err, null)
-		else if err
-			throw err
-
-		it 'A filter should be present', ->
-			assert.notEqual(result.options.$filter, null)
-
-		it "Filter should be an instance of 'eq'", ->
-			assert.equal(result.options.$filter[0], 'eq')
-
-		it 'lhs should be a call', ->
-			assert.equal(result.options.$filter[1][0], 'call')
-
-		it 'lhs should be ' + methodName + ' with correct args', ->
-			assert.equal(result.options.$filter[1][1].method, methodName)
-			assert.equal(result.options.$filter[1][1].args[0], 'alfred')
-
-		it 'rhs should be cake', ->
-			assert.equal(result.options.$filter[2], 'cake')
+methodTestWithOneArg = methodTest "'alfred'", (argsResult) ->
+	assert.equal(argsResult[0], 'alfred')
 
 
 methodTestWithTwoArgs('substringof')
