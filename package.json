@@ -5,13 +5,17 @@
   "main": "odata-parser.js",
   "scripts": {
     "pretest": "npm run-script prepublish",
-    "test": "mocha",
-    "prepublish": "node node_modules/ometa-js/bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
+    "test": "./node_modules/.bin/mocha",
+    "prepublish": "./node_modules/.bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
   },
   "repository": "git@bitbucket.org:rulemotion/odata-parser.git",
   "author": "",
   "license": "BSD",
   "dependencies": {
     "ometa-js": "~1.3.0"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.8.0",
+    "mocha": "~2.0.1"
   }
 }
