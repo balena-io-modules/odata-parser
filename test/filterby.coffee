@@ -1,8 +1,8 @@
 test = require './test'
 assert = require 'assert'
 
-operandTest = (op) ->
-	test '/resource?$filter=Foo ' + op + ' 2', 'OData', (result) ->
+operandTest = (op, odataValue = 2, value = odataValue) ->
+	test "/resource?$filter=Foo #{op} #{odataValue}", 'OData', (result) ->
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
 
@@ -12,8 +12,8 @@ operandTest = (op) ->
 		it 'lhr should be Foo', ->
 			assert.equal(result.options.$filter[1].name, 'Foo')
 
-		it 'rhr should be 2', ->
-			assert.equal(result.options.$filter[2], 2)
+		it "rhr should be #{value}", ->
+			assert.equal(result.options.$filter[2], value)
 
 operandTest('eq')
 operandTest('ne')
@@ -22,32 +22,10 @@ operandTest('ge')
 operandTest('lt')
 operandTest('le')
 
-test "/resource?$filter=Foo eq 'bar'", 'OData', (result) ->
-	it 'A filter should be present', ->
-		assert.notEqual(result.options.$filter, null)
+operandTest('eq', 2.5)
+operandTest('eq', "'bar'", 'bar')
+operandTest('eq', "'%20'", ' ')
 
-	it "Filter should be an instance of 'eq'", ->
-		assert.equal(result.options.$filter[0], 'eq')
-
-	it 'lhr should be Foo', ->
-		assert.equal(result.options.$filter[1].name, 'Foo')
-
-	it 'rhr should be 2', ->
-		assert.equal(result.options.$filter[2], 'bar')
-
-
-test "/resource?$filter=Foo eq '%20'", 'OData', (result) ->
-	it 'A filter should be present', ->
-		assert.notEqual(result.options.$filter, null)
-
-	it "Filter should be an instance of 'eq'", ->
-		assert.equal(result.options.$filter[0], 'eq')
-
-	it 'lhr should be Foo', ->
-		assert.equal(result.options.$filter[1].name, 'Foo')
-
-	it 'rhr should be 2', ->
-		assert.equal(result.options.$filter[2], ' ')
 
 do ->
 	date = new Date()
@@ -67,20 +45,6 @@ do ->
 	isoDate = encodeURIComponent(date.toISOString())
 	test "/resource?$filter=Foo eq date'#{isoDate}'", 'OData', testFunc
 	test "/resource?$filter=Foo eq datetime'#{isoDate}'", 'OData', testFunc
-
-
-test '/resource?$filter=Foo eq 2.5', 'OData', (result) ->
-	it 'A filter should be present', ->
-		assert.notEqual(result.options.$filter, null)
-
-	it "Filter should be an instance of 'eq'", ->
-		assert.equal(result.options.$filter[0], 'eq')
-
-	it 'lhr should be Foo', ->
-		assert.equal(result.options.$filter[1].name, 'Foo')
-
-	it 'rhr should be 2.5', ->
-		assert.equal(result.options.$filter[2], 2.5)
 
 
 test '/resource?$filter=Price gt 5 and Price lt 10', 'OData', (result) ->
