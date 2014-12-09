@@ -177,6 +177,8 @@ export ometa ODataParser {
 		FilterMethodCallExpression
 	|	FilterNegateExpression
 	|	Number
+	|	Null
+	|	Boolean
 	|	QuotedText
 	|	Date
 	|	LambdaPropertyPath
@@ -431,6 +433,26 @@ export ometa ODataParser {
 	Integer =
 		<digit+>:d
 		-> parseInt(d, 10)
+	,
+
+	Null =
+		seq('null')
+		-> null
+	,
+
+	Boolean =
+			True
+		|	False
+	,
+
+	True =
+		seq('true')
+		-> true
+	,
+
+	False =
+		seq('false')
+		-> false
 	,
 
 	Date =

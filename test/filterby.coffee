@@ -1,7 +1,11 @@
 test = require './test'
 assert = require 'assert'
 
-operandTest = (op, odataValue = 2, value = odataValue) ->
+operandTest = (op, odataValue, value) ->
+	if odataValue is undefined
+		odataValue = 2
+	if value is undefined
+		value = odataValue
 	test "/resource?$filter=Foo #{op} #{odataValue}", 'OData', (result) ->
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
@@ -25,6 +29,9 @@ operandTest('le')
 operandTest('eq', 2.5)
 operandTest('eq', "'bar'", 'bar')
 operandTest('eq', "'%20'", ' ')
+operandTest('eq', true)
+operandTest('eq', false)
+operandTest('eq', null)
 
 
 do ->
