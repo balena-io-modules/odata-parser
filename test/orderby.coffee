@@ -1,13 +1,13 @@
 test = require './test'
 assert = require 'assert'
 
-test '/resource?$orderby=Property', 'OData', (result) ->
+test '$orderby=Property', 'OData', (result) ->
 	it 'sort options are present on the result', ->
 		assert.notEqual(result.options.$orderby, null)
 	it 'sort options have the property specified', ->
 		assert.equal(result.options.$orderby.properties[0].name, 'Property')
 
-test '/resource?$orderby=PropertyOne,PropertyTwo', 'OData', (result) ->
+test '$orderby=PropertyOne,PropertyTwo', 'OData', (result) ->
 	it 'sort options are present on the result', ->
 		assert.notEqual(result.options.$orderby, null)
 	it 'sort options have the first property specified', ->
@@ -16,7 +16,7 @@ test '/resource?$orderby=PropertyOne,PropertyTwo', 'OData', (result) ->
 		assert.equal(result.options.$orderby.properties[1].name, 'PropertyTwo')
 
 
-test '/resource?$orderby=PropertyOne desc', 'OData', (result) ->
+test '$orderby=PropertyOne desc', 'OData', (result) ->
 	it 'sort options are present on the result', ->
 		assert.notEqual(result.options.$orderby, null)
 	it 'sort options have the property specified', ->
@@ -25,7 +25,7 @@ test '/resource?$orderby=PropertyOne desc', 'OData', (result) ->
 		assert.equal(result.options.$orderby.properties[0].order, 'desc')
 
 
-test '/resource?$orderby=PropertyOne%20desc', 'OData', (result) ->
+test '$orderby=PropertyOne%20desc', 'OData', (result) ->
 	it 'sort options are present on the result', ->
 		assert.notEqual(result.options.$orderby, null)
 	it 'sort options have the property specified', ->
@@ -34,7 +34,7 @@ test '/resource?$orderby=PropertyOne%20desc', 'OData', (result) ->
 		assert.equal(result.options.$orderby.properties[0].order, 'desc')
 
 
-test '/resource?$orderby=PropertyOne asc', 'OData', (result) ->
+test '$orderby=PropertyOne asc', 'OData', (result) ->
 	it 'sort options are present on the result', ->
 		assert.notEqual(result.options.$orderby, null)
 	it 'sort options have the property specified', ->
@@ -42,7 +42,7 @@ test '/resource?$orderby=PropertyOne asc', 'OData', (result) ->
 	it 'sort options have the property ordering specified', ->
 		assert.equal(result.options.$orderby.properties[0].order, 'asc')
 
-test '/resource?$orderby=PropertyOne asc,PropertyTwo desc', 'OData', (result) ->
+test '$orderby=PropertyOne asc,PropertyTwo desc', 'OData', (result) ->
 	it 'sort options are present on the result', ->
 		assert.notEqual(result.options.$orderby, null)
 	it 'sort options have property one name specified', ->
@@ -54,7 +54,7 @@ test '/resource?$orderby=PropertyOne asc,PropertyTwo desc', 'OData', (result) ->
 	it 'sort options have the property two ordering specified', ->
 		assert.equal(result.options.$orderby.properties[1].order, 'desc')
 
-test '/resource?$orderby=PropertyOne/SubProperty', 'OData', (result) ->
+test '$orderby=PropertyOne/SubProperty', 'OData', (result) ->
 	it 'sort options are present on the result', ->
 		assert.notEqual(result.options.$orderby, null)
 	it 'sort options have property one name specified', ->

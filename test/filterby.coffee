@@ -6,7 +6,7 @@ operandTest = (op, odataValue, value) ->
 		odataValue = 2
 	if value is undefined
 		value = odataValue
-	test "/resource?$filter=Foo #{op} #{odataValue}", 'OData', (result) ->
+	test "$filter=Foo #{op} #{odataValue}", 'OData', (result) ->
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
 
@@ -50,11 +50,11 @@ do ->
 			assert.equal(result.options.$filter[2] - date, 0)
 
 	isoDate = encodeURIComponent(date.toISOString())
-	test "/resource?$filter=Foo eq date'#{isoDate}'", 'OData', testFunc
-	test "/resource?$filter=Foo eq datetime'#{isoDate}'", 'OData', testFunc
+	test "$filter=Foo eq date'#{isoDate}'", 'OData', testFunc
+	test "$filter=Foo eq datetime'#{isoDate}'", 'OData', testFunc
 
 
-test '/resource?$filter=Price gt 5 and Price lt 10', 'OData', (result) ->
+test '$filter=Price gt 5 and Price lt 10', 'OData', (result) ->
 
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
@@ -75,7 +75,7 @@ test '/resource?$filter=Price gt 5 and Price lt 10', 'OData', (result) ->
 		assert.equal(rhs[2], 10)
 
 
-test '/resource?$filter=Price eq 5 or Price eq 10', 'OData', (result) ->
+test '$filter=Price eq 5 or Price eq 10', 'OData', (result) ->
 
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
@@ -96,7 +96,7 @@ test '/resource?$filter=Price eq 5 or Price eq 10', 'OData', (result) ->
 		assert.equal(rhs[2], 10)
 
 
-test '/resource?$filter=not Published', 'OData', (result) ->
+test '$filter=not Published', 'OData', (result) ->
 
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
@@ -109,7 +109,7 @@ test '/resource?$filter=not Published', 'OData', (result) ->
 		assert.equal(result.options.$filter[1].name, 'Published')
 
 
-test '/resource?$filter=not (Price gt 5)', 'OData', (result) ->
+test '$filter=not (Price gt 5)', 'OData', (result) ->
 
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
@@ -124,7 +124,7 @@ test '/resource?$filter=not (Price gt 5)', 'OData', (result) ->
 		assert.equal(rhs[2], 5)
 
 
-test '/resource?$filter=Price add 5 gt 10', 'OData', (result) ->
+test '$filter=Price add 5 gt 10', 'OData', (result) ->
 
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
@@ -142,7 +142,7 @@ test '/resource?$filter=Price add 5 gt 10', 'OData', (result) ->
 		assert.equal(result.options.$filter[2], 10)
 
 
-test '/resource?$filter=Price sub 5 gt 10', 'OData', (result) ->
+test '$filter=Price sub 5 gt 10', 'OData', (result) ->
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
 
@@ -159,7 +159,7 @@ test '/resource?$filter=Price sub 5 gt 10', 'OData', (result) ->
 		assert.equal(result.options.$filter[2], 10)
 
 
-test '/resource?$filter=Price mul 5 gt 10', 'OData', (result) ->
+test '$filter=Price mul 5 gt 10', 'OData', (result) ->
 
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
@@ -177,7 +177,7 @@ test '/resource?$filter=Price mul 5 gt 10', 'OData', (result) ->
 		assert.equal(result.options.$filter[2], 10)
 
 
-test '/resource?$filter=Price div Price mul 5 gt 10', 'OData', (result) ->
+test '$filter=Price div Price mul 5 gt 10', 'OData', (result) ->
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
 
@@ -200,7 +200,7 @@ test '/resource?$filter=Price div Price mul 5 gt 10', 'OData', (result) ->
 		assert.equal(result.options.$filter[2], 10)
 
 
-test '/resource?$filter=(Price div Price) mul 5 gt 10', 'OData', (result) ->
+test '$filter=(Price div Price) mul 5 gt 10', 'OData', (result) ->
 	it 'A filter should be present', ->
 		assert.notEqual(result.options.$filter, null)
 
@@ -223,7 +223,7 @@ test '/resource?$filter=(Price div Price) mul 5 gt 10', 'OData', (result) ->
 
 methodTest = (args, argsTest) ->
 	(methodName, expectFailure) ->
-		test "/resource?$filter=#{methodName}(#{args}) eq 'cake'", 'OData', (result, err) ->
+		test "$filter=#{methodName}(#{args}) eq 'cake'", 'OData', (result, err) ->
 			if expectFailure
 				it "Should fail because it's invalid", ->
 					assert.notEqual(err, null)
@@ -293,7 +293,7 @@ methodTestWithThreeArgs('indexof', true)
 
 
 lambdaTest = (methodName) ->
-	test "/resource?$filter=child/#{methodName}(d:d/name eq 'cake')", 'OData', (result, err) ->
+	test "$filter=child/#{methodName}(d:d/name eq 'cake')", 'OData', (result, err) ->
 		if err
 			throw err
 

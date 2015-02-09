@@ -1,6 +1,8 @@
 test = require './test'
 assert = require 'assert'
 
+test = test.raw
+
 test '/', 'OData', (result) ->
 	it 'Service root should point to $serviceroot', ->
 		assert.equal(result.resource, '$serviceroot')
