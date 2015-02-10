@@ -19,5 +19,3 @@ module.exports = (test) ->
 		test '$inlinecount=flibble', 'OData', (result) ->
 			it 'inline should be specified', ->
 				assert.equal(result.options.$inlinecount, '')
-
-module.exports(require './test')

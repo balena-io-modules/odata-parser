@@ -326,5 +326,3 @@ module.exports = (test) ->
 
 		lambdaTest('any')
 		lambdaTest('all')
-
-module.exports(require './test')

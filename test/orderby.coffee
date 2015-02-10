@@ -62,5 +62,3 @@ module.exports = (test) ->
 				assert.equal(result.options.$orderby.properties[0].name, 'PropertyOne')
 			it "sort options have property one's sub property specified", ->
 				assert.equal(result.options.$orderby.properties[0].property.name, 'SubProperty')
-
-module.exports(require './test')

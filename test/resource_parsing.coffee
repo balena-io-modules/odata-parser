@@ -1,7 +1,5 @@
-test = require './test'
+test = require('./test').raw
 assert = require 'assert'
-
-test = test.raw
 
 describe 'Resource Parsing', ->
 	test '/', 'OData', (result) ->

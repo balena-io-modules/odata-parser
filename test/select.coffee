@@ -1,4 +1,3 @@
-test = require './test'
 assert = require 'assert'
 
 module.exports = (test) ->
@@ -26,5 +25,3 @@ module.exports = (test) ->
 				assert.notEqual(result.options.$select,null)
 			it 'property name is *', ->
 					assert.equal(result.options.$select, '*')
-
-module.exports(require './test')
