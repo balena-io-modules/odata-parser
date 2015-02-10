@@ -48,14 +48,10 @@
             });
         },
         QueryOptions: function() {
-            var $elf = this, _fromIdx = this.input.idx, options, optionsObj;
+            var $elf = this, _fromIdx = this.input.idx, options;
             this._applyWithArgs("exactly", "?");
             options = this._applyWithArgs("listOf", "QueryOption", "&");
-            optionsObj = {};
-            (function() {
-                for (var i in options) optionsObj[options[i].name] = options[i].value;
-            }).call(this);
-            return optionsObj;
+            return this._applyWithArgs("ParseOptionsObject", options);
         },
         QueryOption: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -180,7 +176,7 @@
         ExpandOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties;
             this._applyWithArgs("RecognisedOption", "$expand=");
-            properties = this._apply("PropertyPathList");
+            properties = this._apply("ExpandPropertyPathList");
             return {
                 name: "$expand",
                 value: {
@@ -657,6 +653,51 @@
                 property: next
             };
         },
+        ExpandPropertyPathList: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("listOf", "ExpandPropertyPath", ",");
+        },
+        ExpandPropertyPath: function() {
+            var $elf = this, _fromIdx = this.input.idx, next, options, optionsObj, resource;
+            resource = this._apply("ResourceName");
+            this._opt(function() {
+                this._applyWithArgs("exactly", "(");
+                options = this._applyWithArgs("listOf", "ExpandPathOption", "&");
+                optionsObj = this._applyWithArgs("ParseOptionsObject", options);
+                return this._applyWithArgs("exactly", ")");
+            });
+            this._opt(function() {
+                this._applyWithArgs("exactly", "/");
+                return next = this._apply("PropertyPath");
+            });
+            return {
+                name: resource,
+                property: next,
+                options: optionsObj
+            };
+        },
+        ExpandPathOption: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._apply("SortOption");
+            }, function() {
+                return this._apply("TopOption");
+            }, function() {
+                return this._apply("SkipOption");
+            }, function() {
+                return this._apply("ExpandOption");
+            }, function() {
+                return this._apply("InlineCountOption");
+            }, function() {
+                return this._apply("FilterByOption");
+            }, function() {
+                return this._apply("FormatOption");
+            }, function() {
+                return this._apply("SelectOption");
+            }, function() {
+                return this._apply("OperationParam");
+            });
+        },
         LambdaPropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, lambda, next, resource;
             resource = this._apply("ResourceName");
@@ -1041,6 +1082,11 @@
             });
         }
     });
+    ODataParser.ParseOptionsObject = function(options) {
+        var optionsObj = {};
+        for (var i in options) optionsObj[options[i].name] = options[i].value;
+        return optionsObj;
+    };
     ODataParser.numberOf = function(rule, count, separator) {
         for (var ret = [], i = 1; count > i; i++) {
             ret.push(this._apply(rule));
