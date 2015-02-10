@@ -16,12 +16,7 @@ export ometa ODataParser {
 	QueryOptions =
 		'?'
 		listOf(`QueryOption, '&'):options
-		{{}}:optionsObj
-		{	for(var i in options) {
-				optionsObj[options[i].name] = options[i].value;
-			}
-		}
-		-> optionsObj
+		ParseOptionsObject(options)
 	,
 
 	QueryOption =
@@ -81,7 +76,7 @@ export ometa ODataParser {
 
 	ExpandOption =
 		RecognisedOption('$expand=')
-		PropertyPathList:properties
+		ExpandPropertyPathList:properties
 		-> { name: '$expand', value: { properties: properties } }
 	,
 
@@ -358,6 +353,33 @@ export ometa ODataParser {
 		)?
 		-> { name: resource, property: next}
 	,
+	ExpandPropertyPathList =
+		listOf(`ExpandPropertyPath, ',')
+	,
+	ExpandPropertyPath =
+		ResourceName:resource
+		(	'('
+			listOf(`ExpandPathOption, '&'):options
+			ParseOptionsObject(options):optionsObj
+			')'
+		)?
+		(	'/'
+			PropertyPath:next
+		)?
+		-> { name: resource, property: next, options: optionsObj}
+	,
+	ExpandPathOption =
+			SortOption
+		|	TopOption
+		|	SkipOption
+		|	ExpandOption
+		|	InlineCountOption
+		|	FilterByOption
+		|	FormatOption
+		|	SelectOption
+		|	OperationParam
+	,
+
 	LambdaPropertyPath =
 		ResourceName:resource
 		'/'
@@ -504,6 +526,14 @@ export ometa ODataParser {
 			^space
 		|	seq('%20')
 			-> ' '
+}
+
+ODataParser.ParseOptionsObject = function(options) {
+	var optionsObj = {};
+	for(var i in options) {
+		optionsObj[options[i].name] = options[i].value;
+	}
+	return optionsObj;
 }
 
 ODataParser.numberOf = function(rule, count, separator) {
