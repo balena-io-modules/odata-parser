@@ -1059,11 +1059,21 @@
             }.call(this);
         },
         QuotedText: function() {
-            var $elf = this, _fromIdx = this.input.idx, t;
+            var $elf = this, _fromIdx = this.input.idx, text;
             this._apply("Apostrophe");
-            t = this._apply("Text");
+            text = this._many(function() {
+                return this._or(function() {
+                    this._apply("Apostrophe");
+                    return this._apply("Apostrophe");
+                }, function() {
+                    this._not(function() {
+                        return this._apply("Apostrophe");
+                    });
+                    return this.anything();
+                });
+            });
             this._apply("Apostrophe");
-            return t;
+            return decodeURIComponent(text.join(""));
         },
         space: function() {
             var $elf = this, _fromIdx = this.input.idx;
