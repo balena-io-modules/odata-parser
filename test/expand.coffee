@@ -20,19 +20,22 @@ module.exports = testExpands = (test, nested = 1) ->
 					assert.equal(result.options.$expand.properties[1].name, 'Suppliers')
 
 		if nested > 0
-			testExpandOption = (input, entry, expectation) ->
+			testExpandOption = (test, input, entry, expectation) ->
 				test "$expand=Products(#{input})", entry, (result) ->
 					it 'has an $expand value', ->
 						assert.notEqual(result.options.$expand, null)
 					it 'has a resource of Products', ->
 						assert.equal(result.options.$expand.properties[0].name, 'Products')
 					expectation(result.options.$expand.properties[0])
+			nestedTest = testExpandOption.bind(null, test)
+			nestedTest.skip = testExpandOption.bind(null, test.skip)
+			nestedTest.only = testExpandOption.bind(null, test.only)
 
-			require('./filterby')(testExpandOption)
-			require('./format')(testExpandOption)
-			require('./orderby')(testExpandOption)
-			require('./paging')(testExpandOption)
-			require('./select')(testExpandOption)
-			testExpands(testExpandOption, nested - 1)
+			require('./filterby')(nestedTest)
+			require('./format')(nestedTest)
+			require('./orderby')(nestedTest)
+			require('./paging')(nestedTest)
+			require('./select')(nestedTest)
+			testExpands(nestedTest, nested - 1)
 
 testExpands(require './test')

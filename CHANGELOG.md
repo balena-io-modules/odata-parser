@@ -1,3 +1,4 @@
+* Allow `test.only`/`test.skip` to work with expand tests.
 * Fix nested expand tests not actually testing nested expands.
 
 v0.1.3
