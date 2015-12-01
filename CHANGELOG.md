@@ -1,3 +1,4 @@
+* Added tests for grandchild lambdas.
 * Allow `test.only`/`test.skip` to work with expand tests.
 * Fix nested expand tests not actually testing nested expands.
 
