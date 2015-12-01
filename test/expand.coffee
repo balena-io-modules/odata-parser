@@ -33,6 +33,6 @@ module.exports = testExpands = (test, nested = 1) ->
 			require('./orderby')(testExpandOption)
 			require('./paging')(testExpandOption)
 			require('./select')(testExpandOption)
-			testExpands(test, nested - 1)
+			testExpands(testExpandOption, nested - 1)
 
 testExpands(require './test')

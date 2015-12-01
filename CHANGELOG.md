@@ -1,3 +1,5 @@
+* Fix nested expand tests not actually testing nested expands.
+
 v0.1.3
 
 * Added support for brackets (and a bunch of other chars), as well as '', in quoted text.
