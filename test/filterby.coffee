@@ -296,6 +296,27 @@ module.exports = (test) ->
 
 
 		lambdaTest = (methodName) ->
+			lambdaAsserts = (lambda) ->
+				it 'where it is a lambda', ->
+					assert.notEqual(lambda, null)
+
+				it "of type '#{methodName}'", ->
+					assert.equal(lambda.method, methodName)
+
+				it "with the element identified by 'd'", ->
+					assert.equal(lambda.identifier, 'd')
+
+				it 'and an expression that is d/name', ->
+					assert.equal(lambda.expression[1].name, 'd')
+					assert.equal(lambda.expression[1].property.name, 'name')
+					assert.equal(lambda.expression[1].property.property, null)
+
+				it "'eq'", ->
+					assert.equal(lambda.expression[0], 'eq')
+
+				it "'cake'", ->
+					assert.equal(lambda.expression[2], 'cake')
+
 			test "$filter=child/#{methodName}(d:d/name eq 'cake')", 'OData', (result, err) ->
 				if err
 					throw err
@@ -306,25 +327,21 @@ module.exports = (test) ->
 				it 'Filter should be on the child resource', ->
 					assert.equal(result.options.$filter.name, 'child')
 
-				it 'where it is a lambda', ->
-					assert.notEqual(result.options.$filter.lambda, null)
+				lambdaAsserts(result.options.$filter.lambda)
 
-				it "of type '#{methodName}'", ->
-					assert.equal(result.options.$filter.lambda.method, methodName)
+			test "$filter=child/grandchild/#{methodName}(d:d/name eq 'cake')", 'OData', (result, err) ->
+				if err
+					throw err
 
-				it "with the element identified by 'd'", ->
-					assert.equal(result.options.$filter.lambda.identifier, 'd')
+				it 'A filter should be present', ->
+					assert.notEqual(result.options.$filter, null)
 
-				it 'and an expression that is d/name', ->
-					assert.equal(result.options.$filter.lambda.expression[1].name, 'd')
-					assert.equal(result.options.$filter.lambda.expression[1].property.name, 'name')
-					assert.equal(result.options.$filter.lambda.expression[1].property.property, null)
+				it 'Filter should be on the child/grandchild resource', ->
+					assert.equal(result.options.$filter.name, 'child')
+					assert.notEqual(result.options.$filter.property, null)
+					assert.equal(result.options.$filter.property.name, 'grandchild')
 
-				it "'eq'", ->
-					assert.equal(result.options.$filter.lambda.expression[0], 'eq')
-
-				it "'cake'", ->
-					assert.equal(result.options.$filter.lambda.expression[2], 'cake')
+				lambdaAsserts(result.options.$filter.property.lambda)
 
 		lambdaTest('any')
 		lambdaTest('all')

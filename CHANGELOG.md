@@ -1,3 +1,7 @@
+* Added tests for grandchild lambdas.
+* Allow `test.only`/`test.skip` to work with expand tests.
+* Fix nested expand tests not actually testing nested expands.
+
 v0.1.3
 
 * Added support for brackets (and a bunch of other chars), as well as '', in quoted text.
