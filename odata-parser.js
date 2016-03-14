@@ -626,7 +626,7 @@
             }.call(this);
             this._applyWithArgs("exactly", "(");
             this._apply("spaces");
-            identifier = this.anything();
+            identifier = this._apply("ResourceName");
             this._applyWithArgs("exactly", ":");
             expression = this._apply("FilterByExpression");
             this._apply("spaces");
