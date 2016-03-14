@@ -5,9 +5,10 @@ raw = (describe, input, entry, expectation) ->
 	describe "Parsing #{input}", ->
 		try
 			result = parser.matchAll(input, entry)
-			expectation(result)
 		catch e
 			expectation(e)
+			return
+		expectation(result)
 
 runExpectation = (args...) ->
 	args[1] = '/resource?' + args[1]

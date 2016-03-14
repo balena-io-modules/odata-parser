@@ -335,7 +335,7 @@ export ometa ODataParser {
 		):name
 		'('
 			spaces
-			anything:identifier
+			ResourceName:identifier
 			':'
 			FilterByExpression:expression
 			spaces
