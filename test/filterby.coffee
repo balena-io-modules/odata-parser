@@ -296,18 +296,18 @@ module.exports = (test) ->
 
 
 		lambdaTest = (methodName) ->
-			lambdaAsserts = (lambda) ->
+			lambdaAsserts = (lambda, alias = 'd') ->
 				it 'where it is a lambda', ->
 					assert.notEqual(lambda, null)
 
 				it "of type '#{methodName}'", ->
 					assert.equal(lambda.method, methodName)
 
-				it "with the element identified by 'd'", ->
-					assert.equal(lambda.identifier, 'd')
+				it "with the element identified by '#{alias}'", ->
+					assert.equal(lambda.identifier, alias)
 
 				it 'and an expression that is d/name', ->
-					assert.equal(lambda.expression[1].name, 'd')
+					assert.equal(lambda.expression[1].name, alias)
 					assert.equal(lambda.expression[1].property.name, 'name')
 					assert.equal(lambda.expression[1].property.property, null)
 
@@ -328,6 +328,18 @@ module.exports = (test) ->
 					assert.equal(result.options.$filter.name, 'child')
 
 				lambdaAsserts(result.options.$filter.lambda)
+
+			test "$filter=child/#{methodName}(long_name:long_name/name eq 'cake')", 'OData', (result, err) ->
+				if err
+					throw err
+
+				it 'A filter should be present', ->
+					assert.notEqual(result.options.$filter, null)
+
+				it 'Filter should be on the child resource', ->
+					assert.equal(result.options.$filter.name, 'child')
+
+				lambdaAsserts(result.options.$filter.lambda, 'long_name')
 
 			test "$filter=child/grandchild/#{methodName}(d:d/name eq 'cake')", 'OData', (result, err) ->
 				if err
