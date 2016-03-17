@@ -1,6 +1,10 @@
 export ometa ODataParser {
 
-	Process = OData,
+	Process =
+		{this.reset()}
+		OData:tree
+		-> { tree: tree, binds: this.binds }
+	,
 	ProcessRule =
 		anything:rule
 		[	apply(rule):result
@@ -185,11 +189,11 @@ export ometa ODataParser {
 	FilterByValue =
 		FilterMethodCallExpression
 	|	FilterNegateExpression
-	|	Number
+	|	NumberBind
 	|	Null
-	|	Boolean
-	|	QuotedText
-	|	Date
+	|	BooleanBind
+	|	QuotedTextBind
+	|	DateBind
 	|	Duration
 	|	LambdaPropertyPath
 	|	PropertyPath
@@ -448,8 +452,8 @@ export ometa ODataParser {
 	,
 	Key =
 		'('
-		(	Number
-		|	QuotedText
+		(	NumberBind
+		|	QuotedTextBind
 		):key
 		')'
 		-> key
@@ -547,16 +551,6 @@ export ometa ODataParser {
 		-> false
 	,
 
-	Date =
-		(	seq('datetime')
-		|	seq('date')
-		)
-		QuotedText:date
-		{Date.parse(date)}:date
-		?(!isNaN(date))
-		-> new Date(date)
-	,
-
 	Duration =
 		seq('duration')
 		Apostrophe
@@ -651,7 +645,43 @@ export ometa ODataParser {
 			^space
 		|	seq('%20')
 			-> ' '
+	,
+
+	Bind :type :value =
+		{this.binds.push([type, value])}
+		-> { bind: this.binds.length - 1 }
+	,
+
+	NumberBind =
+		Number:n
+		Bind('Real', n)
+	,
+
+	DateBind =
+		(	seq('datetime')
+			-> 'Date Time'
+		|	seq('date')
+			-> 'Date'
+		):type
+		QuotedText:date
+		{Date.parse(date)}:date
+		?(!isNaN(date))
+		Bind(type, date)
+	,
+
+	BooleanBind =
+		Boolean:b
+		Bind('Boolean', b)
+	,
+
+	QuotedTextBind =
+		QuotedText:t
+		Bind('Text', t)
 }
+
+ODataParser.initialize = ODataParser.reset = function() {
+	this.binds = [];
+};
 
 ODataParser.ParseOptionsObject = function(options) {
 	var optionsObj = {};
@@ -659,7 +689,7 @@ ODataParser.ParseOptionsObject = function(options) {
 		optionsObj[options[i].name] = options[i].value;
 	}
 	return optionsObj;
-}
+};
 
 ODataParser.numberOf = function(rule, count, separator) {
 	if(count === 0) {
@@ -674,7 +704,7 @@ ODataParser.numberOf = function(rule, count, separator) {
 	}
 	ret.push(this._apply(rule));
 	return ret;
-}
+};
 
 ODataParser._enableTokens = function() {
 	OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterAndOperand', 'FilterByOperand', 'FilterRecognisedMathOperand']);

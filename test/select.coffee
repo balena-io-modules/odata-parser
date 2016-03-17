@@ -2,7 +2,7 @@ assert = require 'assert'
 
 module.exports = (test) ->
 	describe '$select', ->
-		test '$select=category/person', 'OData', (result) ->
+		test '$select=category/person', (result) ->
 			it 'has a $select value', ->
 				assert.notEqual(result.options.$select, null)
 			it 'resource is category', ->
@@ -10,7 +10,7 @@ module.exports = (test) ->
 			it 'property is person', ->
 				assert.equal(result.options.$select.properties[0].property.name, 'person')
 
-		test '$select=category/person,animal', 'OData', (result) ->
+		test '$select=category/person,animal', (result) ->
 			it 'has a $select value', ->
 				assert.notEqual(result.options.$select, null)
 			it 'resource is category', ->
@@ -20,7 +20,7 @@ module.exports = (test) ->
 			it 'resource has animal', ->
 				assert.equal(result.options.$select.properties[1].name, 'animal')
 
-		test '$select=*', 'OData', (result) ->
+		test '$select=*', (result) ->
 			it 'has a $select value', ->
 				assert.notEqual(result.options.$select, null)
 			it 'property name is *', ->

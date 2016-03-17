@@ -3,7 +3,7 @@ assert = require 'assert'
 # We default to testing 1 level of expand options, this can be increased to test multiple levels
 module.exports = testExpands = (test, nested = 1) ->
 	describe '$expand', ->
-		test '$expand=Products/Suppliers', 'OData', (result) ->
+		test '$expand=Products/Suppliers', (result) ->
 			it 'has an $expand value', ->
 				assert.notEqual(result.options.$expand, null)
 			it 'has a resource of Products', ->
@@ -11,7 +11,7 @@ module.exports = testExpands = (test, nested = 1) ->
 			it 'has a child path of Suppliers', ->
 				assert.equal(result.options.$expand.properties[0].property.name, 'Suppliers')
 
-		test '$expand=Products,Suppliers', 'OData', (result) ->
+		test '$expand=Products,Suppliers', (result) ->
 			it 'has an $expand value', ->
 				assert.notEqual(result.options.$expand, null)
 			it 'has a resource of Products', ->
@@ -19,7 +19,7 @@ module.exports = testExpands = (test, nested = 1) ->
 			it 'has a resource of Suppliers', ->
 				assert.equal(result.options.$expand.properties[1].name, 'Suppliers')
 
-		test '$expand=Products/$count', 'OData', (result) ->
+		test '$expand=Products/$count', (result) ->
 			it 'has an $expand value', ->
 				assert.notEqual(result.options.$expand, null)
 			it 'has a resource of Products', ->
@@ -28,8 +28,8 @@ module.exports = testExpands = (test, nested = 1) ->
 				assert.equal(result.options.$expand.properties[0].count, true)
 
 		if nested > 0
-			testExpandOption = (test, input, entry, expectation) ->
-				test "$expand=Products(#{input})", entry, (result) ->
+			testExpandOption = (test, input, optArgs..., expectation) ->
+				test "$expand=Products(#{input})", optArgs..., (result) ->
 					it 'has an options property', ->
 						assert.notEqual(result.options, null)
 					it 'has an $expand value', ->
@@ -38,8 +38,8 @@ module.exports = testExpands = (test, nested = 1) ->
 						assert.equal(result.options.$expand.properties[0].name, 'Products')
 					expectation(result.options?.$expand?.properties?[0])
 
-			testExpandOptionCount = (test, input, entry, expectation) ->
-				test "$expand=Products/$count(#{input})", entry, (result) ->
+			testExpandOptionCount = (test, input, optArgs..., expectation) ->
+				test "$expand=Products/$count(#{input})", optArgs..., (result) ->
 					it 'has an options property', ->
 						assert.notEqual(result.options, null)
 					it 'has an $expand value', ->

@@ -1,3 +1,5 @@
+* Return the odata tree and bindings separately, so that is is possible to easily reuse trees even when bindings change.
+
 v0.1.10
 
 * Added the ability to process only a given rule, making sure the rule is successful.
