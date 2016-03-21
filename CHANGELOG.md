@@ -1,3 +1,4 @@
+* Added all OData 4 functions.
 * Added a boolean property filter test.
 
 v0.1.5
