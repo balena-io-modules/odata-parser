@@ -99,6 +99,15 @@ module.exports = (test) ->
 			assert.equal(rhs[2], 10)
 
 
+	test '$filter=Published', 'OData', (result) ->
+
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
+
+		it "value should be 'Published'", ->
+			assert.equal(result.options.$filter.name, 'Published')
+
+
 	test '$filter=not Published', 'OData', (result) ->
 
 		it 'A filter should be present', ->
@@ -106,7 +115,6 @@ module.exports = (test) ->
 
 		it "Filter should be an instance of 'not'", ->
 			assert.equal(result.options.$filter[0], 'not')
-
 
 		it "value should be 'Published'", ->
 			assert.equal(result.options.$filter[1].name, 'Published')
