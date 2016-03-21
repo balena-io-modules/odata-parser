@@ -1,3 +1,5 @@
+* Added a boolean property filter test.
+
 v0.1.5
 
 * Allowed a lambda alias to be any valid resource name and to be only a valid resource name, rather than any single character.
