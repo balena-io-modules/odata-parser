@@ -223,61 +223,65 @@ export ometa ODataParser {
 	,
 
 	FilterMethodCallExpression =
-		(	SubstringOfMethodCall
+		(	ContainsMethodCall
 		|	EndsWithMethodCall
 		|	StartsWithMethodCall
 		|	LengthMethodCall
 		|	IndexOfMethodCall
-		|	ReplaceMethodCall
 		|	SubstringMethodCall
-		|	TolowerMethodCall
-		|	ToupperMethodCall
+		|	ToLowerMethodCall
+		|	ToUpperMethodCall
 		|	TrimMethodCall
 		|	ConcatMethodCall
+		|	YearMethodCall
+		|	MonthMethodCall
 		|	DayMethodCall
 		|	HourMethodCall
 		|	MinuteMethodCall
-		|	MonthMethodCall
 		|	SecondMethodCall
-		|	YearMethodCall
+		|	FractionalSecondsMethodCall
+		|	DateMethodCall
+		|	TimeMethodCall
+		|	TotalOffsetMinutesMethodCall
+		|	NowMethodCall
+		|	MaxDateTimeMethodCall
+		|	MinDateTimeMethodCall
+		|	TotalSecondsMethodCall
 		|	RoundMethodCall
 		|	FloorMethodCall
 		|	CeilingMethodCall
 		|	IsOfMethodCall
+		|	CastMethodCall
+		// OData < v4
+		|	SubstringOfMethodCall
+		|	ReplaceMethodCall
 		):method
 		-> [ 'call', method ]
 	,
 
-	SubstringOfMethodCall =
-		MethodCall('substringof', 2)
+	ContainsMethodCall =
+		MethodCall('contains', 2)
 	,
-
 	EndsWithMethodCall =
 		MethodCall('endswith', 2)
 	,
-
 	StartsWithMethodCall =
 		MethodCall('startswith', 2)
 	,
-
 	LengthMethodCall =
 		MethodCall('length', 1)
 	,
-
 	IndexOfMethodCall =
 		MethodCall('indexof', 2)
-	,
-	ReplaceMethodCall =
-		MethodCall('replace', 3)
 	,
 	SubstringMethodCall =
 		MethodCall('substring', 2)
 	|	MethodCall('substring', 3)
 	,
-	TolowerMethodCall =
+	ToLowerMethodCall =
 		MethodCall('tolower', 1)
 	,
-	ToupperMethodCall =
+	ToUpperMethodCall =
 		MethodCall('toupper', 1)
 	,
 	TrimMethodCall =
@@ -285,6 +289,12 @@ export ometa ODataParser {
 	,
 	ConcatMethodCall =
 		MethodCall('concat', 2)
+	,
+	YearMethodCall =
+		MethodCall('year', 1)
+	,
+	MonthMethodCall =
+		MethodCall('month', 1)
 	,
 	DayMethodCall =
 		MethodCall('day', 2)
@@ -295,14 +305,32 @@ export ometa ODataParser {
 	MinuteMethodCall =
 		MethodCall('minute', 1)
 	,
-	MonthMethodCall =
-		MethodCall('month', 1)
-	,
 	SecondMethodCall =
 		MethodCall('second', 1)
 	,
-	YearMethodCall =
-		MethodCall('year', 1)
+	FractionalSecondsMethodCall =
+		MethodCall('fractionalseconds', 1)
+	,
+	DateMethodCall =
+		MethodCall('date', 1)
+	,
+	TimeMethodCall =
+		MethodCall('time', 1)
+	,
+	TotalOffsetMinutesMethodCall =
+		MethodCall('totaloffsetminutes', 1)
+	,
+	NowMethodCall =
+		MethodCall('now', 1)
+	,
+	MaxDateTimeMethodCall =
+		MethodCall('maxdatetime', 1)
+	,
+	MinDateTimeMethodCall =
+		MethodCall('mindatetime', 1)
+	,
+	TotalSecondsMethodCall =
+		MethodCall('totalseconds', 1)
 	,
 	RoundMethodCall =
 		MethodCall('round', 1)
@@ -313,10 +341,20 @@ export ometa ODataParser {
 	CeilingMethodCall =
 		MethodCall('ceiling', 1)
 	,
-
 	IsOfMethodCall =
 			MethodCall('isof', 1)
 		|	MethodCall('isof', 2)
+	,
+	CastMethodCall =
+			MethodCall('cast', 1)
+		|	MethodCall('cast', 2)
+	,
+
+	SubstringOfMethodCall =
+		MethodCall('substringof', 2)
+	,
+	ReplaceMethodCall =
+		MethodCall('replace', 3)
 	,
 
 	MethodCall :name :arity =
