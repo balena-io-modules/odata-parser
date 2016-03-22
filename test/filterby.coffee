@@ -269,6 +269,9 @@ module.exports = (test) ->
 		methodTestWithOneArg = methodTest "'alfred'", (argsResult) ->
 			assert.equal(argsResult[0], 'alfred')
 
+		methodTestWithZeroArg = methodTest '', (argsResult) ->
+			assert.equal(argsResult.length, 0)
+
 
 		methodTestWithTwoArgs('contains')
 		methodTestWithTwoArgs('endswith')
@@ -291,9 +294,9 @@ module.exports = (test) ->
 		methodTestWithOneArg('date')
 		methodTestWithOneArg('time')
 		methodTestWithOneArg('totaloffsetminutes')
-		methodTestWithOneArg('now')
-		methodTestWithOneArg('maxdatetime')
-		methodTestWithOneArg('mindatetime')
+		methodTestWithZeroArg('now')
+		methodTestWithZeroArg('maxdatetime')
+		methodTestWithZeroArg('mindatetime')
 		methodTestWithOneArg('totalseconds')
 		methodTestWithOneArg('round')
 		methodTestWithOneArg('floor')

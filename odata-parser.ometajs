@@ -321,13 +321,13 @@ export ometa ODataParser {
 		MethodCall('totaloffsetminutes', 1)
 	,
 	NowMethodCall =
-		MethodCall('now', 1)
+		MethodCall('now', 0)
 	,
 	MaxDateTimeMethodCall =
-		MethodCall('maxdatetime', 1)
+		MethodCall('maxdatetime', 0)
 	,
 	MinDateTimeMethodCall =
-		MethodCall('mindatetime', 1)
+		MethodCall('mindatetime', 0)
 	,
 	TotalSecondsMethodCall =
 		MethodCall('totalseconds', 1)
@@ -578,6 +578,9 @@ ODataParser.ParseOptionsObject = function(options) {
 }
 
 ODataParser.numberOf = function(rule, count, separator) {
+	if(count === 0) {
+		return [];
+	}
 	var ret = [];
 	for(var i = 1; i < count; i++) {
 		ret.push(this._apply(rule));
