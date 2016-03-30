@@ -453,7 +453,7 @@
         FilterMethodCallExpression: function() {
             var $elf = this, _fromIdx = this.input.idx, method;
             method = this._or(function() {
-                return this._apply("SubstringOfMethodCall");
+                return this._apply("ContainsMethodCall");
             }, function() {
                 return this._apply("EndsWithMethodCall");
             }, function() {
@@ -463,17 +463,19 @@
             }, function() {
                 return this._apply("IndexOfMethodCall");
             }, function() {
-                return this._apply("ReplaceMethodCall");
-            }, function() {
                 return this._apply("SubstringMethodCall");
             }, function() {
-                return this._apply("TolowerMethodCall");
+                return this._apply("ToLowerMethodCall");
             }, function() {
-                return this._apply("ToupperMethodCall");
+                return this._apply("ToUpperMethodCall");
             }, function() {
                 return this._apply("TrimMethodCall");
             }, function() {
                 return this._apply("ConcatMethodCall");
+            }, function() {
+                return this._apply("YearMethodCall");
+            }, function() {
+                return this._apply("MonthMethodCall");
             }, function() {
                 return this._apply("DayMethodCall");
             }, function() {
@@ -481,11 +483,23 @@
             }, function() {
                 return this._apply("MinuteMethodCall");
             }, function() {
-                return this._apply("MonthMethodCall");
-            }, function() {
                 return this._apply("SecondMethodCall");
             }, function() {
-                return this._apply("YearMethodCall");
+                return this._apply("FractionalSecondsMethodCall");
+            }, function() {
+                return this._apply("DateMethodCall");
+            }, function() {
+                return this._apply("TimeMethodCall");
+            }, function() {
+                return this._apply("TotalOffsetMinutesMethodCall");
+            }, function() {
+                return this._apply("NowMethodCall");
+            }, function() {
+                return this._apply("MaxDateTimeMethodCall");
+            }, function() {
+                return this._apply("MinDateTimeMethodCall");
+            }, function() {
+                return this._apply("TotalSecondsMethodCall");
             }, function() {
                 return this._apply("RoundMethodCall");
             }, function() {
@@ -494,12 +508,18 @@
                 return this._apply("CeilingMethodCall");
             }, function() {
                 return this._apply("IsOfMethodCall");
+            }, function() {
+                return this._apply("CastMethodCall");
+            }, function() {
+                return this._apply("SubstringOfMethodCall");
+            }, function() {
+                return this._apply("ReplaceMethodCall");
             });
             return [ "call", method ];
         },
-        SubstringOfMethodCall: function() {
+        ContainsMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "substringof", 2);
+            return this._applyWithArgs("MethodCall", "contains", 2);
         },
         EndsWithMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -517,10 +537,6 @@
             var $elf = this, _fromIdx = this.input.idx;
             return this._applyWithArgs("MethodCall", "indexof", 2);
         },
-        ReplaceMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "replace", 3);
-        },
         SubstringMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
@@ -529,11 +545,11 @@
                 return this._applyWithArgs("MethodCall", "substring", 3);
             });
         },
-        TolowerMethodCall: function() {
+        ToLowerMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._applyWithArgs("MethodCall", "tolower", 1);
         },
-        ToupperMethodCall: function() {
+        ToUpperMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._applyWithArgs("MethodCall", "toupper", 1);
         },
@@ -545,9 +561,17 @@
             var $elf = this, _fromIdx = this.input.idx;
             return this._applyWithArgs("MethodCall", "concat", 2);
         },
+        YearMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "year", 1);
+        },
+        MonthMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "month", 1);
+        },
         DayMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "day", 2);
+            return this._applyWithArgs("MethodCall", "day", 1);
         },
         HourMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -557,17 +581,41 @@
             var $elf = this, _fromIdx = this.input.idx;
             return this._applyWithArgs("MethodCall", "minute", 1);
         },
-        MonthMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "month", 1);
-        },
         SecondMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._applyWithArgs("MethodCall", "second", 1);
         },
-        YearMethodCall: function() {
+        FractionalSecondsMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "year", 1);
+            return this._applyWithArgs("MethodCall", "fractionalseconds", 1);
+        },
+        DateMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "date", 1);
+        },
+        TimeMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "time", 1);
+        },
+        TotalOffsetMinutesMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "totaloffsetminutes", 1);
+        },
+        NowMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "now", 0);
+        },
+        MaxDateTimeMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "maxdatetime", 0);
+        },
+        MinDateTimeMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "mindatetime", 0);
+        },
+        TotalSecondsMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "totalseconds", 1);
         },
         RoundMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -588,6 +636,22 @@
             }, function() {
                 return this._applyWithArgs("MethodCall", "isof", 2);
             });
+        },
+        CastMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                return this._applyWithArgs("MethodCall", "cast", 1);
+            }, function() {
+                return this._applyWithArgs("MethodCall", "cast", 2);
+            });
+        },
+        SubstringOfMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "substringof", 2);
+        },
+        ReplaceMethodCall: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._applyWithArgs("MethodCall", "replace", 3);
         },
         MethodCall: function(name, arity) {
             var $elf = this, _fromIdx = this.input.idx, args;
@@ -1098,6 +1162,7 @@
         return optionsObj;
     };
     ODataParser.numberOf = function(rule, count, separator) {
+        if (0 === count) return [];
         for (var ret = [], i = 1; count > i; i++) {
             ret.push(this._apply(rule));
             this._apply("spaces");
