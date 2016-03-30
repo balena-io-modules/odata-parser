@@ -286,7 +286,7 @@ module.exports = (test) ->
 		methodTestWithTwoArgs('concat')
 		methodTestWithOneArg('year')
 		methodTestWithOneArg('month')
-		methodTestWithTwoArgs('day')
+		methodTestWithOneArg('day')
 		methodTestWithOneArg('hour')
 		methodTestWithOneArg('minute')
 		methodTestWithOneArg('second')

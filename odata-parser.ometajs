@@ -297,7 +297,7 @@ export ometa ODataParser {
 		MethodCall('month', 1)
 	,
 	DayMethodCall =
-		MethodCall('day', 2)
+		MethodCall('day', 1)
 	,
 	HourMethodCall =
 		MethodCall('hour', 1)
