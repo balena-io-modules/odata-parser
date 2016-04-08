@@ -1,3 +1,5 @@
+* Added support for negative numbers.
+
 v0.1.7
 
 * Added support for duration literals.
