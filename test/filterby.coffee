@@ -1,4 +1,5 @@
 assert = require 'assert'
+{ expect } = require 'chai'
 
 module.exports = (test) ->
 	describe '$filter', ->
@@ -9,16 +10,16 @@ module.exports = (test) ->
 				value = odataValue
 			test "$filter=Foo #{op} #{odataValue}", 'OData', (result) ->
 				it 'A filter should be present', ->
-					assert.notEqual(result.options.$filter, null)
+					expect(result.options.$filter).to.exist
 
 				it "Filter should be an instance of '#{op}'", ->
-					assert.equal(result.options.$filter[0], op)
+					expect(result.options.$filter[0]).to.equal(op)
 
 				it 'lhr should be Foo', ->
-					assert.equal(result.options.$filter[1].name, 'Foo')
+					expect(result.options.$filter[1]).to.have.property('name').that.equals('Foo')
 
 				it "rhr should be #{value}", ->
-					assert.equal(result.options.$filter[2], value)
+					expect(result.options.$filter[2]).to.deep.equal(value)
 
 		operandTest('eq')
 		operandTest('ne')
@@ -35,6 +36,35 @@ module.exports = (test) ->
 		operandTest('eq', true)
 		operandTest('eq', false)
 		operandTest('eq', null)
+
+		duration = (obj) ->
+			result =
+				negative: false
+				year: undefined
+				month: undefined
+				day: undefined
+				hour: undefined
+				minute: undefined
+				second: undefined
+			for key, value of obj
+				result[key] = value
+			return result
+
+		operandTest('eq', "duration'-P1Y'", duration(negative: true, year: 1))
+		operandTest('eq', "duration'P1Y'", duration(year: 1))
+		operandTest('eq', "duration'P1M'", duration(month: 1))
+		operandTest('eq', "duration'P1D'", duration(day: 1))
+		operandTest('eq', "duration'PT1H'", duration(hour: 1))
+		operandTest('eq', "duration'PT1M'", duration(minute: 1))
+		operandTest('eq', "duration'PT1.1S'", duration(second: 1.1))
+		operandTest 'eq', "duration'-P1Y2M3DT4H5M6.7S'", duration
+			negative: true
+			year: 1
+			month: 2
+			day: 3
+			hour: 4
+			minute: 5
+			second: 6.7
 
 
 		do ->
@@ -67,9 +97,9 @@ module.exports = (test) ->
 
 		it 'Left hand side should be Price gt 5', ->
 			lhs = result.options.$filter[1]
-			assert.equal(lhs[0], 'gt')
-			assert.equal(lhs[1].name, 'Price')
-			assert.equal(lhs[2], 5)
+			expect(lhs[0]).to.equal('gt')
+			expect(lhs[1]).to.have.property('name').that.equals('Price')
+			expect(lhs[2]).to.equal(5)
 
 		it 'Right hand side should be less than 10', ->
 			rhs = result.options.$filter[2]
