@@ -176,6 +176,7 @@ export ometa ODataParser {
 	|	Boolean
 	|	QuotedText
 	|	Date
+	|	Duration
 	|	LambdaPropertyPath
 	|	PropertyPath
 	|	GroupedPrecedenceExpression
@@ -525,6 +526,49 @@ export ometa ODataParser {
 		-> new Date(date)
 	,
 
+	Duration =
+		seq('duration')
+		Apostrophe
+		// Sign must appear first if it appears
+		'-'?:negative
+		// P must always appear
+		LowerCaseMatch('p')
+		// The order of elements is fixed (PnYnMnDTnHnMnS)
+		DurationInteger('y')?:year
+		DurationInteger('m')?:month
+		DurationInteger('d')?:day
+		(	// T must be present for time parts to be specified
+			'T'
+			DurationInteger('h')?:hour
+			DurationInteger('m')?:minute
+			DurationNumber('s')?:second
+			// If T is present there must be a time part
+			?(hour || minute || second)
+		)?:timeExists
+		// There must be a duration part
+		?(year || month || day || timeExists)
+		Apostrophe
+		-> {
+			negative: negative != null,
+			year: year,
+			month: month,
+			day: day,
+			hour: hour,
+			minute: minute,
+			second: second
+		}
+	,
+	DurationInteger :letter =
+		Integer:n
+		LowerCaseMatch(letter)
+		-> n
+	,
+	DurationNumber :letter =
+		Number:n
+		LowerCaseMatch(letter)
+		-> n
+	,
+
 	ReservedUriComponent =
 			GenDelim
 		|	SubDelim
@@ -567,6 +611,10 @@ export ometa ODataParser {
 			^space
 		|	seq('%20')
 			-> ' '
+	,
+	LowerCaseMatch :letter =
+		lowerCaseAnything:l
+		?(l === letter)
 }
 
 ODataParser.ParseOptionsObject = function(options) {
