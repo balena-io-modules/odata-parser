@@ -1,3 +1,5 @@
+v0.1.7
+
 * Added support for duration literals.
 
 v0.1.6

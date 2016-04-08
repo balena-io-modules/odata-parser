@@ -341,6 +341,8 @@
             }, function() {
                 return this._apply("Date");
             }, function() {
+                return this._apply("Duration");
+            }, function() {
                 return this._apply("LambdaPropertyPath");
             }, function() {
                 return this._apply("PropertyPath");
@@ -1009,6 +1011,67 @@
             this._pred(!isNaN(date));
             return new Date(date);
         },
+        Duration: function() {
+            var $elf = this, _fromIdx = this.input.idx, day, hour, minute, month, negative, second, timeExists, year;
+            this._applyWithArgs("exactly", "d");
+            this._applyWithArgs("exactly", "u");
+            this._applyWithArgs("exactly", "r");
+            this._applyWithArgs("exactly", "a");
+            this._applyWithArgs("exactly", "t");
+            this._applyWithArgs("exactly", "i");
+            this._applyWithArgs("exactly", "o");
+            this._applyWithArgs("exactly", "n");
+            this._apply("Apostrophe");
+            negative = this._opt(function() {
+                return this._applyWithArgs("exactly", "-");
+            });
+            this._applyWithArgs("LowerCaseMatch", "p");
+            year = this._opt(function() {
+                return this._applyWithArgs("DurationInteger", "y");
+            });
+            month = this._opt(function() {
+                return this._applyWithArgs("DurationInteger", "m");
+            });
+            day = this._opt(function() {
+                return this._applyWithArgs("DurationInteger", "d");
+            });
+            timeExists = this._opt(function() {
+                this._applyWithArgs("exactly", "T");
+                hour = this._opt(function() {
+                    return this._applyWithArgs("DurationInteger", "h");
+                });
+                minute = this._opt(function() {
+                    return this._applyWithArgs("DurationInteger", "m");
+                });
+                second = this._opt(function() {
+                    return this._applyWithArgs("DurationNumber", "s");
+                });
+                return this._pred(hour || minute || second);
+            });
+            this._pred(year || month || day || timeExists);
+            this._apply("Apostrophe");
+            return {
+                negative: null != negative,
+                year: year,
+                month: month,
+                day: day,
+                hour: hour,
+                minute: minute,
+                second: second
+            };
+        },
+        DurationInteger: function(letter) {
+            var $elf = this, _fromIdx = this.input.idx, n;
+            n = this._apply("Integer");
+            this._applyWithArgs("LowerCaseMatch", letter);
+            return n;
+        },
+        DurationNumber: function(letter) {
+            var $elf = this, _fromIdx = this.input.idx, n;
+            n = this._apply("Number");
+            this._applyWithArgs("LowerCaseMatch", letter);
+            return n;
+        },
         ReservedUriComponent: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
@@ -1154,6 +1217,11 @@
                     throw this._fail();
                 }
             });
+        },
+        LowerCaseMatch: function(letter) {
+            var $elf = this, _fromIdx = this.input.idx, l;
+            l = this._apply("lowerCaseAnything");
+            return this._pred(l === letter);
         }
     });
     ODataParser.ParseOptionsObject = function(options) {
