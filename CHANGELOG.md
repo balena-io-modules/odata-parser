@@ -1,3 +1,4 @@
+* Fixed duration literals to follow the OData spec.
 * Added support for negative numbers.
 
 v0.1.7

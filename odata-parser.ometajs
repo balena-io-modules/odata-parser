@@ -539,26 +539,22 @@ export ometa ODataParser {
 		// Sign must appear first if it appears
 		Sign:sign
 		// P must always appear
-		LowerCaseMatch('p')
-		// The order of elements is fixed (PnYnMnDTnHnMnS)
-		DurationInteger('y')?:year
-		DurationInteger('m')?:month
-		DurationInteger('d')?:day
+		'P'
+		// The order of elements is fixed (PnDTnHnMnS)
+		DurationInteger('D')?:day
 		(	// T must be present for time parts to be specified
 			'T'
-			DurationInteger('h')?:hour
-			DurationInteger('m')?:minute
-			DurationNumber('s')?:second
+			DurationInteger('H')?:hour
+			DurationInteger('M')?:minute
+			DurationNumber('S')?:second
 			// If T is present there must be a time part
 			?(hour || minute || second)
 		)?:timeExists
 		// There must be a duration part
-		?(year || month || day || timeExists)
+		?(day || timeExists)
 		Apostrophe
 		-> {
 			negative: sign == '-',
-			year: year,
-			month: month,
 			day: day,
 			hour: hour,
 			minute: minute,
@@ -567,7 +563,7 @@ export ometa ODataParser {
 	,
 	DurationInteger :letter =
 		UnsignedInteger:n
-		LowerCaseMatch(letter)
+		exactly(letter)
 		-> n
 	,
 	DurationNumber :letter =
@@ -576,7 +572,7 @@ export ometa ODataParser {
 				'.'
 				digit+
 			>:d
-			LowerCaseMatch(letter)
+			exactly(letter)
 			-> Number(d)
 		)
 	,
@@ -631,10 +627,6 @@ export ometa ODataParser {
 			^space
 		|	seq('%20')
 			-> ' '
-	,
-	LowerCaseMatch :letter =
-		lowerCaseAnything:l
-		?(l === letter)
 }
 
 ODataParser.ParseOptionsObject = function(options) {

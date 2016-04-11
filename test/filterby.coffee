@@ -43,8 +43,6 @@ module.exports = (test) ->
 		duration = (obj) ->
 			result =
 				negative: false
-				year: undefined
-				month: undefined
 				day: undefined
 				hour: undefined
 				minute: undefined
@@ -53,21 +51,18 @@ module.exports = (test) ->
 				result[key] = value
 			return result
 
-		operandTest('eq', "duration'-P1Y'", duration(negative: true, year: 1))
-		operandTest('eq', "duration'P1Y'", duration(year: 1))
-		operandTest('eq', "duration'P1M'", duration(month: 1))
+		operandTest('eq', "duration'-P1D'", duration(negative: true, day: 1))
+		operandTest('eq', "duration'+P1D'", duration(day: 1))
 		operandTest('eq', "duration'P1D'", duration(day: 1))
 		operandTest('eq', "duration'PT1H'", duration(hour: 1))
 		operandTest('eq', "duration'PT1M'", duration(minute: 1))
 		operandTest('eq', "duration'PT1.1S'", duration(second: 1.1))
-		operandTest 'eq', "duration'-P1Y2M3DT4H5M6.7S'", duration
+		operandTest 'eq', "duration'-P1DT2H3M4.5S'", duration
 			negative: true
-			year: 1
-			month: 2
-			day: 3
-			hour: 4
-			minute: 5
-			second: 6.7
+			day: 1
+			hour: 2
+			minute: 3
+			second: 4.5
 
 
 		do ->
