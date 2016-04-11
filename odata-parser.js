@@ -125,7 +125,7 @@
         TopOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
             this._applyWithArgs("RecognisedOption", "$top=");
-            value = this._apply("Number");
+            value = this._apply("UnsignedInteger");
             return {
                 name: "$top",
                 value: value
@@ -134,7 +134,7 @@
         SkipOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
             this._applyWithArgs("RecognisedOption", "$skip=");
-            value = this._apply("Number");
+            value = this._apply("UnsignedInteger");
             return {
                 name: "$skip",
                 value: value
@@ -910,7 +910,8 @@
             });
         },
         Decimal: function() {
-            var $elf = this, _fromIdx = this.input.idx, d;
+            var $elf = this, _fromIdx = this.input.idx, d, sign;
+            sign = this._apply("Sign");
             d = this._consumedBy(function() {
                 this._many1(function() {
                     return this._apply("digit");
@@ -920,9 +921,19 @@
                     return this._apply("digit");
                 });
             });
-            return Number(d);
+            return Number(sign + d);
         },
         Integer: function() {
+            var $elf = this, _fromIdx = this.input.idx, d, sign;
+            sign = this._apply("Sign");
+            d = this._consumedBy(function() {
+                return this._many1(function() {
+                    return this._apply("digit");
+                });
+            });
+            return parseInt(sign + d, 10);
+        },
+        UnsignedInteger: function() {
             var $elf = this, _fromIdx = this.input.idx, d;
             d = this._consumedBy(function() {
                 return this._many1(function() {
@@ -1012,7 +1023,7 @@
             return new Date(date);
         },
         Duration: function() {
-            var $elf = this, _fromIdx = this.input.idx, day, hour, minute, month, negative, second, timeExists, year;
+            var $elf = this, _fromIdx = this.input.idx, day, hour, minute, second, sign, timeExists;
             this._applyWithArgs("exactly", "d");
             this._applyWithArgs("exactly", "u");
             this._applyWithArgs("exactly", "r");
@@ -1022,38 +1033,28 @@
             this._applyWithArgs("exactly", "o");
             this._applyWithArgs("exactly", "n");
             this._apply("Apostrophe");
-            negative = this._opt(function() {
-                return this._applyWithArgs("exactly", "-");
-            });
-            this._applyWithArgs("LowerCaseMatch", "p");
-            year = this._opt(function() {
-                return this._applyWithArgs("DurationInteger", "y");
-            });
-            month = this._opt(function() {
-                return this._applyWithArgs("DurationInteger", "m");
-            });
+            sign = this._apply("Sign");
+            this._applyWithArgs("exactly", "P");
             day = this._opt(function() {
-                return this._applyWithArgs("DurationInteger", "d");
+                return this._applyWithArgs("DurationInteger", "D");
             });
             timeExists = this._opt(function() {
                 this._applyWithArgs("exactly", "T");
                 hour = this._opt(function() {
-                    return this._applyWithArgs("DurationInteger", "h");
+                    return this._applyWithArgs("DurationInteger", "H");
                 });
                 minute = this._opt(function() {
-                    return this._applyWithArgs("DurationInteger", "m");
+                    return this._applyWithArgs("DurationInteger", "M");
                 });
                 second = this._opt(function() {
-                    return this._applyWithArgs("DurationNumber", "s");
+                    return this._applyWithArgs("DurationNumber", "S");
                 });
                 return this._pred(hour || minute || second);
             });
-            this._pred(year || month || day || timeExists);
+            this._pred(day || timeExists);
             this._apply("Apostrophe");
             return {
-                negative: null != negative,
-                year: year,
-                month: month,
+                negative: "-" == sign,
                 day: day,
                 hour: hour,
                 minute: minute,
@@ -1062,15 +1063,27 @@
         },
         DurationInteger: function(letter) {
             var $elf = this, _fromIdx = this.input.idx, n;
-            n = this._apply("Integer");
-            this._applyWithArgs("LowerCaseMatch", letter);
+            n = this._apply("UnsignedInteger");
+            this._applyWithArgs("exactly", letter);
             return n;
         },
         DurationNumber: function(letter) {
-            var $elf = this, _fromIdx = this.input.idx, n;
-            n = this._apply("Number");
-            this._applyWithArgs("LowerCaseMatch", letter);
-            return n;
+            var $elf = this, _fromIdx = this.input.idx, d;
+            return this._or(function() {
+                return this._applyWithArgs("DurationInteger", letter);
+            }, function() {
+                d = this._consumedBy(function() {
+                    this._many1(function() {
+                        return this._apply("digit");
+                    });
+                    this._applyWithArgs("exactly", ".");
+                    return this._many1(function() {
+                        return this._apply("digit");
+                    });
+                });
+                this._applyWithArgs("exactly", letter);
+                return Number(d);
+            });
         },
         ReservedUriComponent: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -1168,6 +1181,28 @@
             });
             return decodeURIComponent(text);
         },
+        Sign: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
+                switch (this.anything()) {
+                  case "%":
+                    this._applyWithArgs("exactly", "2");
+                    this._applyWithArgs("exactly", "B");
+                    return "+";
+
+                  case "+":
+                    return "+";
+
+                  case "-":
+                    return "-";
+
+                  default:
+                    throw this._fail();
+                }
+            }, function() {
+                return "";
+            });
+        },
         Apostrophe: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return function() {
@@ -1217,11 +1252,6 @@
                     throw this._fail();
                 }
             });
-        },
-        LowerCaseMatch: function(letter) {
-            var $elf = this, _fromIdx = this.input.idx, l;
-            l = this._apply("lowerCaseAnything");
-            return this._pred(l === letter);
         }
     });
     ODataParser.ParseOptionsObject = function(options) {
