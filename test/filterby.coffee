@@ -28,7 +28,10 @@ module.exports = (test) ->
 		operandTest('lt')
 		operandTest('le')
 
+		operandTest('eq', 2)
+		operandTest('eq', -2)
 		operandTest('eq', 2.5)
+		operandTest('eq', -2.5)
 		operandTest('eq', "'bar'", 'bar')
 		operandTest('eq', "'%20'", ' ')
 		operandTest('eq', "'()'", '()')

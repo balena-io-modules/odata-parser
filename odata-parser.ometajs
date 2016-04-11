@@ -55,13 +55,13 @@ export ometa ODataParser {
 
 	TopOption =
 		RecognisedOption('$top=')
-		Number:value
+		UnsignedInteger:value
 		-> { name: '$top', value: value }
 	,
 
 	SkipOption =
 		RecognisedOption('$skip=')
-		Number:value
+		UnsignedInteger:value
 		-> { name: '$skip', value: value }
 	,
 
@@ -484,14 +484,21 @@ export ometa ODataParser {
 	,
 
 	Decimal =
+		Sign:sign
 		<	digit+
 			'.'
 			digit+
 		>:d
-		-> Number(d)
+		-> Number(sign + d)
 	,
 
 	Integer =
+		Sign:sign
+		<digit+>:d
+		-> parseInt(sign + d, 10)
+	,
+
+	UnsignedInteger =
 		<digit+>:d
 		-> parseInt(d, 10)
 	,
@@ -530,7 +537,7 @@ export ometa ODataParser {
 		seq('duration')
 		Apostrophe
 		// Sign must appear first if it appears
-		'-'?:negative
+		Sign:sign
 		// P must always appear
 		LowerCaseMatch('p')
 		// The order of elements is fixed (PnYnMnDTnHnMnS)
@@ -549,7 +556,7 @@ export ometa ODataParser {
 		?(year || month || day || timeExists)
 		Apostrophe
 		-> {
-			negative: negative != null,
+			negative: sign == '-',
 			year: year,
 			month: month,
 			day: day,
@@ -559,14 +566,19 @@ export ometa ODataParser {
 		}
 	,
 	DurationInteger :letter =
-		Integer:n
+		UnsignedInteger:n
 		LowerCaseMatch(letter)
 		-> n
 	,
 	DurationNumber :letter =
-		Number:n
-		LowerCaseMatch(letter)
-		-> n
+		(	DurationInteger(letter)
+		|	<	digit+
+				'.'
+				digit+
+			>:d
+			LowerCaseMatch(letter)
+			-> Number(d)
+		)
 	,
 
 	ReservedUriComponent =
@@ -588,6 +600,14 @@ export ometa ODataParser {
 			)*
 		>:text
 		-> decodeURIComponent(text)
+	,
+
+	Sign =
+			'+'
+		|	seq('%2B')
+			-> '+'
+		|	'-'
+		|	-> ''
 	,
 
 	// TODO: This should really be done treating everything the same, but for now this hack should allow FF to work passably.
