@@ -25,6 +25,7 @@ export ometa ODataParser {
 		|	SkipOption
 		|	ExpandOption
 		|	InlineCountOption
+                |       CountOption
 		|	FilterByOption
 		|	FormatOption
 		|	SelectOption
@@ -73,6 +74,16 @@ export ometa ODataParser {
 		):value
 		-> { name: '$inlinecount', value: value }
 	,
+
+        CountOption =
+                RecognisedOption('$count=')
+                (       seq('true')
+                |       '*'
+                )
+                -> { name: '$count', value: '*' }
+                |  RecognisedOption('$count')
+                   -> { name: '$count', value: '*' }
+        ,
 
 	ExpandOption =
 		RecognisedOption('$expand=')
