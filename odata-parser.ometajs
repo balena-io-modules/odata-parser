@@ -25,7 +25,7 @@ export ometa ODataParser {
 		|	SkipOption
 		|	ExpandOption
 		|	InlineCountOption
-                |       CountOption
+		|       CountOption
 		|	FilterByOption
 		|	FormatOption
 		|	SelectOption
@@ -75,14 +75,10 @@ export ometa ODataParser {
 		-> { name: '$inlinecount', value: value }
 	,
 
-        CountOption =
-                RecognisedOption('$count=')
-                (       seq('true')
-                |       '*'
-                )
-                -> { name: '$count', value: '*' }
-                |  RecognisedOption('$count')
-                   -> { name: '$count', value: '*' }
+	CountOption =
+	        RecognisedOption('$count=')
+	        seq('true')
+	        -> { name: '$count', value: 'true' }
         ,
 
 	ExpandOption =
@@ -457,7 +453,10 @@ export ometa ODataParser {
 			)?
 		)?
 		QueryOptions?:options
-		-> { resource: resource, key: key, link: link, property: next, options: options }
+                (       seq('/$count')
+                        -> 1
+                )?:count
+		-> { resource: resource, key: key, link: link, property: next, count: count, options: options }
 	,
 	SubPathSegment =
 		'/'
@@ -469,7 +468,10 @@ export ometa ODataParser {
 		|	SubPathSegment:next
 		)?
 		QueryOptions?:options
-		-> { resource: resource, key: key, link: link, property: next, options: options }
+                (       seq('/$count')
+                        -> 1
+                )?:count
+		-> { resource: resource, key: key, link: link, property: next, count: count, options: options }
 	,
 
 	ContentType =
