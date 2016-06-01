@@ -19,6 +19,14 @@ module.exports = testExpands = (test, nested = 1) ->
 			it 'has a resource of Suppliers', ->
 					assert.equal(result.options.$expand.properties[1].name, 'Suppliers')
 
+		test '$expand=Products/$count', 'OData', (result) ->
+			it 'has an $expand value', ->
+				assert.notEqual(result.options.$expand, null)
+			it 'has a resource of Products', ->
+				assert.equal(result.options.$expand.properties[0].name, 'Products')
+			it 'has count defined', ->
+				assert.equal(result.options.$expand.properties[0].count, true)
+
 		if nested > 0
 			testExpandOption = (test, input, entry, expectation) ->
 				test "$expand=Products(#{input})", entry, (result) ->
@@ -29,6 +37,17 @@ module.exports = testExpands = (test, nested = 1) ->
 					it 'has a resource of Products', ->
 						assert.equal(result.options.$expand.properties[0].name, 'Products')
 					expectation(result.options?.$expand?.properties?[0])
+
+				test "$expand=Products/$count(#{input})", entry, (result) ->
+					it 'has an options property', ->
+						assert.notEqual(result.options, null)
+					it 'has an $expand value', ->
+						assert.notEqual(result.options.$expand, null)
+					it 'has a resource of Products', ->
+						assert.equal(result.options.$expand.properties[0].name, 'Products')
+					it 'has count defined', ->
+						assert.equal(result.options.$expand.properties[0].count, true)
+					expectation(result.options?.$expand?.properties?[0])
 			nestedTest = testExpandOption.bind(null, test)
 			nestedTest.skip = testExpandOption.bind(null, test.skip)
 			nestedTest.only = testExpandOption.bind(null, test.only)
@@ -38,6 +57,7 @@ module.exports = testExpands = (test, nested = 1) ->
 			require('./orderby')(nestedTest)
 			require('./paging')(nestedTest)
 			require('./select')(nestedTest)
+			require('./count')(nestedTest)
 			testExpands(nestedTest, nested - 1)
 
 testExpands(require './test')
