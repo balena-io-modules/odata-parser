@@ -459,9 +459,6 @@ export ometa ODataParser {
 					-> true
 				)?:count
 		)?
-		//(	seq('/$count')
-		//	-> true
-		//)?:count
 		QueryOptions?:options
 		-> { resource: resource, key: key, link: link, property: next, count: count, options: options }
 	,
