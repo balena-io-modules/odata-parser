@@ -77,8 +77,8 @@ export ometa ODataParser {
 
 	CountOption =
 		RecognisedOption('$count=')
-		seq('true')
-		-> { name: '$count', value: true }
+		Boolean:value
+		-> { name: '$count', value: value }
 	,
 
 	ExpandOption =
