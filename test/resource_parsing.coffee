@@ -87,6 +87,10 @@ describe 'Resource Parsing', ->
 		it 'should have the argument specified', ->
 			assert.equal(result.property.options.foo, 'bar')
 
+	test '/model/$count/$count', 'OData', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
+
 	test '/model/$count', 'OData', (result) ->
 		it 'should have the count specified', ->
 			assert.equal(result.count, true)

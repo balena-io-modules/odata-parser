@@ -38,6 +38,7 @@ module.exports = testExpands = (test, nested = 1) ->
 						assert.equal(result.options.$expand.properties[0].name, 'Products')
 					expectation(result.options?.$expand?.properties?[0])
 
+			testExpandOptionCount = (test, input, entry, expectation) ->
 				test "$expand=Products/$count(#{input})", entry, (result) ->
 					it 'has an options property', ->
 						assert.notEqual(result.options, null)
@@ -48,9 +49,14 @@ module.exports = testExpands = (test, nested = 1) ->
 					it 'has count defined', ->
 						assert.equal(result.options.$expand.properties[0].count, true)
 					expectation(result.options?.$expand?.properties?[0])
+
 			nestedTest = testExpandOption.bind(null, test)
 			nestedTest.skip = testExpandOption.bind(null, test.skip)
 			nestedTest.only = testExpandOption.bind(null, test.only)
+
+			nestedCountTest = testExpandOptionCount.bind(null, test)
+			nestedCountTest.skip = testExpandOptionCount.bind(null, test.skip)
+			nestedCountTest.only = testExpandOptionCount.bind(null, test.only)
 
 			require('./filterby')(nestedTest)
 			require('./format')(nestedTest)
@@ -58,6 +64,12 @@ module.exports = testExpands = (test, nested = 1) ->
 			require('./paging')(nestedTest)
 			require('./select')(nestedTest)
 			require('./count')(nestedTest)
+			require('./filterby')(nestedCountTest)
+			require('./format')(nestedCountTest)
+			require('./orderby')(nestedCountTest)
+			require('./paging')(nestedCountTest)
+			require('./select')(nestedCountTest)
+			require('./count')(nestedCountTest)
 			testExpands(nestedTest, nested - 1)
 
 testExpands(require './test')
