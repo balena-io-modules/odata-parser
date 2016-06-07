@@ -66,6 +66,8 @@
             }, function() {
                 return this._apply("InlineCountOption");
             }, function() {
+                return this._apply("CountOption");
+            }, function() {
                 return this._apply("FilterByOption");
             }, function() {
                 return this._apply("FormatOption");
@@ -170,6 +172,15 @@
             });
             return {
                 name: "$inlinecount",
+                value: value
+            };
+        },
+        CountOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, value;
+            this._applyWithArgs("RecognisedOption", "$count=");
+            value = this._apply("Boolean");
+            return {
+                name: "$count",
                 value: value
             };
         },
@@ -724,8 +735,18 @@
             return this._applyWithArgs("listOf", "ExpandPropertyPath", ",");
         },
         ExpandPropertyPath: function() {
-            var $elf = this, _fromIdx = this.input.idx, next, options, optionsObj, resource;
+            var $elf = this, _fromIdx = this.input.idx, count, next, options, optionsObj, resource;
             resource = this._apply("ResourceName");
+            count = this._opt(function() {
+                this._applyWithArgs("exactly", "/");
+                this._applyWithArgs("exactly", "$");
+                this._applyWithArgs("exactly", "c");
+                this._applyWithArgs("exactly", "o");
+                this._applyWithArgs("exactly", "u");
+                this._applyWithArgs("exactly", "n");
+                this._applyWithArgs("exactly", "t");
+                return !0;
+            });
             this._opt(function() {
                 this._applyWithArgs("exactly", "(");
                 options = this._applyWithArgs("listOf", "ExpandPathOption", "&");
@@ -739,6 +760,7 @@
             return {
                 name: resource,
                 property: next,
+                count: count,
                 options: optionsObj
             };
         },
@@ -754,6 +776,8 @@
                 return this._apply("ExpandOption");
             }, function() {
                 return this._apply("InlineCountOption");
+            }, function() {
+                return this._apply("CountOption");
             }, function() {
                 return this._apply("FilterByOption");
             }, function() {
@@ -794,28 +818,41 @@
             return key;
         },
         PathSegment: function() {
-            var $elf = this, _fromIdx = this.input.idx, key, link, next, options, resource;
+            var $elf = this, _fromIdx = this.input.idx, count, key, link, next, options, resource;
             this._applyWithArgs("exactly", "/");
             resource = this._apply("ResourceName");
             this._opt(function() {
-                key = this._apply("Key");
-                return this._opt(function() {
-                    return this._or(function() {
-                        switch (this.anything()) {
-                          case "/":
-                            this._applyWithArgs("exactly", "$");
-                            this._applyWithArgs("exactly", "l");
-                            this._applyWithArgs("exactly", "i");
-                            this._applyWithArgs("exactly", "n");
-                            this._applyWithArgs("exactly", "k");
-                            this._applyWithArgs("exactly", "s");
-                            return link = this._apply("SubPathSegment");
+                return this._or(function() {
+                    key = this._apply("Key");
+                    return this._opt(function() {
+                        return this._or(function() {
+                            switch (this.anything()) {
+                              case "/":
+                                this._applyWithArgs("exactly", "$");
+                                this._applyWithArgs("exactly", "l");
+                                this._applyWithArgs("exactly", "i");
+                                this._applyWithArgs("exactly", "n");
+                                this._applyWithArgs("exactly", "k");
+                                this._applyWithArgs("exactly", "s");
+                                return link = this._apply("SubPathSegment");
 
-                          default:
-                            throw this._fail();
-                        }
-                    }, function() {
-                        return next = this._apply("SubPathSegment");
+                              default:
+                                throw this._fail();
+                            }
+                        }, function() {
+                            return next = this._apply("SubPathSegment");
+                        });
+                    });
+                }, function() {
+                    return count = this._opt(function() {
+                        this._applyWithArgs("exactly", "/");
+                        this._applyWithArgs("exactly", "$");
+                        this._applyWithArgs("exactly", "c");
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "u");
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "t");
+                        return !0;
                     });
                 });
             });
@@ -827,11 +864,12 @@
                 key: key,
                 link: link,
                 property: next,
+                count: count,
                 options: options
             };
         },
         SubPathSegment: function() {
-            var $elf = this, _fromIdx = this.input.idx, key, link, next, options, resource;
+            var $elf = this, _fromIdx = this.input.idx, count, key, link, next, options, resource;
             this._applyWithArgs("exactly", "/");
             resource = this._apply("ResourceName");
             key = this._opt(function() {
@@ -856,6 +894,16 @@
                     return next = this._apply("SubPathSegment");
                 });
             });
+            count = this._opt(function() {
+                this._applyWithArgs("exactly", "/");
+                this._applyWithArgs("exactly", "$");
+                this._applyWithArgs("exactly", "c");
+                this._applyWithArgs("exactly", "o");
+                this._applyWithArgs("exactly", "u");
+                this._applyWithArgs("exactly", "n");
+                this._applyWithArgs("exactly", "t");
+                return !0;
+            });
             options = this._opt(function() {
                 return this._apply("QueryOptions");
             });
@@ -864,6 +912,7 @@
                 key: key,
                 link: link,
                 property: next,
+                count: count,
                 options: options
             };
         },

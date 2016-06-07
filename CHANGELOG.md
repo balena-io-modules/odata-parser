@@ -1,3 +1,8 @@
+v0.1.9
+
+* Added support for /$count
+* Added support for ?$count=(true|false)
+
 v0.1.8
 
 * Fixed duration literals to follow the OData spec.
