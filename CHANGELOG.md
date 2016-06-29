@@ -1,3 +1,5 @@
+* Added the ability to process only a given rule, making sure the rule is successful.
+
 v0.1.9
 
 * Added support for /$count

@@ -140,3 +140,18 @@ describe 'Resource Parsing', ->
 			assert.equal(rhs[0], 'eq')
 			assert.equal(rhs[1].name, 'id')
 			assert.equal(rhs[2], 10)
+
+	test ['FilterByExpression', 'foo eq $INVALID'], 'ProcessRule', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
+
+	test ['FilterByExpression', "foo eq 'valid'"], 'ProcessRule', (filter) ->
+		it "Filter should be an instance of 'eq'", ->
+			assert.equal(filter[0], 'eq')
+
+		it 'lhr should be foo', ->
+			assert.equal(filter[1].name, 'foo')
+
+		it "rhr should be 'valid", ->
+			assert.equal(filter[2], 'valid')
+
