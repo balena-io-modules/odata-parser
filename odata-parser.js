@@ -8,6 +8,15 @@
             var $elf = this, _fromIdx = this.input.idx;
             return this._apply("OData");
         },
+        ProcessRule: function() {
+            var $elf = this, _fromIdx = this.input.idx, result, rule;
+            rule = this.anything();
+            this._form(function() {
+                return result = this._applyWithArgs("apply", rule);
+            });
+            this._apply("end");
+            return result;
+        },
         OData: function() {
             var $elf = this, _fromIdx = this.input.idx, model;
             return this._or(function() {
