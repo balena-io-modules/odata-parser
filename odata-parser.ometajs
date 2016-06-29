@@ -1,6 +1,13 @@
 export ometa ODataParser {
 
 	Process = OData,
+	ProcessRule =
+		anything:rule
+		[	apply(rule):result
+		]
+		end
+		-> result
+	,
 
 	OData =
 			PathSegment:model
