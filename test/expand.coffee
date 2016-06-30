@@ -17,7 +17,7 @@ module.exports = testExpands = (test, nested = 1) ->
 			it 'has a resource of Products', ->
 				assert.equal(result.options.$expand.properties[0].name, 'Products')
 			it 'has a resource of Suppliers', ->
-					assert.equal(result.options.$expand.properties[1].name, 'Suppliers')
+				assert.equal(result.options.$expand.properties[1].name, 'Suppliers')
 
 		test '$expand=Products/$count', 'OData', (result) ->
 			it 'has an $expand value', ->

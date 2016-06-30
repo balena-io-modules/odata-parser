@@ -116,7 +116,7 @@ describe 'Resource Parsing', ->
 		it 'lhr should be id', ->
 			assert.equal(result.options.$filter[1].name, 'id')
 
-		it "rhr should be 5", ->
+		it 'rhr should be 5', ->
 			assert.equal(result.options.$filter[2], 5)
 
 	test '/model/$count?$filter=id eq 5 or id eq 10', 'OData', (result) ->

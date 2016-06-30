@@ -4,9 +4,10 @@
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
   "scripts": {
-    "pretest": "npm run-script prepublish",
-    "test": "./node_modules/.bin/mocha",
-    "prepublish": "./node_modules/.bin/ometajs2js --input odata-parser.ometajs --output odata-parser.js"
+    "lint": "resin-lint test",
+    "pretest": "npm run lint && npm run-script prepublish",
+    "test": "mocha",
+    "prepublish": "ometajs2js --input odata-parser.ometajs --output odata-parser.js"
   },
   "repository": "https://github.com/resin-io-modules/odata-parser.git",
   "author": "",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "coffee-script": "~1.10.0",
-    "mocha": "^2.1.0"
+    "mocha": "^2.1.0",
+    "resin-lint": "^1.4.0"
   }
 }
