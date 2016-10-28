@@ -2,20 +2,20 @@ assert = require 'assert'
 
 module.exports = (test) ->
 	describe 'Paging', ->
-		test '$top=5&$skip=100', 'OData', (result) ->
+		test '$top=5&$skip=100', (result) ->
 			it 'top should be specified', ->
 				assert.equal(result.options.$top, 5)
 			it 'skip should be specified', ->
 				assert.equal(result.options.$skip, 100)
 
-		test '$inlinecount=allpages', 'OData', (result) ->
+		test '$inlinecount=allpages', (result) ->
 			it 'inline should be specified', ->
 				assert.equal(result.options.$inlinecount, 'allpages')
 
-		test '$inlinecount=none', 'OData', (result) ->
+		test '$inlinecount=none', (result) ->
 			it 'inline should be specified', ->
 				assert.equal(result.options.$inlinecount, 'none')
 
-		test '$inlinecount=flibble', 'OData', (result) ->
+		test '$inlinecount=flibble', (result) ->
 			it 'inline should be specified', ->
 				assert.equal(result.options.$inlinecount, '')

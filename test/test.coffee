@@ -1,14 +1,33 @@
 require('ometa-js')
-parser = require('../odata-parser.ometajs').ODataParser.createInstance()
+{ ODataParser } = require '../odata-parser.ometajs'
+{ expect } = require 'chai'
+_ = require 'lodash'
 
-raw = (describe, input, entry, expectation) ->
+getBindType = (value) ->
+	if _.isNumber(value)
+		return ['Real', value]
+	else if _.isString(value)
+		return ['Text', value]
+	else if _.isBoolean(value)
+		return ['Boolean', value]
+	else
+		return value
+
+raw = (describe, input, optArgs..., expectation) ->
+	[ binds = [], entry = 'Process' ] = optArgs
+	binds = _.map(binds, getBindType)
 	describe "Parsing #{input}", ->
 		try
-			result = parser.matchAll(input, entry)
+			result = ODataParser.matchAll(input, entry)
 		catch e
 			expectation(e)
 			return
-		expectation(result)
+		if entry is 'Process'
+			it 'should have the correct binds', ->
+				expect(result).to.have.property('binds').that.deep.equals(binds)
+			expectation(result.tree)
+		else
+			expectation(result)
 
 runExpectation = (args...) ->
 	args[1] = '/resource?' + args[1]

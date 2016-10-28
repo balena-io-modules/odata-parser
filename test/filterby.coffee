@@ -1,5 +1,6 @@
 assert = require 'assert'
 { expect } = require 'chai'
+_ = require 'lodash'
 
 module.exports = (test) ->
 	describe '$filter', ->
@@ -8,7 +9,10 @@ module.exports = (test) ->
 				odataValue = 2
 			if value is undefined
 				value = odataValue
-			test "$filter=Foo #{op} #{odataValue}", 'OData', (result) ->
+			binds = []
+			if value? and not _.isObject(value)
+				binds.push(value)
+			test "$filter=Foo #{op} #{odataValue}", binds, (result) ->
 				it 'A filter should be present', ->
 					expect(result.options.$filter).to.exist
 
@@ -18,8 +22,12 @@ module.exports = (test) ->
 				it 'lhr should be Foo', ->
 					expect(result.options.$filter[1]).to.have.property('name').that.equals('Foo')
 
-				it "rhr should be #{value}", ->
-					expect(result.options.$filter[2]).to.deep.equal(value)
+				if odataValue is null or _.isObject(value)
+					it "rhr should be #{value}", ->
+						expect(result.options.$filter[2]).to.deep.equal(value)
+				else
+					it 'rhr should be a bind', ->
+						expect(result.options.$filter[2]).to.have.property('bind').that.equals(0)
 
 		operandTest('eq')
 		operandTest('ne')
@@ -77,15 +85,15 @@ module.exports = (test) ->
 				it 'lhr should be Foo', ->
 					assert.equal(result.options.$filter[1].name, 'Foo')
 
-				it 'rhr should be ' + date, ->
-					assert.equal(result.options.$filter[2] - date, 0)
+				it 'rhr should be a bind', ->
+					assert.equal(result.options.$filter[2].bind, 0)
 
 			isoDate = encodeURIComponent(date.toISOString())
-			test "$filter=Foo eq date'#{isoDate}'", 'OData', testFunc
-			test "$filter=Foo eq datetime'#{isoDate}'", 'OData', testFunc
+			test "$filter=Foo eq date'#{isoDate}'", [['Date', date.getTime()]], testFunc
+			test "$filter=Foo eq datetime'#{isoDate}'", [['Date Time', date.getTime()]], testFunc
 
 
-	test '$filter=Price gt 5 and Price lt 10', 'OData', (result) ->
+	test '$filter=Price gt 5 and Price lt 10', [5, 10], (result) ->
 
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
@@ -93,20 +101,20 @@ module.exports = (test) ->
 		it "Filter should be an instance of 'and'", ->
 			assert.equal(result.options.$filter[0], 'and')
 
-		it 'Left hand side should be Price gt 5', ->
+		it 'Left hand side should be Price gt $0', ->
 			lhs = result.options.$filter[1]
 			expect(lhs[0]).to.equal('gt')
 			expect(lhs[1]).to.have.property('name').that.equals('Price')
-			expect(lhs[2]).to.equal(5)
+			expect(lhs[2]).to.have.property('bind').that.equal(0)
 
-		it 'Right hand side should be less than 10', ->
+		it 'Right hand side should be less than $1', ->
 			rhs = result.options.$filter[2]
 			assert.equal(rhs[0], 'lt')
 			assert.equal(rhs[1].name, 'Price')
-			assert.equal(rhs[2], 10)
+			assert.equal(rhs[2].bind, 1)
 
 
-	test '$filter=Price eq 5 or Price eq 10', 'OData', (result) ->
+	test '$filter=Price eq 5 or Price eq 10', [5, 10], (result) ->
 
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
@@ -114,20 +122,20 @@ module.exports = (test) ->
 		it "Filter should be an instance of 'or'", ->
 			assert.equal(result.options.$filter[0], 'or')
 
-		it 'Left hand side should be Price eq 5', ->
+		it 'Left hand side should be Price eq $0', ->
 			lhs = result.options.$filter[1]
 			assert.equal(lhs[0], 'eq')
 			assert.equal(lhs[1].name, 'Price')
-			assert.equal(lhs[2], 5)
+			assert.equal(lhs[2].bind, 0)
 
-		it 'Right hand side should be less than 10', ->
+		it 'Right hand side should be less than $1', ->
 			rhs = result.options.$filter[2]
 			assert.equal(rhs[0], 'eq')
 			assert.equal(rhs[1].name, 'Price')
-			assert.equal(rhs[2], 10)
+			assert.equal(rhs[2].bind, 1)
 
 
-	test '$filter=Published', 'OData', (result) ->
+	test '$filter=Published', (result) ->
 
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
@@ -136,7 +144,7 @@ module.exports = (test) ->
 			assert.equal(result.options.$filter.name, 'Published')
 
 
-	test '$filter=not Published', 'OData', (result) ->
+	test '$filter=not Published', (result) ->
 
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
@@ -148,7 +156,7 @@ module.exports = (test) ->
 			assert.equal(result.options.$filter[1].name, 'Published')
 
 
-	test '$filter=not (Price gt 5)', 'OData', (result) ->
+	test '$filter=not (Price gt 5)', [5], (result) ->
 
 		it 'A filter should be present', ->
 			assert.notEqual(result.options.$filter, null)
@@ -156,14 +164,14 @@ module.exports = (test) ->
 		it "Filter should be an instance of 'not'", ->
 			assert.equal(result.options.$filter[0], 'not')
 
-		it 'Value should be Price gt 5', ->
+		it 'Value should be Price gt $0', ->
 			rhs = result.options.$filter[1]
 			assert.equal(rhs[0], 'gt')
 			assert.equal(rhs[1].name, 'Price')
-			assert.equal(rhs[2], 5)
+			assert.equal(rhs[2].bind, 0)
 
 
-		test '$filter=Price add 5 gt 10', 'OData', (result) ->
+		test '$filter=Price add 5 gt 10', [5, 10], (result) ->
 
 			it 'A filter should be present', ->
 				assert.notEqual(result.options.$filter, null)
@@ -171,34 +179,34 @@ module.exports = (test) ->
 			it "Filter should be an instance of 'gt'", ->
 				assert.equal(result.options.$filter[0], 'gt')
 
-			it 'lhr should be Price add 5', ->
+			it 'lhr should be Price add $0', ->
 				rhs = result.options.$filter[1]
 				assert.equal(rhs[0], 'add')
 				assert.equal(rhs[1].name, 'Price')
-				assert.equal(rhs[2], 5)
+				assert.equal(rhs[2].bind, 0)
 
-			it 'rhr should be 10', ->
-				assert.equal(result.options.$filter[2], 10)
+			it 'rhr should be $1', ->
+				assert.equal(result.options.$filter[2].bind, 1)
 
 
-		test '$filter=Price sub 5 gt 10', 'OData', (result) ->
+		test '$filter=Price sub 5 gt 10', [5, 10], (result) ->
 			it 'A filter should be present', ->
 				assert.notEqual(result.options.$filter, null)
 
 			it "Filter should be an instance of 'gt'", ->
 				assert.equal(result.options.$filter[0], 'gt')
 
-			it 'lhr should be Price sub 5', ->
+			it 'lhr should be Price sub $0', ->
 				rhs = result.options.$filter[1]
 				assert.equal(rhs[0], 'sub')
 				assert.equal(rhs[1].name, 'Price')
-				assert.equal(rhs[2], 5)
+				assert.equal(rhs[2].bind, 0)
 
-			it 'rhr should be 10', ->
-				assert.equal(result.options.$filter[2], 10)
+			it 'rhr should be $1', ->
+				assert.equal(result.options.$filter[2].bind, 1)
 
 
-		test '$filter=Price mul 5 gt 10', 'OData', (result) ->
+		test '$filter=Price mul 5 gt 10', [5, 10], (result) ->
 
 			it 'A filter should be present', ->
 				assert.notEqual(result.options.$filter, null)
@@ -206,17 +214,17 @@ module.exports = (test) ->
 			it "Filter should be an instance of 'gt'", ->
 				assert.equal(result.options.$filter[0], 'gt')
 
-			it 'lhr should be Price add 5', ->
+			it 'lhr should be Price add $0', ->
 				lhs = result.options.$filter[1]
 				assert.equal(lhs[0], 'mul')
 				assert.equal(lhs[1].name, 'Price')
-				assert.equal(lhs[2], 5)
+				assert.equal(lhs[2].bind, 0)
 
-			it 'rhr should be 10', ->
-				assert.equal(result.options.$filter[2], 10)
+			it 'rhr should be $1', ->
+				assert.equal(result.options.$filter[2].bind, 1)
 
 
-		test '$filter=Price div Price mul 5 gt 10', 'OData', (result) ->
+		test '$filter=Price div Price mul 5 gt 10', [5, 10], (result) ->
 			it 'A filter should be present', ->
 				assert.notEqual(result.options.$filter, null)
 
@@ -230,16 +238,16 @@ module.exports = (test) ->
 				assert.equal(lexpr[1].name, 'Price')
 
 
-			it 'should be Price mul 5', ->
+			it 'should be Price mul $0', ->
 				assert.equal(lexpr[2][0], 'mul')
 				assert.equal(lexpr[2][1].name, 'Price')
-				assert.equal(lexpr[2][2], 5)
+				assert.equal(lexpr[2][2].bind, 0)
 
-			it 'rhr should be 10', ->
-				assert.equal(result.options.$filter[2], 10)
+			it 'rhr should be $1', ->
+				assert.equal(result.options.$filter[2].bind, 1)
 
 
-		test '$filter=(Price div Price) mul 5 gt 10', 'OData', (result) ->
+		test '$filter=(Price div Price) mul 5 gt 10', [5, 10], (result) ->
 			it 'A filter should be present', ->
 				assert.notEqual(result.options.$filter, null)
 
@@ -248,21 +256,21 @@ module.exports = (test) ->
 
 			lexpr = result.options.$filter[1]
 
-			it 'should be {expr} mul 5', ->
+			it 'should be {expr} mul $0', ->
 				assert.equal(lexpr[0], 'mul')
-				assert.equal(lexpr[2], 5)
+				assert.equal(lexpr[2].bind, 0)
 
 			it 'should be {Price div Price}', ->
 				assert.equal(lexpr[1][0], 'div')
 				assert.equal(lexpr[1][1].name, 'Price')
 				assert.equal(lexpr[1][2].name, 'Price' )
 
-			it 'rhr should be 10', ->
-				assert.equal(result.options.$filter[2], 10)
+			it 'rhr should be $1', ->
+				assert.equal(result.options.$filter[2].bind, 1)
 
-		methodTest = (args, argsTest) ->
+		methodTest = (args, binds, argsTest) ->
 			(methodName, expectFailure) ->
-				test "$filter=#{methodName}(#{args}) eq 'cake'", 'OData', (result, err) ->
+				test "$filter=#{methodName}(#{args}) eq 'cake'", binds.concat('cake'), (result, err) ->
 					if expectFailure
 						it "Should fail because it's invalid", ->
 							assert.notEqual(err, null)
@@ -282,22 +290,22 @@ module.exports = (test) ->
 						assert.equal(result.options.$filter[1][1].method, methodName)
 						argsTest(result.options.$filter[1][1].args)
 
-					it 'rhs should be cake', ->
-						assert.equal(result.options.$filter[2], 'cake')
+					it 'rhs should be bound to the last arg', ->
+						assert.equal(result.options.$filter[2].bind, binds.length)
 
-		methodTestWithThreeArgs = methodTest "'alfred', Product, 2", (argsResult) ->
-			assert.equal(argsResult[0], 'alfred')
+		methodTestWithThreeArgs = methodTest "'alfred', Product, 2", ['alfred', 2], (argsResult) ->
+			assert.equal(argsResult[0].bind, 0)
 			assert.equal(argsResult[1].name, 'Product')
-			assert.equal(argsResult[2], 2)
+			assert.equal(argsResult[2].bind, 1)
 
-		methodTestWithTwoArgs = methodTest "'alfred', Product", (argsResult) ->
-			assert.equal(argsResult[0], 'alfred')
+		methodTestWithTwoArgs = methodTest "'alfred', Product", ['alfred'], (argsResult) ->
+			assert.equal(argsResult[0].bind, 0)
 			assert.equal(argsResult[1].name, 'Product')
 
-		methodTestWithOneArg = methodTest "'alfred'", (argsResult) ->
-			assert.equal(argsResult[0], 'alfred')
+		methodTestWithOneArg = methodTest "'alfred'", ['alfred'], (argsResult) ->
+			assert.equal(argsResult[0].bind, 0)
 
-		methodTestWithZeroArg = methodTest '', (argsResult) ->
+		methodTestWithZeroArg = methodTest '', [], (argsResult) ->
 			assert.equal(argsResult.length, 0)
 
 
@@ -364,10 +372,10 @@ module.exports = (test) ->
 				it "'eq'", ->
 					assert.equal(lambda.expression[0], 'eq')
 
-				it "'cake'", ->
-					assert.equal(lambda.expression[2], 'cake')
+				it '$0', ->
+					assert.equal(lambda.expression[2].bind, 0)
 
-			test "$filter=child/#{methodName}(d:d/name eq 'cake')", 'OData', (result, err) ->
+			test "$filter=child/#{methodName}(d:d/name eq 'cake')", ['cake'], (result, err) ->
 				if err
 					throw err
 
@@ -379,7 +387,7 @@ module.exports = (test) ->
 
 				lambdaAsserts(result.options.$filter.lambda)
 
-			test "$filter=child/#{methodName}(long_name:long_name/name eq 'cake')", 'OData', (result, err) ->
+			test "$filter=child/#{methodName}(long_name:long_name/name eq 'cake')", ['cake'], (result, err) ->
 				if err
 					throw err
 
@@ -391,7 +399,7 @@ module.exports = (test) ->
 
 				lambdaAsserts(result.options.$filter.lambda, 'long_name')
 
-			test "$filter=child/grandchild/#{methodName}(d:d/name eq 'cake')", 'OData', (result, err) ->
+			test "$filter=child/grandchild/#{methodName}(d:d/name eq 'cake')", ['cake'], (result, err) ->
 				if err
 					throw err
 
