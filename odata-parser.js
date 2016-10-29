@@ -5,8 +5,13 @@
 }(this, function(require, exports, OMeta) {
     var ODataParser = exports.ODataParser = OMeta._extend({
         Process: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._apply("OData");
+            var $elf = this, _fromIdx = this.input.idx, tree;
+            this.reset();
+            tree = this._apply("OData");
+            return {
+                tree: tree,
+                binds: this.binds
+            };
         },
         ProcessRule: function() {
             var $elf = this, _fromIdx = this.input.idx, result, rule;
@@ -351,15 +356,15 @@
             }, function() {
                 return this._apply("FilterNegateExpression");
             }, function() {
-                return this._apply("Number");
+                return this._apply("NumberBind");
             }, function() {
                 return this._apply("Null");
             }, function() {
-                return this._apply("Boolean");
+                return this._apply("BooleanBind");
             }, function() {
-                return this._apply("QuotedText");
+                return this._apply("QuotedTextBind");
             }, function() {
-                return this._apply("Date");
+                return this._apply("DateBind");
             }, function() {
                 return this._apply("Duration");
             }, function() {
@@ -819,9 +824,9 @@
             var $elf = this, _fromIdx = this.input.idx, key;
             this._applyWithArgs("exactly", "(");
             key = this._or(function() {
-                return this._apply("Number");
+                return this._apply("NumberBind");
             }, function() {
-                return this._apply("QuotedText");
+                return this._apply("QuotedTextBind");
             });
             this._applyWithArgs("exactly", ")");
             return key;
@@ -1032,53 +1037,6 @@
             this._applyWithArgs("exactly", "s");
             this._applyWithArgs("exactly", "e");
             return !1;
-        },
-        Date: function() {
-            var $elf = this, _fromIdx = this.input.idx, date;
-            (function() {
-                switch (this.anything()) {
-                  case "d":
-                    switch (this.anything()) {
-                      case "a":
-                        switch (this.anything()) {
-                          case "t":
-                            switch (this.anything()) {
-                              case "e":
-                                return this._or(function() {
-                                    switch (this.anything()) {
-                                      case "t":
-                                        this._applyWithArgs("exactly", "i");
-                                        this._applyWithArgs("exactly", "m");
-                                        this._applyWithArgs("exactly", "e");
-                                        return "datetime";
-
-                                      default:
-                                        throw this._fail();
-                                    }
-                                }, function() {
-                                    return "date";
-                                });
-
-                              default:
-                                throw this._fail();
-                            }
-
-                          default:
-                            throw this._fail();
-                        }
-
-                      default:
-                        throw this._fail();
-                    }
-
-                  default:
-                    throw this._fail();
-                }
-            }).call(this);
-            date = this._apply("QuotedText");
-            date = Date.parse(date);
-            this._pred(!isNaN(date));
-            return new Date(date);
         },
         Duration: function() {
             var $elf = this, _fromIdx = this.input.idx, day, hour, minute, second, sign, timeExists;
@@ -1310,8 +1268,81 @@
                     throw this._fail();
                 }
             });
+        },
+        Bind: function(type, value) {
+            var $elf = this, _fromIdx = this.input.idx;
+            this.binds.push([ type, value ]);
+            return {
+                bind: this.binds.length - 1
+            };
+        },
+        NumberBind: function() {
+            var $elf = this, _fromIdx = this.input.idx, n;
+            n = this._apply("Number");
+            return this._applyWithArgs("Bind", "Real", n);
+        },
+        DateBind: function() {
+            var $elf = this, _fromIdx = this.input.idx, date, type;
+            type = function() {
+                switch (this.anything()) {
+                  case "d":
+                    switch (this.anything()) {
+                      case "a":
+                        switch (this.anything()) {
+                          case "t":
+                            switch (this.anything()) {
+                              case "e":
+                                return this._or(function() {
+                                    switch (this.anything()) {
+                                      case "t":
+                                        this._applyWithArgs("exactly", "i");
+                                        this._applyWithArgs("exactly", "m");
+                                        this._applyWithArgs("exactly", "e");
+                                        return "Date Time";
+
+                                      default:
+                                        throw this._fail();
+                                    }
+                                }, function() {
+                                    "date";
+                                    return "Date";
+                                });
+
+                              default:
+                                throw this._fail();
+                            }
+
+                          default:
+                            throw this._fail();
+                        }
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  default:
+                    throw this._fail();
+                }
+            }.call(this);
+            date = this._apply("QuotedText");
+            date = Date.parse(date);
+            this._pred(!isNaN(date));
+            return this._applyWithArgs("Bind", type, date);
+        },
+        BooleanBind: function() {
+            var $elf = this, _fromIdx = this.input.idx, b;
+            b = this._apply("Boolean");
+            return this._applyWithArgs("Bind", "Boolean", b);
+        },
+        QuotedTextBind: function() {
+            var $elf = this, _fromIdx = this.input.idx, t;
+            t = this._apply("QuotedText");
+            return this._applyWithArgs("Bind", "Text", t);
         }
     });
+    ODataParser.initialize = ODataParser.reset = function() {
+        this.binds = [];
+    };
     ODataParser.ParseOptionsObject = function(options) {
         var optionsObj = {};
         for (var i in options) optionsObj[options[i].name] = options[i].value;

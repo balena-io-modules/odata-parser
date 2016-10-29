@@ -1,3 +1,5 @@
+v0.2.0
+
 * Return the odata tree and bindings separately, so that is is possible to easily reuse trees even when bindings change.
 
 v0.1.10
