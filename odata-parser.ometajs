@@ -23,7 +23,7 @@ export ometa ODataParser {
 			end
 			-> {resource: '$serviceroot'}
 	,
-	
+
 	QueryOptions =
 		'?'
 		listOf(`QueryOption, '&'):options
@@ -458,19 +458,29 @@ export ometa ODataParser {
 		')'
 		-> key
 	,
+	Links =
+		seq('/$links')
+		SubPathSegment:link
+		-> link
+	,
+	Next = SubPathSegment:next
+	,
 	PathSegment =
-		'/'
-		ResourceName:resource
-		(	Key:key
-			(	seq('/$links')
-				SubPathSegment:link
-			|	SubPathSegment:next
+		('/' ResourceName:resource
+			(	Key:key
+				( Links:link
+				|	Next:next
+				)?
+				|	(	seq('/$count')
+						-> true
+					)?:count
 			)?
-			|	(	seq('/$count')
-					-> true
-				)?:count
-		)?
-		QueryOptions?:options
+			QueryOptions?:options
+	  | ( '$' Text:id -> { "Content-ID": id }): resource
+			( Links:link
+			|	Next:next
+			)?
+		)
 		-> { resource: resource, key: key, link: link, property: next, count: count, options: options }
 	,
 	SubPathSegment =
