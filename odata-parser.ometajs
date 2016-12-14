@@ -475,12 +475,12 @@ export ometa ODataParser {
 						-> true
 					)?:count
 			)?
-			QueryOptions?:options
-	  | ( '$' Text:id -> { "Content-ID": id }): resource
+	  | ( '$' RefBind:key -> this.getBind(key)):resource
 			( Links:link
 			|	Next:next
 			)?
 		)
+		QueryOptions?:options
 		-> { resource: resource, key: key, link: link, property: next, count: count, options: options }
 	,
 	SubPathSegment =
@@ -684,6 +684,11 @@ export ometa ODataParser {
 		Bind('Boolean', b)
 	,
 
+	RefBind =
+		Text:t
+		Bind('Ref', t)
+	,
+
 	QuotedTextBind =
 		QuotedText:t
 		Bind('Text', t)
@@ -714,6 +719,10 @@ ODataParser.numberOf = function(rule, count, separator) {
 	}
 	ret.push(this._apply(rule));
 	return ret;
+};
+
+ODataParser.getBind = function(key) {
+	return this.binds[key.bind]
 };
 
 ODataParser._enableTokens = function() {

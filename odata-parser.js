@@ -848,12 +848,12 @@
             return next = this._apply("SubPathSegment");
         },
         PathSegment: function() {
-            var $elf = this, _fromIdx = this.input.idx, count, id, key, link, next, options, resource;
+            var $elf = this, _fromIdx = this.input.idx, count, key, link, next, options, resource;
             this._or(function() {
                 switch (this.anything()) {
                   case "/":
                     resource = this._apply("ResourceName");
-                    this._opt(function() {
+                    return this._opt(function() {
                         return this._or(function() {
                             key = this._apply("Key");
                             return this._opt(function() {
@@ -876,9 +876,6 @@
                             });
                         });
                     });
-                    return options = this._opt(function() {
-                        return this._apply("QueryOptions");
-                    });
 
                   default:
                     throw this._fail();
@@ -886,10 +883,8 @@
             }, function() {
                 switch (this.anything()) {
                   case "$":
-                    id = this._apply("Text");
-                    resource = {
-                        "Content-ID": id
-                    };
+                    key = this._apply("RefBind");
+                    resource = this.getBind(key);
                     return this._opt(function() {
                         return this._or(function() {
                             return link = this._apply("Links");
@@ -901,6 +896,9 @@
                   default:
                     throw this._fail();
                 }
+            });
+            options = this._opt(function() {
+                return this._apply("QueryOptions");
             });
             return {
                 resource: resource,
@@ -1363,6 +1361,11 @@
             b = this._apply("Boolean");
             return this._applyWithArgs("Bind", "Boolean", b);
         },
+        RefBind: function() {
+            var $elf = this, _fromIdx = this.input.idx, t;
+            t = this._apply("Text");
+            return this._applyWithArgs("Bind", "Ref", t);
+        },
         QuotedTextBind: function() {
             var $elf = this, _fromIdx = this.input.idx, t;
             t = this._apply("QuotedText");
@@ -1387,6 +1390,9 @@
         }
         ret.push(this._apply(rule));
         return ret;
+    };
+    ODataParser.getBind = function(key) {
+        return this.binds[key.bind];
     };
     ODataParser._enableTokens = function() {
         OMeta._enableTokens.call(this, [ "Text", "ResourceName", "Number", "RecognisedOption", "FilterAndOperand", "FilterByOperand", "FilterRecognisedMathOperand" ]);
