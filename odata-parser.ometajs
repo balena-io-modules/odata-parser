@@ -463,21 +463,22 @@ export ometa ODataParser {
 		SubPathSegment:link
 		-> link
 	,
-	Next = SubPathSegment:next
-	,
 	PathSegment =
-		('/' ResourceName:resource
+		(	'/'
+			ResourceName:resource
 			(	Key:key
-				( Links:link
-				|	Next:next
+				(	Links:link
+				|	SubPathSegment:next
 				)?
 				|	(	seq('/$count')
 						-> true
 					)?:count
 			)?
-	  | ( '$' RefBind:key -> this.getBind(key)):resource
-			( Links:link
-			|	Next:next
+	  |	'$'
+			RefBind:key
+			getBind(key):resource
+			(	Links:link
+			|	SubPathSegment:next
 			)?
 		)
 		QueryOptions?:options
@@ -685,7 +686,7 @@ export ometa ODataParser {
 	,
 
 	RefBind =
-		Text:t
+		ResourceName:t
 		Bind('Ref', t)
 	,
 
