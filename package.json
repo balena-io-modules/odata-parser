@@ -8,19 +8,17 @@
     "pretest": "npm run lint && npm run prepublishOnly",
     "test": "mocha",
     "prepublish": "require-npm4-to-publish",
-    "prepublishOnly": "ometajs2js --input odata-parser.ometajs --output odata-parser.js"
+    "prepublishOnly": "pegjs --cache --allowed-start-rules Process,ProcessRule -o odata-parser.js odata-parser.pegjs"
   },
   "repository": "https://github.com/resin-io-modules/odata-parser.git",
   "author": "",
   "license": "BSD",
-  "dependencies": {
-    "ometa-js": "^1.5.3"
-  },
   "devDependencies": {
     "chai": "^4.1.2",
     "coffee-script": "~1.12.7",
     "lodash": "^4.16.4",
     "mocha": "^5.2.0",
+    "pegjs": "^0.10.0",
     "require-npm4-to-publish": "^1.0.0",
     "resin-lint": "^1.5.7"
   }

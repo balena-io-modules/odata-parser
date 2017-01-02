@@ -1,5 +1,6 @@
 test = require './test'
 assert = require 'assert'
+{ SyntaxError } = require '../odata-parser'
 
 describe 'Encoding', ->
 	test 'foo=hello%20world', (result) ->

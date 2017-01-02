@@ -1,4 +1,4 @@
-{ ODataParser } = require '../odata-parser'
+ODataParser = require '../odata-parser'
 { expect } = require 'chai'
 _ = require 'lodash'
 
@@ -13,22 +13,19 @@ getBindType = (value) ->
 		return value
 
 raw = (describe, input, optArgs..., expectation) ->
-	[ binds = [], entry = 'Process', params = {} ] = optArgs
+	[ binds = [], options = { startRule: 'Process' }, params = {} ] = optArgs
 	binds = _.map(binds, getBindType)
 	_.each params, (value, key) ->
 		binds[key] = getBindType(value)
 	describe "Parsing #{input}", ->
 		try
-			result = ODataParser.matchAll(input, entry)
+			result = ODataParser.parse(input, options)
 		catch e
 			expectation(e)
 			return
-		if entry is 'Process'
-			it 'should have the correct binds', ->
-				expect(result).to.have.property('binds').that.deep.equals(binds)
-			expectation(result.tree)
-		else
-			expectation(result)
+		it 'should have the correct binds', ->
+			expect(result).to.have.property('binds').that.deep.equals(binds)
+		expectation(result.tree)
 
 runExpectation = (args...) ->
 	args[1] = '/resource?' + args[1]
