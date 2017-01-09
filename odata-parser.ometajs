@@ -466,17 +466,18 @@ export ometa ODataParser {
 	PathSegment =
 		(	'/'
 			ResourceName:resource
-			(	Key:key
-				(	Links:link
-				|	SubPathSegment:next
-				)?
-				|	(	seq('/$count')
-						-> true
-					)?:count
+			(
+			Key:key
+			(	Links:link
+			|	SubPathSegment:next
 			)?
-	  |	'$'
-			RefBind:key
-			getBind(key):resource
+			|	(	seq('/$count')
+					-> true
+				)?:count
+			)?
+		|	ContentReference:ref
+			{ref.resource}:resource
+			{ref.key}:key
 			(	Links:link
 			|	SubPathSegment:next
 			)?
@@ -685,9 +686,11 @@ export ometa ODataParser {
 		Bind('Boolean', b)
 	,
 
-	RefBind =
-		ResourceName:t
-		Bind('Ref', t)
+	ContentReference =
+		'$'
+		ResourceName:resource
+		Bind('Ref', resource):bind
+		-> ({ resource: bind, key: bind })
 	,
 
 	QuotedTextBind =

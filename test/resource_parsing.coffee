@@ -5,7 +5,7 @@ assert = require 'assert'
 checkResource = (result, expected) ->
 	expect(result)
 	.to.have.property 'resource'
-	.that.deep.equals expected
+	.that.equals expected
 
 checkKeyBind = (result) ->
 	it 'should have the key specified for the source', ->
@@ -138,13 +138,13 @@ describe 'Resource Parsing', ->
 
 	test '$1', [['Ref', '1']], (result) ->
 		it 'should bind resource to Content-ID 1', ->
-			checkResource(result, ['Ref', '1'])
+			assert.equal(result.resource, result.key)
 
 		checkKeyBind(result)
 
 	test '$1/child', [['Ref', '1']], (result) ->
 		it 'should bind resource to Content-ID 1', ->
-			checkResource(result, ['Ref', '1'])
+			assert.equal(result.resource, result.key)
 
 		checkKeyBind(result)
 
