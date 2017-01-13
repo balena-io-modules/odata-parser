@@ -136,13 +136,13 @@ describe 'Resource Parsing', ->
 		it 'rhr should be $0', ->
 			assert.equal(result.options.$filter[2].bind, 0)
 
-	test '$1', [['Ref', '1']], (result) ->
+	test '$1', [['ContentReference', '1']], (result) ->
 		it 'should bind resource to Content-ID 1', ->
 			assert.equal(result.resource, result.key)
 
 		checkKeyBind(result)
 
-	test '$1/child', [['Ref', '1']], (result) ->
+	test '$1/child', [['ContentReference', '1']], (result) ->
 		it 'should bind resource to Content-ID 1', ->
 			assert.equal(result.resource, result.key)
 

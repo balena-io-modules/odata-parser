@@ -466,11 +466,10 @@ export ometa ODataParser {
 	PathSegment =
 		(	'/'
 			ResourceName:resource
-			(
-			Key:key
-			(	Links:link
-			|	SubPathSegment:next
-			)?
+			(	Key:key
+				(	Links:link
+				|	SubPathSegment:next
+				)?
 			|	(	seq('/$count')
 					-> true
 				)?:count
@@ -689,7 +688,7 @@ export ometa ODataParser {
 	ContentReference =
 		'$'
 		ResourceName:resource
-		Bind('Ref', resource):bind
+		Bind('ContentReference', resource):bind
 		-> ({ resource: bind, key: bind })
 	,
 
