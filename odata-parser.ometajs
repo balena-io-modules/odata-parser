@@ -23,7 +23,7 @@ export ometa ODataParser {
 			end
 			-> {resource: '$serviceroot'}
 	,
-	
+
 	QueryOptions =
 		'?'
 		listOf(`QueryOption, '&'):options
@@ -458,18 +458,29 @@ export ometa ODataParser {
 		')'
 		-> key
 	,
+	Links =
+		seq('/$links')
+		SubPathSegment:link
+		-> link
+	,
 	PathSegment =
-		'/'
-		ResourceName:resource
-		(	Key:key
-			(	seq('/$links')
-				SubPathSegment:link
-			|	SubPathSegment:next
-			)?
+		(	'/'
+			ResourceName:resource
+			(	Key:key
+				(	Links:link
+				|	SubPathSegment:next
+				)?
 			|	(	seq('/$count')
 					-> true
 				)?:count
-		)?
+			)?
+		|	ContentReference:ref
+			{ref.resource}:resource
+			{ref.key}:key
+			(	Links:link
+			|	SubPathSegment:next
+			)?
+		)
 		QueryOptions?:options
 		-> { resource: resource, key: key, link: link, property: next, count: count, options: options }
 	,
@@ -674,6 +685,13 @@ export ometa ODataParser {
 		Bind('Boolean', b)
 	,
 
+	ContentReference =
+		'$'
+		ResourceName:resource
+		Bind('ContentReference', resource):bind
+		-> ({ resource: bind, key: bind })
+	,
+
 	QuotedTextBind =
 		QuotedText:t
 		Bind('Text', t)
@@ -704,6 +722,10 @@ ODataParser.numberOf = function(rule, count, separator) {
 	}
 	ret.push(this._apply(rule));
 	return ret;
+};
+
+ODataParser.getBind = function(key) {
+	return this.binds[key.bind]
 };
 
 ODataParser._enableTokens = function() {

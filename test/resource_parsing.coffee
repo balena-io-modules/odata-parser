@@ -136,6 +136,21 @@ describe 'Resource Parsing', ->
 		it 'rhr should be $0', ->
 			assert.equal(result.options.$filter[2].bind, 0)
 
+	test '$1', [['ContentReference', '1']], (result) ->
+		it 'should bind resource to Content-ID 1', ->
+			assert.equal(result.resource, result.key)
+
+		checkKeyBind(result)
+
+	test '$1/child', [['ContentReference', '1']], (result) ->
+		it 'should bind resource to Content-ID 1', ->
+			assert.equal(result.resource, result.key)
+
+		checkKeyBind(result)
+
+		it 'should have the child specified', ->
+			assert.equal(result.property.resource, 'child')
+
 	test '/model/$count?$filter=id eq 5 or id eq 10', [5, 10], (result) ->
 		it 'should have the resource specified', ->
 			checkResource(result, 'model')
@@ -174,4 +189,3 @@ describe 'Resource Parsing', ->
 
 		it 'rhr should be $0', ->
 			assert.equal(filter[2].bind, 0)
-
