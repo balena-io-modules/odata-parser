@@ -458,7 +458,7 @@ export ometa ODataParser {
 	,
 	KeyBind =
 			NumberBind
-		| QuotedTextBind
+		|	QuotedTextBind
 	,
 	ExternalKeyBind =
 		KeyBind:b
