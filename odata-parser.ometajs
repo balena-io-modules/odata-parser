@@ -452,11 +452,17 @@ export ometa ODataParser {
 	,
 	Key =
 		'('
-		(	NumberBind
-		|	QuotedTextBind
-		):key
+		KeyBind:key
 		')'
 		-> key
+	,
+	KeyBind =
+			NumberBind
+		|	QuotedTextBind
+	,
+	ExternalKeyBind =
+		KeyBind:b
+		-> this.getBind(b)
 	,
 	Links =
 		seq('/$links')
