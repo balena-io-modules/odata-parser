@@ -823,50 +823,77 @@
         Key: function() {
             var $elf = this, _fromIdx = this.input.idx, key;
             this._applyWithArgs("exactly", "(");
-            key = this._or(function() {
+            key = this._apply("KeyBind");
+            this._applyWithArgs("exactly", ")");
+            return key;
+        },
+        KeyBind: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return this._or(function() {
                 return this._apply("NumberBind");
             }, function() {
                 return this._apply("QuotedTextBind");
             });
-            this._applyWithArgs("exactly", ")");
-            return key;
+        },
+        ExternalKeyBind: function() {
+            var $elf = this, _fromIdx = this.input.idx, b;
+            b = this._apply("KeyBind");
+            return this.getBind(b);
+        },
+        Links: function() {
+            var $elf = this, _fromIdx = this.input.idx, link;
+            this._applyWithArgs("exactly", "/");
+            this._applyWithArgs("exactly", "$");
+            this._applyWithArgs("exactly", "l");
+            this._applyWithArgs("exactly", "i");
+            this._applyWithArgs("exactly", "n");
+            this._applyWithArgs("exactly", "k");
+            this._applyWithArgs("exactly", "s");
+            link = this._apply("SubPathSegment");
+            return link;
         },
         PathSegment: function() {
-            var $elf = this, _fromIdx = this.input.idx, count, key, link, next, options, resource;
-            this._applyWithArgs("exactly", "/");
-            resource = this._apply("ResourceName");
-            this._opt(function() {
-                return this._or(function() {
-                    key = this._apply("Key");
+            var $elf = this, _fromIdx = this.input.idx, count, key, link, next, options, ref, resource;
+            this._or(function() {
+                switch (this.anything()) {
+                  case "/":
+                    resource = this._apply("ResourceName");
                     return this._opt(function() {
                         return this._or(function() {
-                            switch (this.anything()) {
-                              case "/":
-                                this._applyWithArgs("exactly", "$");
-                                this._applyWithArgs("exactly", "l");
-                                this._applyWithArgs("exactly", "i");
-                                this._applyWithArgs("exactly", "n");
-                                this._applyWithArgs("exactly", "k");
-                                this._applyWithArgs("exactly", "s");
-                                return link = this._apply("SubPathSegment");
-
-                              default:
-                                throw this._fail();
-                            }
+                            key = this._apply("Key");
+                            return this._opt(function() {
+                                return this._or(function() {
+                                    return link = this._apply("Links");
+                                }, function() {
+                                    return next = this._apply("SubPathSegment");
+                                });
+                            });
                         }, function() {
-                            return next = this._apply("SubPathSegment");
+                            return count = this._opt(function() {
+                                this._applyWithArgs("exactly", "/");
+                                this._applyWithArgs("exactly", "$");
+                                this._applyWithArgs("exactly", "c");
+                                this._applyWithArgs("exactly", "o");
+                                this._applyWithArgs("exactly", "u");
+                                this._applyWithArgs("exactly", "n");
+                                this._applyWithArgs("exactly", "t");
+                                return !0;
+                            });
                         });
                     });
-                }, function() {
-                    return count = this._opt(function() {
-                        this._applyWithArgs("exactly", "/");
-                        this._applyWithArgs("exactly", "$");
-                        this._applyWithArgs("exactly", "c");
-                        this._applyWithArgs("exactly", "o");
-                        this._applyWithArgs("exactly", "u");
-                        this._applyWithArgs("exactly", "n");
-                        this._applyWithArgs("exactly", "t");
-                        return !0;
+
+                  default:
+                    throw this._fail();
+                }
+            }, function() {
+                ref = this._apply("ContentReference");
+                resource = ref.resource;
+                key = ref.key;
+                return this._opt(function() {
+                    return this._or(function() {
+                        return link = this._apply("Links");
+                    }, function() {
+                        return next = this._apply("SubPathSegment");
                     });
                 });
             });
@@ -1334,6 +1361,16 @@
             b = this._apply("Boolean");
             return this._applyWithArgs("Bind", "Boolean", b);
         },
+        ContentReference: function() {
+            var $elf = this, _fromIdx = this.input.idx, bind, resource;
+            this._applyWithArgs("exactly", "$");
+            resource = this._apply("ResourceName");
+            bind = this._applyWithArgs("Bind", "ContentReference", resource);
+            return {
+                resource: bind,
+                key: bind
+            };
+        },
         QuotedTextBind: function() {
             var $elf = this, _fromIdx = this.input.idx, t;
             t = this._apply("QuotedText");
@@ -1350,7 +1387,7 @@
     };
     ODataParser.numberOf = function(rule, count, separator) {
         if (0 === count) return [];
-        for (var ret = [], i = 1; count > i; i++) {
+        for (var ret = [], i = 1; i < count; i++) {
             ret.push(this._apply(rule));
             this._apply("spaces");
             this._applyWithArgs("exactly", separator);
@@ -1358,6 +1395,9 @@
         }
         ret.push(this._apply(rule));
         return ret;
+    };
+    ODataParser.getBind = function(key) {
+        return this.binds[key.bind];
     };
     ODataParser._enableTokens = function() {
         OMeta._enableTokens.call(this, [ "Text", "ResourceName", "Number", "RecognisedOption", "FilterAndOperand", "FilterByOperand", "FilterRecognisedMathOperand" ]);

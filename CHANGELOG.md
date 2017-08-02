@@ -1,3 +1,8 @@
+v0.2.1
+
+* Added `ExternalKeyBind`
+* Added batch support
+
 v0.2.0
 
 * Return the odata tree and bindings separately, so that is is possible to easily reuse trees even when bindings change.
