@@ -1,6 +1,6 @@
 {
   "name": "@resin/odata-parser",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
   "scripts": {
@@ -14,7 +14,6 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "chai": "^3.5.0",
     "ometa-js": "^1.4.1"
   },
   "devDependencies": {
