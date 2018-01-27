@@ -103,7 +103,7 @@
         },
         SortOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties;
-            this._applyWithArgs("RecognisedOption", "$orderby=");
+            this._applyWithArgs("RecognisedOption", "orderby");
             properties = this._applyWithArgs("listOf", "SortProperty", ",");
             return {
                 name: "$orderby",
@@ -140,7 +140,7 @@
         },
         TopOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
-            this._applyWithArgs("RecognisedOption", "$top=");
+            this._applyWithArgs("RecognisedOption", "top");
             value = this._apply("UnsignedInteger");
             return {
                 name: "$top",
@@ -149,7 +149,7 @@
         },
         SkipOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
-            this._applyWithArgs("RecognisedOption", "$skip=");
+            this._applyWithArgs("RecognisedOption", "skip");
             value = this._apply("UnsignedInteger");
             return {
                 name: "$skip",
@@ -158,7 +158,7 @@
         },
         InlineCountOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
-            this._applyWithArgs("RecognisedOption", "$inlinecount=");
+            this._applyWithArgs("RecognisedOption", "inlinecount");
             value = this._or(function() {
                 switch (this.anything()) {
                   case "a":
@@ -191,7 +191,7 @@
         },
         CountOption: function() {
             var $elf = this, _fromIdx = this.input.idx, value;
-            this._applyWithArgs("RecognisedOption", "$count=");
+            this._applyWithArgs("RecognisedOption", "count");
             value = this._apply("Boolean");
             return {
                 name: "$count",
@@ -200,7 +200,7 @@
         },
         ExpandOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties;
-            this._applyWithArgs("RecognisedOption", "$expand=");
+            this._applyWithArgs("RecognisedOption", "expand");
             properties = this._apply("ExpandPropertyPathList");
             return {
                 name: "$expand",
@@ -211,7 +211,7 @@
         },
         SelectOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties, value;
-            this._applyWithArgs("RecognisedOption", "$select=");
+            this._applyWithArgs("RecognisedOption", "select");
             value = this._or(function() {
                 switch (this.anything()) {
                   case "*":
@@ -233,7 +233,7 @@
         },
         FilterByOption: function() {
             var $elf = this, _fromIdx = this.input.idx, expr;
-            this._applyWithArgs("RecognisedOption", "$filter=");
+            this._applyWithArgs("RecognisedOption", "filter");
             expr = this._apply("FilterByExpression");
             return {
                 name: "$filter",
@@ -242,7 +242,7 @@
         },
         FormatOption: function() {
             var $elf = this, _fromIdx = this.input.idx, type;
-            this._applyWithArgs("RecognisedOption", "$format=");
+            this._applyWithArgs("RecognisedOption", "format");
             type = this._apply("ContentType");
             return {
                 name: "$format",
@@ -251,7 +251,9 @@
         },
         RecognisedOption: function(name) {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("seq", name);
+            this._apply("Dollar");
+            this._applyWithArgs("seq", name);
+            return this._applyWithArgs("exactly", "=");
         },
         FilterByExpression: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -1257,6 +1259,23 @@
 
                   case "'":
                     return "'";
+
+                  default:
+                    throw this._fail();
+                }
+            }.call(this);
+        },
+        Dollar: function() {
+            var $elf = this, _fromIdx = this.input.idx;
+            return function() {
+                switch (this.anything()) {
+                  case "$":
+                    return "$";
+
+                  case "%":
+                    this._applyWithArgs("exactly", "2");
+                    this._applyWithArgs("exactly", "4");
+                    return "%24";
 
                   default:
                     throw this._fail();
