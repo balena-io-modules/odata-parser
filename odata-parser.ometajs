@@ -49,7 +49,7 @@ export ometa ODataParser {
 	,
 
 	SortOption =
-		RecognisedOption('$orderby=')
+		RecognisedOption('orderby')
 		listOf(`SortProperty, ','):properties
 		-> { name: '$orderby', value: { properties: properties } }
 	,
@@ -66,19 +66,19 @@ export ometa ODataParser {
 	,
 
 	TopOption =
-		RecognisedOption('$top=')
+		RecognisedOption('top')
 		UnsignedInteger:value
 		-> { name: '$top', value: value }
 	,
 
 	SkipOption =
-		RecognisedOption('$skip=')
+		RecognisedOption('skip')
 		UnsignedInteger:value
 		-> { name: '$skip', value: value }
 	,
 
 	InlineCountOption =
-		RecognisedOption('$inlinecount=')
+		RecognisedOption('inlinecount')
 		(	seq('allpages')
 		|	seq('none')
 		|	Text -> ''
@@ -87,19 +87,19 @@ export ometa ODataParser {
 	,
 
 	CountOption =
-		RecognisedOption('$count=')
+		RecognisedOption('count')
 		Boolean:value
 		-> { name: '$count', value: value }
 	,
 
 	ExpandOption =
-		RecognisedOption('$expand=')
+		RecognisedOption('expand')
 		ExpandPropertyPathList:properties
 		-> { name: '$expand', value: { properties: properties } }
 	,
 
 	SelectOption =
-		RecognisedOption('$select=')
+		RecognisedOption('select')
 		(	'*'
 		|	PropertyPathList:properties
 			-> { properties: properties }
@@ -109,19 +109,21 @@ export ometa ODataParser {
 
 
 	FilterByOption =
-		RecognisedOption('$filter=')
+		RecognisedOption('filter')
 		FilterByExpression:expr
 		-> { name: '$filter', value: expr }
 	,
 
 	FormatOption =
-		RecognisedOption('$format=')
+		RecognisedOption('format')
 		ContentType:type
 		-> { name: '$format', value: type }
 	,
 
 	RecognisedOption :name =
+		Dollar
 		seq(name)
+		'='
 	,
 
 	FilterByExpression =
@@ -646,6 +648,11 @@ export ometa ODataParser {
 			'\''
 		|	seq('%27')
 			-> '\''
+	,
+
+	Dollar =
+		'$'
+	|	seq('%24')
 	,
 
 	QuotedText =
