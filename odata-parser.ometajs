@@ -615,16 +615,11 @@ export ometa ODataParser {
 	,
 
 	ReservedUriComponent =
-			GenDelim
-		|	SubDelim
-	,
-
-	GenDelim =
-		':' | '/' | '?' | '#' | '[' | ']' | '@'
-	,
-
-	SubDelim =
-		'!' | '$' | '*' | Apostrophe | '&' | '(' | ')' | '+' | ',' | ';' | '='
+		// GenDelim
+			':' | '/' | '?' | '#' | '[' | ']' | '@'
+		|
+		// SubDelim
+			'!' | '$' | '*' | '&' | '(' | ')' | '+' | ',' | ';' | '=' | Apostrophe
 	,
 
 	Text =
