@@ -1133,23 +1133,45 @@
         ReservedUriComponent: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
-                return this._apply("GenDelim");
-            }, function() {
-                return this._apply("SubDelim");
-            });
-        },
-        GenDelim: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return function() {
                 switch (this.anything()) {
+                  case "!":
+                    return "!";
+
                   case "#":
                     return "#";
+
+                  case "$":
+                    return "$";
+
+                  case "&":
+                    return "&";
+
+                  case "(":
+                    return "(";
+
+                  case ")":
+                    return ")";
+
+                  case "*":
+                    return "*";
+
+                  case "+":
+                    return "+";
+
+                  case ",":
+                    return ",";
 
                   case "/":
                     return "/";
 
                   case ":":
                     return ":";
+
+                  case ";":
+                    return ";";
+
+                  case "=":
+                    return "=";
 
                   case "?":
                     return "?";
@@ -1166,52 +1188,8 @@
                   default:
                     throw this._fail();
                 }
-            }.call(this);
-        },
-        SubDelim: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                switch (this.anything()) {
-                  case "!":
-                    return "!";
-
-                  case "$":
-                    return "$";
-
-                  case "*":
-                    return "*";
-
-                  default:
-                    throw this._fail();
-                }
             }, function() {
                 return this._apply("Apostrophe");
-            }, function() {
-                switch (this.anything()) {
-                  case "&":
-                    return "&";
-
-                  case "(":
-                    return "(";
-
-                  case ")":
-                    return ")";
-
-                  case "+":
-                    return "+";
-
-                  case ",":
-                    return ",";
-
-                  case ";":
-                    return ";";
-
-                  case "=":
-                    return "=";
-
-                  default:
-                    throw this._fail();
-                }
             });
         },
         Text: function() {
