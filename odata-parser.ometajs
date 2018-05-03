@@ -1,3 +1,37 @@
+var methods = {
+	cast: [ 1, 2 ],
+	ceiling: 1,
+	concat: 2,
+	contains: 2,
+	date: 1,
+	day: 1,
+	endswith: 2,
+	floor: 1,
+	fractionalseconds: 1,
+	hour: 1,
+	indexof: 2,
+	isof: [ 1, 2 ],
+	length: 1,
+	maxdatetime: 0,
+	mindatetime: 0,
+	minute: 1,
+	month: 1,
+	now: 0,
+	replace: 3,
+	round: 1,
+	second: 1,
+	startswith: 2,
+	substringof: 2,
+	substring: [ 2, 3 ],
+	time: 1,
+	tolower: 1,
+	totaloffsetminutes: 1,
+	totalseconds: 1,
+	toupper: 1,
+	trim: 1,
+	year: 1
+};
+
 export ometa ODataParser {
 
 	Process =
@@ -244,148 +278,45 @@ export ometa ODataParser {
 	,
 
 	FilterMethodCallExpression =
-		(	ContainsMethodCall
-		|	EndsWithMethodCall
-		|	StartsWithMethodCall
-		|	LengthMethodCall
-		|	IndexOfMethodCall
-		|	SubstringMethodCall
-		|	ToLowerMethodCall
-		|	ToUpperMethodCall
-		|	TrimMethodCall
-		|	ConcatMethodCall
-		|	YearMethodCall
-		|	MonthMethodCall
-		|	DayMethodCall
-		|	HourMethodCall
-		|	MinuteMethodCall
-		|	SecondMethodCall
-		|	FractionalSecondsMethodCall
-		|	DateMethodCall
-		|	TimeMethodCall
-		|	TotalOffsetMinutesMethodCall
-		|	NowMethodCall
-		|	MaxDateTimeMethodCall
-		|	MinDateTimeMethodCall
-		|	TotalSecondsMethodCall
-		|	RoundMethodCall
-		|	FloorMethodCall
-		|	CeilingMethodCall
-		|	IsOfMethodCall
-		|	CastMethodCall
-		// OData < v4
-		|	SubstringOfMethodCall
-		|	ReplaceMethodCall
-		):method
-		-> [ 'call', method ]
-	,
+		(	seq('cast')
+		|	seq('ceiling')
+		|	seq('concat')
+		|	seq('contains')
+		|	seq('date')
+		|	seq('day')
+		|	seq('endswith')
+		|	seq('floor')
+		|	seq('fractionalseconds')
+		|	seq('hour')
+		|	seq('indexof')
+		|	seq('isof')
+		|	seq('length')
+		|	seq('maxdatetime')
+		|	seq('mindatetime')
+		|	seq('minute')
+		|	seq('month')
+		|	seq('now')
+		|	seq('replace')
+		|	seq('round')
+		|	seq('second')
+		|	seq('startswith')
+		|	seq('substringof')
+		|	seq('substring')
+		|	seq('time')
+		|	seq('tolower')
+		|	seq('totaloffsetminutes')
+		|	seq('totalseconds')
+		|	seq('toupper')
+		|	seq('trim')
+		|	seq('year')
 
-	ContainsMethodCall =
-		MethodCall('contains', 2)
-	,
-	EndsWithMethodCall =
-		MethodCall('endswith', 2)
-	,
-	StartsWithMethodCall =
-		MethodCall('startswith', 2)
-	,
-	LengthMethodCall =
-		MethodCall('length', 1)
-	,
-	IndexOfMethodCall =
-		MethodCall('indexof', 2)
-	,
-	SubstringMethodCall =
-		MethodCall('substring', 2)
-	|	MethodCall('substring', 3)
-	,
-	ToLowerMethodCall =
-		MethodCall('tolower', 1)
-	,
-	ToUpperMethodCall =
-		MethodCall('toupper', 1)
-	,
-	TrimMethodCall =
-		MethodCall('trim', 1)
-	,
-	ConcatMethodCall =
-		MethodCall('concat', 2)
-	,
-	YearMethodCall =
-		MethodCall('year', 1)
-	,
-	MonthMethodCall =
-		MethodCall('month', 1)
-	,
-	DayMethodCall =
-		MethodCall('day', 1)
-	,
-	HourMethodCall =
-		MethodCall('hour', 1)
-	,
-	MinuteMethodCall =
-		MethodCall('minute', 1)
-	,
-	SecondMethodCall =
-		MethodCall('second', 1)
-	,
-	FractionalSecondsMethodCall =
-		MethodCall('fractionalseconds', 1)
-	,
-	DateMethodCall =
-		MethodCall('date', 1)
-	,
-	TimeMethodCall =
-		MethodCall('time', 1)
-	,
-	TotalOffsetMinutesMethodCall =
-		MethodCall('totaloffsetminutes', 1)
-	,
-	NowMethodCall =
-		MethodCall('now', 0)
-	,
-	MaxDateTimeMethodCall =
-		MethodCall('maxdatetime', 0)
-	,
-	MinDateTimeMethodCall =
-		MethodCall('mindatetime', 0)
-	,
-	TotalSecondsMethodCall =
-		MethodCall('totalseconds', 1)
-	,
-	RoundMethodCall =
-		MethodCall('round', 1)
-	,
-	FloorMethodCall =
-		MethodCall('floor', 1)
-	,
-	CeilingMethodCall =
-		MethodCall('ceiling', 1)
-	,
-	IsOfMethodCall =
-			MethodCall('isof', 1)
-		|	MethodCall('isof', 2)
-	,
-	CastMethodCall =
-			MethodCall('cast', 1)
-		|	MethodCall('cast', 2)
-	,
-
-	SubstringOfMethodCall =
-		MethodCall('substringof', 2)
-	,
-	ReplaceMethodCall =
-		MethodCall('replace', 3)
-	,
-
-	MethodCall :name :arity =
-		seq(name)
+		):methodName
 		'('
 			spaces
-			numberOf(`FilterByExpression, arity, ','):args
+			numberOf(`FilterByExpression, methods[methodName], ','):args
 			spaces
 		')'
-		-> { args: args, method: name }
+		-> [ 'call', { args: args, method: methodName } ]
 	,
 
 	LambdaMethodCall =
@@ -726,6 +657,22 @@ ODataParser.space = function() {
 };
 
 ODataParser.numberOf = function(rule, count, separator) {
+	if(count.length) {
+		count.sort();
+		// We need to check in descending order to make sure we match the most possible
+		var origInput = this.input;
+		for (var i = count.length - 1; i >= 0; i--) {
+			try {
+				this.input = origInput;
+				return this.numberOf(rule, count[i], separator);
+			} catch (e) {
+				if (!(e instanceof SyntaxError)) {
+					throw e;
+				}
+			}
+		}
+		throw this._fail()
+	}
 	if(count === 0) {
 		return [];
 	}
