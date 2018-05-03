@@ -1277,22 +1277,6 @@
             this._apply("Apostrophe");
             return decodeURIComponent(text.join(""));
         },
-        space: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return OMeta._superApplyWithArgs(this, "space");
-            }, function() {
-                switch (this.anything()) {
-                  case "%":
-                    this._applyWithArgs("exactly", "2");
-                    this._applyWithArgs("exactly", "0");
-                    return " ";
-
-                  default:
-                    throw this._fail();
-                }
-            });
-        },
         Bind: function(type, value) {
             var $elf = this, _fromIdx = this.input.idx;
             this.binds.push([ type, value ]);
@@ -1381,6 +1365,16 @@
         var optionsObj = {};
         for (var i in options) optionsObj[options[i].name] = options[i].value;
         return optionsObj;
+    };
+    ODataParser.space = function() {
+        var $elf = this, _fromIdx = this.input.idx, r = this._apply("char");
+        if (r.charCodeAt(0) <= 32) return r;
+        if ("%" === r) {
+            this._applyWithArgs("exactly", "2");
+            this._applyWithArgs("exactly", "0");
+            return " ";
+        }
+        throw this._fail();
     };
     ODataParser.numberOf = function(rule, count, separator) {
         if (0 === count) return [];
