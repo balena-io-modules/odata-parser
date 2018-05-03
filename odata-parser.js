@@ -3,7 +3,39 @@
         return root[moduleName];
     }, root, root.OMeta);
 }(this, function(require, exports, OMeta) {
-    var ODataParser = exports.ODataParser = OMeta._extend({
+    var methods = {
+        cast: [ 1, 2 ],
+        ceiling: 1,
+        concat: 2,
+        contains: 2,
+        date: 1,
+        day: 1,
+        endswith: 2,
+        floor: 1,
+        fractionalseconds: 1,
+        hour: 1,
+        indexof: 2,
+        isof: [ 1, 2 ],
+        length: 1,
+        maxdatetime: 0,
+        mindatetime: 0,
+        minute: 1,
+        month: 1,
+        now: 0,
+        replace: 3,
+        round: 1,
+        second: 1,
+        startswith: 2,
+        substringof: 2,
+        substring: [ 2, 3 ],
+        time: 1,
+        tolower: 1,
+        totaloffsetminutes: 1,
+        totalseconds: 1,
+        toupper: 1,
+        trim: 1,
+        year: 1
+    }, ODataParser = exports.ODataParser = OMeta._extend({
         Process: function() {
             var $elf = this, _fromIdx = this.input.idx, tree;
             this.reset();
@@ -480,220 +512,397 @@
             return [ "not", value ];
         },
         FilterMethodCallExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, method;
-            method = this._or(function() {
-                return this._apply("ContainsMethodCall");
-            }, function() {
-                return this._apply("EndsWithMethodCall");
-            }, function() {
-                return this._apply("StartsWithMethodCall");
-            }, function() {
-                return this._apply("LengthMethodCall");
-            }, function() {
-                return this._apply("IndexOfMethodCall");
-            }, function() {
-                return this._apply("SubstringMethodCall");
-            }, function() {
-                return this._apply("ToLowerMethodCall");
-            }, function() {
-                return this._apply("ToUpperMethodCall");
-            }, function() {
-                return this._apply("TrimMethodCall");
-            }, function() {
-                return this._apply("ConcatMethodCall");
-            }, function() {
-                return this._apply("YearMethodCall");
-            }, function() {
-                return this._apply("MonthMethodCall");
-            }, function() {
-                return this._apply("DayMethodCall");
-            }, function() {
-                return this._apply("HourMethodCall");
-            }, function() {
-                return this._apply("MinuteMethodCall");
-            }, function() {
-                return this._apply("SecondMethodCall");
-            }, function() {
-                return this._apply("FractionalSecondsMethodCall");
-            }, function() {
-                return this._apply("DateMethodCall");
-            }, function() {
-                return this._apply("TimeMethodCall");
-            }, function() {
-                return this._apply("TotalOffsetMinutesMethodCall");
-            }, function() {
-                return this._apply("NowMethodCall");
-            }, function() {
-                return this._apply("MaxDateTimeMethodCall");
-            }, function() {
-                return this._apply("MinDateTimeMethodCall");
-            }, function() {
-                return this._apply("TotalSecondsMethodCall");
-            }, function() {
-                return this._apply("RoundMethodCall");
-            }, function() {
-                return this._apply("FloorMethodCall");
-            }, function() {
-                return this._apply("CeilingMethodCall");
-            }, function() {
-                return this._apply("IsOfMethodCall");
-            }, function() {
-                return this._apply("CastMethodCall");
-            }, function() {
-                return this._apply("SubstringOfMethodCall");
-            }, function() {
-                return this._apply("ReplaceMethodCall");
-            });
-            return [ "call", method ];
-        },
-        ContainsMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "contains", 2);
-        },
-        EndsWithMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "endswith", 2);
-        },
-        StartsWithMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "startswith", 2);
-        },
-        LengthMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "length", 1);
-        },
-        IndexOfMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "indexof", 2);
-        },
-        SubstringMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return this._applyWithArgs("MethodCall", "substring", 2);
-            }, function() {
-                return this._applyWithArgs("MethodCall", "substring", 3);
-            });
-        },
-        ToLowerMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "tolower", 1);
-        },
-        ToUpperMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "toupper", 1);
-        },
-        TrimMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "trim", 1);
-        },
-        ConcatMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "concat", 2);
-        },
-        YearMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "year", 1);
-        },
-        MonthMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "month", 1);
-        },
-        DayMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "day", 1);
-        },
-        HourMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "hour", 1);
-        },
-        MinuteMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "minute", 1);
-        },
-        SecondMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "second", 1);
-        },
-        FractionalSecondsMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "fractionalseconds", 1);
-        },
-        DateMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "date", 1);
-        },
-        TimeMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "time", 1);
-        },
-        TotalOffsetMinutesMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "totaloffsetminutes", 1);
-        },
-        NowMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "now", 0);
-        },
-        MaxDateTimeMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "maxdatetime", 0);
-        },
-        MinDateTimeMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "mindatetime", 0);
-        },
-        TotalSecondsMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "totalseconds", 1);
-        },
-        RoundMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "round", 1);
-        },
-        FloorMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "floor", 1);
-        },
-        CeilingMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "ceiling", 1);
-        },
-        IsOfMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return this._applyWithArgs("MethodCall", "isof", 1);
-            }, function() {
-                return this._applyWithArgs("MethodCall", "isof", 2);
-            });
-        },
-        CastMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return this._applyWithArgs("MethodCall", "cast", 1);
-            }, function() {
-                return this._applyWithArgs("MethodCall", "cast", 2);
-            });
-        },
-        SubstringOfMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "substringof", 2);
-        },
-        ReplaceMethodCall: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("MethodCall", "replace", 3);
-        },
-        MethodCall: function(name, arity) {
-            var $elf = this, _fromIdx = this.input.idx, args;
-            this._applyWithArgs("seq", name);
+            var $elf = this, _fromIdx = this.input.idx, args, methodName;
+            methodName = function() {
+                switch (this.anything()) {
+                  case "c":
+                    switch (this.anything()) {
+                      case "a":
+                        this._applyWithArgs("exactly", "s");
+                        this._applyWithArgs("exactly", "t");
+                        return "cast";
+
+                      case "e":
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "l");
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "g");
+                        return "ceiling";
+
+                      case "o":
+                        switch (this.anything()) {
+                          case "n":
+                            switch (this.anything()) {
+                              case "c":
+                                this._applyWithArgs("exactly", "a");
+                                this._applyWithArgs("exactly", "t");
+                                return "concat";
+
+                              case "t":
+                                this._applyWithArgs("exactly", "a");
+                                this._applyWithArgs("exactly", "i");
+                                this._applyWithArgs("exactly", "n");
+                                this._applyWithArgs("exactly", "s");
+                                return "contains";
+
+                              default:
+                                throw this._fail();
+                            }
+
+                          default:
+                            throw this._fail();
+                        }
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "d":
+                    switch (this.anything()) {
+                      case "a":
+                        switch (this.anything()) {
+                          case "t":
+                            this._applyWithArgs("exactly", "e");
+                            return "date";
+
+                          case "y":
+                            return "day";
+
+                          default:
+                            throw this._fail();
+                        }
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "e":
+                    this._applyWithArgs("exactly", "n");
+                    this._applyWithArgs("exactly", "d");
+                    this._applyWithArgs("exactly", "s");
+                    this._applyWithArgs("exactly", "w");
+                    this._applyWithArgs("exactly", "i");
+                    this._applyWithArgs("exactly", "t");
+                    this._applyWithArgs("exactly", "h");
+                    return "endswith";
+
+                  case "f":
+                    switch (this.anything()) {
+                      case "l":
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "r");
+                        return "floor";
+
+                      case "r":
+                        this._applyWithArgs("exactly", "a");
+                        this._applyWithArgs("exactly", "c");
+                        this._applyWithArgs("exactly", "t");
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "a");
+                        this._applyWithArgs("exactly", "l");
+                        this._applyWithArgs("exactly", "s");
+                        this._applyWithArgs("exactly", "e");
+                        this._applyWithArgs("exactly", "c");
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "d");
+                        this._applyWithArgs("exactly", "s");
+                        return "fractionalseconds";
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "h":
+                    this._applyWithArgs("exactly", "o");
+                    this._applyWithArgs("exactly", "u");
+                    this._applyWithArgs("exactly", "r");
+                    return "hour";
+
+                  case "i":
+                    switch (this.anything()) {
+                      case "n":
+                        this._applyWithArgs("exactly", "d");
+                        this._applyWithArgs("exactly", "e");
+                        this._applyWithArgs("exactly", "x");
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "f");
+                        return "indexof";
+
+                      case "s":
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "f");
+                        return "isof";
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "l":
+                    this._applyWithArgs("exactly", "e");
+                    this._applyWithArgs("exactly", "n");
+                    this._applyWithArgs("exactly", "g");
+                    this._applyWithArgs("exactly", "t");
+                    this._applyWithArgs("exactly", "h");
+                    return "length";
+
+                  case "m":
+                    switch (this.anything()) {
+                      case "a":
+                        this._applyWithArgs("exactly", "x");
+                        this._applyWithArgs("exactly", "d");
+                        this._applyWithArgs("exactly", "a");
+                        this._applyWithArgs("exactly", "t");
+                        this._applyWithArgs("exactly", "e");
+                        this._applyWithArgs("exactly", "t");
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "m");
+                        this._applyWithArgs("exactly", "e");
+                        return "maxdatetime";
+
+                      case "i":
+                        switch (this.anything()) {
+                          case "n":
+                            switch (this.anything()) {
+                              case "d":
+                                this._applyWithArgs("exactly", "a");
+                                this._applyWithArgs("exactly", "t");
+                                this._applyWithArgs("exactly", "e");
+                                this._applyWithArgs("exactly", "t");
+                                this._applyWithArgs("exactly", "i");
+                                this._applyWithArgs("exactly", "m");
+                                this._applyWithArgs("exactly", "e");
+                                return "mindatetime";
+
+                              case "u":
+                                this._applyWithArgs("exactly", "t");
+                                this._applyWithArgs("exactly", "e");
+                                return "minute";
+
+                              default:
+                                throw this._fail();
+                            }
+
+                          default:
+                            throw this._fail();
+                        }
+
+                      case "o":
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "t");
+                        this._applyWithArgs("exactly", "h");
+                        return "month";
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "n":
+                    this._applyWithArgs("exactly", "o");
+                    this._applyWithArgs("exactly", "w");
+                    return "now";
+
+                  case "r":
+                    switch (this.anything()) {
+                      case "e":
+                        this._applyWithArgs("exactly", "p");
+                        this._applyWithArgs("exactly", "l");
+                        this._applyWithArgs("exactly", "a");
+                        this._applyWithArgs("exactly", "c");
+                        this._applyWithArgs("exactly", "e");
+                        return "replace";
+
+                      case "o":
+                        this._applyWithArgs("exactly", "u");
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "d");
+                        return "round";
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "s":
+                    switch (this.anything()) {
+                      case "e":
+                        this._applyWithArgs("exactly", "c");
+                        this._applyWithArgs("exactly", "o");
+                        this._applyWithArgs("exactly", "n");
+                        this._applyWithArgs("exactly", "d");
+                        return "second";
+
+                      case "t":
+                        this._applyWithArgs("exactly", "a");
+                        this._applyWithArgs("exactly", "r");
+                        this._applyWithArgs("exactly", "t");
+                        this._applyWithArgs("exactly", "s");
+                        this._applyWithArgs("exactly", "w");
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "t");
+                        this._applyWithArgs("exactly", "h");
+                        return "startswith";
+
+                      case "u":
+                        switch (this.anything()) {
+                          case "b":
+                            switch (this.anything()) {
+                              case "s":
+                                switch (this.anything()) {
+                                  case "t":
+                                    switch (this.anything()) {
+                                      case "r":
+                                        switch (this.anything()) {
+                                          case "i":
+                                            switch (this.anything()) {
+                                              case "n":
+                                                switch (this.anything()) {
+                                                  case "g":
+                                                    return this._or(function() {
+                                                        switch (this.anything()) {
+                                                          case "o":
+                                                            this._applyWithArgs("exactly", "f");
+                                                            return "substringof";
+
+                                                          default:
+                                                            throw this._fail();
+                                                        }
+                                                    }, function() {
+                                                        return "substring";
+                                                    });
+
+                                                  default:
+                                                    throw this._fail();
+                                                }
+
+                                              default:
+                                                throw this._fail();
+                                            }
+
+                                          default:
+                                            throw this._fail();
+                                        }
+
+                                      default:
+                                        throw this._fail();
+                                    }
+
+                                  default:
+                                    throw this._fail();
+                                }
+
+                              default:
+                                throw this._fail();
+                            }
+
+                          default:
+                            throw this._fail();
+                        }
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "t":
+                    switch (this.anything()) {
+                      case "i":
+                        this._applyWithArgs("exactly", "m");
+                        this._applyWithArgs("exactly", "e");
+                        return "time";
+
+                      case "o":
+                        switch (this.anything()) {
+                          case "l":
+                            this._applyWithArgs("exactly", "o");
+                            this._applyWithArgs("exactly", "w");
+                            this._applyWithArgs("exactly", "e");
+                            this._applyWithArgs("exactly", "r");
+                            return "tolower";
+
+                          case "t":
+                            switch (this.anything()) {
+                              case "a":
+                                switch (this.anything()) {
+                                  case "l":
+                                    switch (this.anything()) {
+                                      case "o":
+                                        this._applyWithArgs("exactly", "f");
+                                        this._applyWithArgs("exactly", "f");
+                                        this._applyWithArgs("exactly", "s");
+                                        this._applyWithArgs("exactly", "e");
+                                        this._applyWithArgs("exactly", "t");
+                                        this._applyWithArgs("exactly", "m");
+                                        this._applyWithArgs("exactly", "i");
+                                        this._applyWithArgs("exactly", "n");
+                                        this._applyWithArgs("exactly", "u");
+                                        this._applyWithArgs("exactly", "t");
+                                        this._applyWithArgs("exactly", "e");
+                                        this._applyWithArgs("exactly", "s");
+                                        return "totaloffsetminutes";
+
+                                      case "s":
+                                        this._applyWithArgs("exactly", "e");
+                                        this._applyWithArgs("exactly", "c");
+                                        this._applyWithArgs("exactly", "o");
+                                        this._applyWithArgs("exactly", "n");
+                                        this._applyWithArgs("exactly", "d");
+                                        this._applyWithArgs("exactly", "s");
+                                        return "totalseconds";
+
+                                      default:
+                                        throw this._fail();
+                                    }
+
+                                  default:
+                                    throw this._fail();
+                                }
+
+                              default:
+                                throw this._fail();
+                            }
+
+                          case "u":
+                            this._applyWithArgs("exactly", "p");
+                            this._applyWithArgs("exactly", "p");
+                            this._applyWithArgs("exactly", "e");
+                            this._applyWithArgs("exactly", "r");
+                            return "toupper";
+
+                          default:
+                            throw this._fail();
+                        }
+
+                      case "r":
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "m");
+                        return "trim";
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "y":
+                    this._applyWithArgs("exactly", "e");
+                    this._applyWithArgs("exactly", "a");
+                    this._applyWithArgs("exactly", "r");
+                    return "year";
+
+                  default:
+                    throw this._fail();
+                }
+            }.call(this);
             this._applyWithArgs("exactly", "(");
             this._apply("spaces");
-            args = this._applyWithArgs("numberOf", "FilterByExpression", arity, ",");
+            args = this._applyWithArgs("numberOf", "FilterByExpression", methods[methodName], ",");
             this._apply("spaces");
             this._applyWithArgs("exactly", ")");
-            return {
+            return [ "call", {
                 args: args,
-                method: name
-            };
+                method: methodName
+            } ];
         },
         LambdaMethodCall: function() {
             var $elf = this, _fromIdx = this.input.idx, expression, identifier, name;
@@ -1377,6 +1586,16 @@
         throw this._fail();
     };
     ODataParser.numberOf = function(rule, count, separator) {
+        if (count.length) {
+            count.sort();
+            for (var origInput = this.input, i = count.length - 1; i >= 0; i--) try {
+                this.input = origInput;
+                return this.numberOf(rule, count[i], separator);
+            } catch (e) {
+                if (!(e instanceof SyntaxError)) throw e;
+            }
+            throw this._fail();
+        }
         if (0 === count) return [];
         for (var ret = [], i = 1; i < count; i++) {
             ret.push(this._apply(rule));
