@@ -660,12 +660,6 @@ export ometa ODataParser {
 		-> decodeURIComponent(text.join(''))
 	,
 
-	space =
-			^space
-		|	seq('%20')
-			-> ' '
-	,
-
 	Bind :type :value =
 		{this.binds.push([type, value])}
 		-> { bind: this.binds.length - 1 }
@@ -715,6 +709,20 @@ ODataParser.ParseOptionsObject = function(options) {
 		optionsObj[options[i].name] = options[i].value;
 	}
 	return optionsObj;
+};
+
+ODataParser.space = function() {
+	var $elf = this, _fromIdx = this.input.idx;
+	var r = this._apply('char');
+	if (r.charCodeAt(0) <= 32) {
+		return r;
+	} else if (r === '%') {
+		this._applyWithArgs("exactly", "2");
+		this._applyWithArgs("exactly", "0");
+		return " "
+	} else {
+		throw this._fail();
+	}
 };
 
 ODataParser.numberOf = function(rule, count, separator) {
