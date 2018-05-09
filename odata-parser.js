@@ -1341,7 +1341,7 @@
         },
         ReservedUriComponent: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
+            return function() {
                 switch (this.anything()) {
                   case "!":
                     return "!";
@@ -1352,8 +1352,16 @@
                   case "$":
                     return "$";
 
+                  case "%":
+                    this._applyWithArgs("exactly", "2");
+                    this._applyWithArgs("exactly", "7");
+                    return "'";
+
                   case "&":
                     return "&";
+
+                  case "'":
+                    return "'";
 
                   case "(":
                     return "(";
@@ -1397,9 +1405,7 @@
                   default:
                     throw this._fail();
                 }
-            }, function() {
-                return this._apply("Apostrophe");
-            });
+            }.call(this);
         },
         Text: function() {
             var $elf = this, _fromIdx = this.input.idx, text;
@@ -1576,7 +1582,7 @@
         return optionsObj;
     };
     ODataParser.space = function() {
-        var $elf = this, _fromIdx = this.input.idx, r = this._apply("char");
+        var r = this._apply("char");
         if (r.charCodeAt(0) <= 32) return r;
         if ("%" === r) {
             this._applyWithArgs("exactly", "2");
