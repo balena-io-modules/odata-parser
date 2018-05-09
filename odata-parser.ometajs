@@ -546,11 +546,13 @@ export ometa ODataParser {
 	,
 
 	ReservedUriComponent =
-		// GenDelim
+			// GenDelim
 			':' | '/' | '?' | '#' | '[' | ']' | '@'
 		|
-		// SubDelim
-			'!' | '$' | '*' | '&' | '(' | ')' | '+' | ',' | ';' | '=' | Apostrophe
+			// SubDelim
+			'!' | '$' | '*' | '&' | '(' | ')' | '+' | ',' | ';' | '=' |
+			// Apostrophe
+			'\'' | seq('%27') -> '\''
 	,
 
 	Text =
@@ -643,7 +645,6 @@ ODataParser.ParseOptionsObject = function(options) {
 };
 
 ODataParser.space = function() {
-	var $elf = this, _fromIdx = this.input.idx;
 	var r = this._apply('char');
 	if (r.charCodeAt(0) <= 32) {
 		return r;
