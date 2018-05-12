@@ -448,9 +448,8 @@ export ometa ODataParser {
 	,
 
 	ResourceName =
-		<	(
-				~(ReservedUriComponent | space)
-				anything
+		<	(	IsReservedUriComponentOrSpace:bool
+				?(!bool)
 			)+
 		>:resourceName
 		-> decodeURIComponent(resourceName)
@@ -546,13 +545,8 @@ export ometa ODataParser {
 	,
 
 	ReservedUriComponent =
-			// GenDelim
-			':' | '/' | '?' | '#' | '[' | ']' | '@'
-		|
-			// SubDelim
-			'!' | '$' | '*' | '&' | '(' | ')' | '+' | ',' | ';' | '=' |
-			// Apostrophe
-			'\'' | seq('%27') -> '\''
+		IsReservedUriComponent:bool
+		?bool
 	,
 
 	Text =
@@ -571,11 +565,10 @@ export ometa ODataParser {
 		|	-> ''
 	,
 
-	// TODO: This should really be done treating everything the same, but for now this hack should allow FF to work passably.
 	Apostrophe =
-			'\''
-		|	seq('%27')
-			-> '\''
+		IsApostrophe:bool
+		?bool
+		-> '\''
 	,
 
 	Dollar =
@@ -644,15 +637,72 @@ ODataParser.ParseOptionsObject = function(options) {
 	return optionsObj;
 };
 
-ODataParser.space = function() {
+var isReservedUriComponent = function(r) {
+	return (
+		// GenDelim
+		r === ':' || r === '/' || r === '?' || r === '#' || r === '[' || r === ']' || r === '@' ||
+		// SubDelim
+		r === '!' || r === '$' || r === '*' || r === '&' || r === '(' || r === ')' || r === '+' || r === ',' || r === ';' || r === '='
+	);
+}
+
+// TODO: The `%27` check should really be done treating everything the same, but for now this hack should allow FF to work passably.
+ODataParser.IsApostrophe = function() {
+	var origInput = this.input,
+		r = this.anything();
+	if (r === '\'') {
+		return true;
+	}
+	if (r === '%') {
+		var origInput = this.input;
+		if (this.anything() === '2' && this.anything() === '7') {
+			return true;
+		}
+		this.input = origInput;
+	}
+	return false;
+};
+
+ODataParser.IsReservedUriComponent = function() {
+	var origInput = this.input;
 	var r = this.anything();
-	if (r.charCodeAt(0) <= 32) {
-		return r;
-	} else if (r === '%') {
-		this._applyWithArgs("exactly", "2");
-		this._applyWithArgs("exactly", "0");
-		return " "
-	} else {
+	if (isReservedUriComponent(r)) {
+		return true;
+	}
+	this.input = origInput;
+	if (this.IsApostrophe()) {
+		return true;
+	}
+	return false;
+};
+
+ODataParser.IsReservedUriComponentOrSpace = function () {
+	var origInput = this.input;
+	if (this.IsReservedUriComponent()) {
+		return true;
+	}
+	this.input = origInput;
+	if (this.IsSpace()) {
+		return true;
+	}
+	return false;
+}
+
+ODataParser.IsSpace = function() {
+	var r = this.anything();
+	if (r.charCodeAt(0) <= 32) return true;
+	if ("%" === r) {
+		var origInput = this.input;
+		if (this.anything() === '2' && this.anything() === '0') {
+			return true;
+		}
+		this.input = origInput;
+	}
+	return false;
+};
+
+ODataParser.space = function() {
+	if (!this.IsSpace()) {
 		throw this._fail();
 	}
 };
