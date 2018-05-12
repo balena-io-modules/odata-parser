@@ -65,15 +65,15 @@ export ometa ODataParser {
 	,
 
 	QueryOption =
-			SortOption
+			SelectOption
+		|	FilterByOption
+		|	ExpandOption
+		|	SortOption
 		|	TopOption
 		|	SkipOption
-		|	ExpandOption
-		|	InlineCountOption
 		|	CountOption
-		|	FilterByOption
+		|	InlineCountOption
 		|	FormatOption
-		|	SelectOption
 		|	OperationParam
 	,
 
@@ -362,15 +362,15 @@ export ometa ODataParser {
 		-> { name: resource, property: next, count: count, options: optionsObj}
 	,
 	ExpandPathOption =
-			SortOption
+			SelectOption
+		|	FilterByOption
+		|	ExpandOption
+		|	SortOption
 		|	TopOption
 		|	SkipOption
-		|	ExpandOption
-		|	InlineCountOption
 		|	CountOption
-		|	FilterByOption
+		|	InlineCountOption
 		|	FormatOption
-		|	SelectOption
 		|	OperationParam
 	,
 
