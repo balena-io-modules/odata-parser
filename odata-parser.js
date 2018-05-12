@@ -1536,6 +1536,15 @@
         }
         return !1;
     };
+    ODataParser.spaces = function() {
+        var origInput;
+        try {
+            do {
+                origInput = this.input;
+            } while (this._apply("IsSpace"));
+        } catch (e) {}
+        this.input = origInput;
+    };
     ODataParser.space = function() {
         if (!this.IsSpace()) throw this._fail();
     };

@@ -701,6 +701,20 @@ ODataParser.IsSpace = function() {
 	return false;
 };
 
+ODataParser.spaces = function() {
+	var origInput;
+
+	try {
+		do {
+			origInput = this.input;
+		} while (this._apply('IsSpace'));
+	} catch (e) {
+		// If we call `anything` at the end of the stream it throws, so we catch it here.
+	}
+
+	this.input = origInput;
+};
+
 ODataParser.space = function() {
 	if (!this.IsSpace()) {
 		throw this._fail();
