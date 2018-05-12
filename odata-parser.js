@@ -1186,16 +1186,6 @@
                 });
             });
         },
-        ResourceName: function() {
-            var $elf = this, _fromIdx = this.input.idx, bool, resourceName;
-            resourceName = this._consumedBy(function() {
-                return this._many1(function() {
-                    bool = this._apply("IsReservedUriComponentOrSpace");
-                    return this._pred(!bool);
-                });
-            });
-            return decodeURIComponent(resourceName);
-        },
         Number: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
@@ -1525,6 +1515,18 @@
         if (this.IsReservedUriComponent()) return !0;
         this.input = origInput;
         return !!this.IsSpace();
+    };
+    ODataParser.ResourceName = function() {
+        var origInput = this.input, prevInput;
+        try {
+            do {
+                prevInput = this.input;
+            } while (!this.IsReservedUriComponentOrSpace());
+        } catch (e) {}
+        this.input = prevInput;
+        if (this.input === origInput) throw this._fail();
+        var resourceName = origInput.upTo(this.input);
+        return decodeURIComponent(resourceName);
     };
     ODataParser.IsSpace = function() {
         var r = this.anything();

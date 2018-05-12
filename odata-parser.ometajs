@@ -447,14 +447,6 @@ export ometa ODataParser {
 		>
 	,
 
-	ResourceName =
-		<	(	IsReservedUriComponentOrSpace:bool
-				?(!bool)
-			)+
-		>:resourceName
-		-> decodeURIComponent(resourceName)
-	,
-
 	Number =
 			Decimal
 		|	Integer
@@ -687,6 +679,28 @@ ODataParser.IsReservedUriComponentOrSpace = function () {
 	}
 	return false;
 }
+
+ODataParser.ResourceName = function() {
+	var origInput = this.input, prevInput;
+
+	try {
+		do {
+			prevInput = this.input;
+		} while (!this.IsReservedUriComponentOrSpace());
+	} catch (e) {
+		// If we call `anything` at the end of the stream it throws, so we catch it here.
+	}
+
+	this.input = prevInput;
+
+	// We require that we consumed at least some input for the resource name
+	if (this.input === origInput) {
+		throw this._fail();
+	}
+
+	var resourceName = origInput.upTo(this.input);
+	return decodeURIComponent(resourceName);
+};
 
 ODataParser.IsSpace = function() {
 	var r = this.anything();
