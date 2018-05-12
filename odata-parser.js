@@ -1582,7 +1582,7 @@
         return optionsObj;
     };
     ODataParser.space = function() {
-        var r = this._apply("char");
+        var r = this.anything();
         if (r.charCodeAt(0) <= 32) return r;
         if ("%" === r) {
             this._applyWithArgs("exactly", "2");
