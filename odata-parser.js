@@ -386,17 +386,19 @@
         FilterByValue: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
+                return this._apply("GroupedPrecedenceExpression");
+            }, function() {
+                return this._apply("QuotedTextBind");
+            }, function() {
                 return this._apply("FilterMethodCallExpression");
             }, function() {
                 return this._apply("FilterNegateExpression");
             }, function() {
                 return this._apply("NumberBind");
             }, function() {
-                return this._apply("Null");
-            }, function() {
                 return this._apply("BooleanBind");
             }, function() {
-                return this._apply("QuotedTextBind");
+                return this._apply("Null");
             }, function() {
                 return this._apply("DateBind");
             }, function() {
@@ -405,8 +407,6 @@
                 return this._apply("LambdaPropertyPath");
             }, function() {
                 return this._apply("PropertyPath");
-            }, function() {
-                return this._apply("GroupedPrecedenceExpression");
             });
         },
         GroupedPrecedenceExpression: function() {

@@ -223,17 +223,17 @@ export ometa ODataParser {
 	,
 
 	FilterByValue =
-		FilterMethodCallExpression
+		GroupedPrecedenceExpression
+	|	QuotedTextBind
+	|	FilterMethodCallExpression
 	|	FilterNegateExpression
 	|	NumberBind
-	|	Null
 	|	BooleanBind
-	|	QuotedTextBind
+	|	Null
 	|	DateBind
 	|	Duration
 	|	LambdaPropertyPath
 	|	PropertyPath
-	|	GroupedPrecedenceExpression
 	,
 
 	GroupedPrecedenceExpression =
