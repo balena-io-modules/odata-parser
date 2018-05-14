@@ -102,23 +102,23 @@
         QueryOption: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
+                return this._apply("SelectOption");
+            }, function() {
+                return this._apply("FilterByOption");
+            }, function() {
+                return this._apply("ExpandOption");
+            }, function() {
                 return this._apply("SortOption");
             }, function() {
                 return this._apply("TopOption");
             }, function() {
                 return this._apply("SkipOption");
             }, function() {
-                return this._apply("ExpandOption");
+                return this._apply("CountOption");
             }, function() {
                 return this._apply("InlineCountOption");
             }, function() {
-                return this._apply("CountOption");
-            }, function() {
-                return this._apply("FilterByOption");
-            }, function() {
                 return this._apply("FormatOption");
-            }, function() {
-                return this._apply("SelectOption");
             }, function() {
                 return this._apply("OperationParam");
             });
@@ -386,17 +386,19 @@
         FilterByValue: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
+                return this._apply("GroupedPrecedenceExpression");
+            }, function() {
+                return this._apply("QuotedTextBind");
+            }, function() {
                 return this._apply("FilterMethodCallExpression");
             }, function() {
                 return this._apply("FilterNegateExpression");
             }, function() {
                 return this._apply("NumberBind");
             }, function() {
-                return this._apply("Null");
-            }, function() {
                 return this._apply("BooleanBind");
             }, function() {
-                return this._apply("QuotedTextBind");
+                return this._apply("Null");
             }, function() {
                 return this._apply("DateBind");
             }, function() {
@@ -405,8 +407,6 @@
                 return this._apply("LambdaPropertyPath");
             }, function() {
                 return this._apply("PropertyPath");
-            }, function() {
-                return this._apply("GroupedPrecedenceExpression");
             });
         },
         GroupedPrecedenceExpression: function() {
@@ -992,23 +992,23 @@
         ExpandPathOption: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
+                return this._apply("SelectOption");
+            }, function() {
+                return this._apply("FilterByOption");
+            }, function() {
+                return this._apply("ExpandOption");
+            }, function() {
                 return this._apply("SortOption");
             }, function() {
                 return this._apply("TopOption");
             }, function() {
                 return this._apply("SkipOption");
             }, function() {
-                return this._apply("ExpandOption");
+                return this._apply("CountOption");
             }, function() {
                 return this._apply("InlineCountOption");
             }, function() {
-                return this._apply("CountOption");
-            }, function() {
-                return this._apply("FilterByOption");
-            }, function() {
                 return this._apply("FormatOption");
-            }, function() {
-                return this._apply("SelectOption");
             }, function() {
                 return this._apply("OperationParam");
             });
@@ -1186,22 +1186,6 @@
                 });
             });
         },
-        ResourceName: function() {
-            var $elf = this, _fromIdx = this.input.idx, resourceName;
-            resourceName = this._consumedBy(function() {
-                return this._many1(function() {
-                    this._not(function() {
-                        return this._or(function() {
-                            return this._apply("ReservedUriComponent");
-                        }, function() {
-                            return this._apply("space");
-                        });
-                    });
-                    return this.anything();
-                });
-            });
-            return decodeURIComponent(resourceName);
-        },
         Number: function() {
             var $elf = this, _fromIdx = this.input.idx;
             return this._or(function() {
@@ -1340,72 +1324,9 @@
             });
         },
         ReservedUriComponent: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return function() {
-                switch (this.anything()) {
-                  case "!":
-                    return "!";
-
-                  case "#":
-                    return "#";
-
-                  case "$":
-                    return "$";
-
-                  case "%":
-                    this._applyWithArgs("exactly", "2");
-                    this._applyWithArgs("exactly", "7");
-                    return "'";
-
-                  case "&":
-                    return "&";
-
-                  case "'":
-                    return "'";
-
-                  case "(":
-                    return "(";
-
-                  case ")":
-                    return ")";
-
-                  case "*":
-                    return "*";
-
-                  case "+":
-                    return "+";
-
-                  case ",":
-                    return ",";
-
-                  case "/":
-                    return "/";
-
-                  case ":":
-                    return ":";
-
-                  case ";":
-                    return ";";
-
-                  case "=":
-                    return "=";
-
-                  case "?":
-                    return "?";
-
-                  case "@":
-                    return "@";
-
-                  case "[":
-                    return "[";
-
-                  case "]":
-                    return "]";
-
-                  default:
-                    throw this._fail();
-                }
-            }.call(this);
+            var $elf = this, _fromIdx = this.input.idx, bool;
+            bool = this._apply("IsReservedUriComponent");
+            return this._pred(bool);
         },
         Text: function() {
             var $elf = this, _fromIdx = this.input.idx, text;
@@ -1442,21 +1363,10 @@
             });
         },
         Apostrophe: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return function() {
-                switch (this.anything()) {
-                  case "%":
-                    this._applyWithArgs("exactly", "2");
-                    this._applyWithArgs("exactly", "7");
-                    return "'";
-
-                  case "'":
-                    return "'";
-
-                  default:
-                    throw this._fail();
-                }
-            }.call(this);
+            var $elf = this, _fromIdx = this.input.idx, bool;
+            bool = this._apply("IsApostrophe");
+            this._pred(bool);
+            return "'";
         },
         Dollar: function() {
             var $elf = this, _fromIdx = this.input.idx;
@@ -1581,15 +1491,64 @@
         for (var i in options) optionsObj[options[i].name] = options[i].value;
         return optionsObj;
     };
-    ODataParser.space = function() {
-        var r = this._apply("char");
-        if (r.charCodeAt(0) <= 32) return r;
+    var isReservedUriComponent = function(r) {
+        return ":" === r || "/" === r || "?" === r || "#" === r || "[" === r || "]" === r || "@" === r || "!" === r || "$" === r || "*" === r || "&" === r || "(" === r || ")" === r || "+" === r || "," === r || ";" === r || "=" === r;
+    };
+    ODataParser.IsApostrophe = function() {
+        var origInput = this.input, r = this.anything();
+        if ("'" === r) return !0;
         if ("%" === r) {
-            this._applyWithArgs("exactly", "2");
-            this._applyWithArgs("exactly", "0");
-            return " ";
+            var origInput = this.input;
+            if ("2" === this.anything() && "7" === this.anything()) return !0;
+            this.input = origInput;
         }
-        throw this._fail();
+        return !1;
+    };
+    ODataParser.IsReservedUriComponent = function() {
+        var origInput = this.input, r = this.anything();
+        if (isReservedUriComponent(r)) return !0;
+        this.input = origInput;
+        return !!this.IsApostrophe();
+    };
+    ODataParser.IsReservedUriComponentOrSpace = function() {
+        var origInput = this.input;
+        if (this.IsReservedUriComponent()) return !0;
+        this.input = origInput;
+        return !!this.IsSpace();
+    };
+    ODataParser.ResourceName = function() {
+        var origInput = this.input, prevInput;
+        try {
+            do {
+                prevInput = this.input;
+            } while (!this.IsReservedUriComponentOrSpace());
+        } catch (e) {}
+        this.input = prevInput;
+        if (this.input === origInput) throw this._fail();
+        var resourceName = origInput.upTo(this.input);
+        return decodeURIComponent(resourceName);
+    };
+    ODataParser.IsSpace = function() {
+        var r = this.anything();
+        if (r.charCodeAt(0) <= 32) return !0;
+        if ("%" === r) {
+            var origInput = this.input;
+            if ("2" === this.anything() && "0" === this.anything()) return !0;
+            this.input = origInput;
+        }
+        return !1;
+    };
+    ODataParser.spaces = function() {
+        var origInput;
+        try {
+            do {
+                origInput = this.input;
+            } while (this._apply("IsSpace"));
+        } catch (e) {}
+        this.input = origInput;
+    };
+    ODataParser.space = function() {
+        if (!this.IsSpace()) throw this._fail();
     };
     ODataParser.numberOf = function(rule, count, separator) {
         if (count.length) {

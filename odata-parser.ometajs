@@ -65,15 +65,15 @@ export ometa ODataParser {
 	,
 
 	QueryOption =
-			SortOption
+			SelectOption
+		|	FilterByOption
+		|	ExpandOption
+		|	SortOption
 		|	TopOption
 		|	SkipOption
-		|	ExpandOption
-		|	InlineCountOption
 		|	CountOption
-		|	FilterByOption
+		|	InlineCountOption
 		|	FormatOption
-		|	SelectOption
 		|	OperationParam
 	,
 
@@ -223,17 +223,17 @@ export ometa ODataParser {
 	,
 
 	FilterByValue =
-		FilterMethodCallExpression
+		GroupedPrecedenceExpression
+	|	QuotedTextBind
+	|	FilterMethodCallExpression
 	|	FilterNegateExpression
 	|	NumberBind
-	|	Null
 	|	BooleanBind
-	|	QuotedTextBind
+	|	Null
 	|	DateBind
 	|	Duration
 	|	LambdaPropertyPath
 	|	PropertyPath
-	|	GroupedPrecedenceExpression
 	,
 
 	GroupedPrecedenceExpression =
@@ -362,15 +362,15 @@ export ometa ODataParser {
 		-> { name: resource, property: next, count: count, options: optionsObj}
 	,
 	ExpandPathOption =
-			SortOption
+			SelectOption
+		|	FilterByOption
+		|	ExpandOption
+		|	SortOption
 		|	TopOption
 		|	SkipOption
-		|	ExpandOption
-		|	InlineCountOption
 		|	CountOption
-		|	FilterByOption
+		|	InlineCountOption
 		|	FormatOption
-		|	SelectOption
 		|	OperationParam
 	,
 
@@ -445,15 +445,6 @@ export ometa ODataParser {
 			letter+
 			('+' letter+)?
 		>
-	,
-
-	ResourceName =
-		<	(
-				~(ReservedUriComponent | space)
-				anything
-			)+
-		>:resourceName
-		-> decodeURIComponent(resourceName)
 	,
 
 	Number =
@@ -546,13 +537,8 @@ export ometa ODataParser {
 	,
 
 	ReservedUriComponent =
-			// GenDelim
-			':' | '/' | '?' | '#' | '[' | ']' | '@'
-		|
-			// SubDelim
-			'!' | '$' | '*' | '&' | '(' | ')' | '+' | ',' | ';' | '=' |
-			// Apostrophe
-			'\'' | seq('%27') -> '\''
+		IsReservedUriComponent:bool
+		?bool
 	,
 
 	Text =
@@ -571,11 +557,10 @@ export ometa ODataParser {
 		|	-> ''
 	,
 
-	// TODO: This should really be done treating everything the same, but for now this hack should allow FF to work passably.
 	Apostrophe =
-			'\''
-		|	seq('%27')
-			-> '\''
+		IsApostrophe:bool
+		?bool
+		-> '\''
 	,
 
 	Dollar =
@@ -644,15 +629,108 @@ ODataParser.ParseOptionsObject = function(options) {
 	return optionsObj;
 };
 
+var isReservedUriComponent = function(r) {
+	return (
+		// GenDelim
+		r === ':' || r === '/' || r === '?' || r === '#' || r === '[' || r === ']' || r === '@' ||
+		// SubDelim
+		r === '!' || r === '$' || r === '*' || r === '&' || r === '(' || r === ')' || r === '+' || r === ',' || r === ';' || r === '='
+	);
+}
+
+// TODO: The `%27` check should really be done treating everything the same, but for now this hack should allow FF to work passably.
+ODataParser.IsApostrophe = function() {
+	var origInput = this.input,
+		r = this.anything();
+	if (r === '\'') {
+		return true;
+	}
+	if (r === '%') {
+		var origInput = this.input;
+		if (this.anything() === '2' && this.anything() === '7') {
+			return true;
+		}
+		this.input = origInput;
+	}
+	return false;
+};
+
+ODataParser.IsReservedUriComponent = function() {
+	var origInput = this.input;
+	var r = this.anything();
+	if (isReservedUriComponent(r)) {
+		return true;
+	}
+	this.input = origInput;
+	if (this.IsApostrophe()) {
+		return true;
+	}
+	return false;
+};
+
+ODataParser.IsReservedUriComponentOrSpace = function () {
+	var origInput = this.input;
+	if (this.IsReservedUriComponent()) {
+		return true;
+	}
+	this.input = origInput;
+	if (this.IsSpace()) {
+		return true;
+	}
+	return false;
+}
+
+ODataParser.ResourceName = function() {
+	var origInput = this.input, prevInput;
+
+	try {
+		do {
+			prevInput = this.input;
+		} while (!this.IsReservedUriComponentOrSpace());
+	} catch (e) {
+		// If we call `anything` at the end of the stream it throws, so we catch it here.
+	}
+
+	this.input = prevInput;
+
+	// We require that we consumed at least some input for the resource name
+	if (this.input === origInput) {
+		throw this._fail();
+	}
+
+	var resourceName = origInput.upTo(this.input);
+	return decodeURIComponent(resourceName);
+};
+
+ODataParser.IsSpace = function() {
+	var r = this.anything();
+	if (r.charCodeAt(0) <= 32) return true;
+	if ("%" === r) {
+		var origInput = this.input;
+		if (this.anything() === '2' && this.anything() === '0') {
+			return true;
+		}
+		this.input = origInput;
+	}
+	return false;
+};
+
+ODataParser.spaces = function() {
+	var origInput;
+
+	try {
+		do {
+			origInput = this.input;
+		} while (this._apply('IsSpace'));
+	} catch (e) {
+		// If we call `anything` at the end of the stream it throws, so we catch it here.
+	}
+
+	this.input = origInput;
+};
+
 ODataParser.space = function() {
-	var r = this._apply('char');
-	if (r.charCodeAt(0) <= 32) {
-		return r;
-	} else if (r === '%') {
-		this._applyWithArgs("exactly", "2");
-		this._applyWithArgs("exactly", "0");
-		return " "
-	} else {
+	if (!this.IsSpace()) {
 		throw this._fail();
 	}
 };
