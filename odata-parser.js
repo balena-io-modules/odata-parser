@@ -35,6 +35,20 @@
         toupper: 1,
         trim: 1,
         year: 1
+    }, operatorPrecedence = {
+        or: 0,
+        and: 0,
+        eq: 1,
+        ne: 1,
+        gt: 1,
+        ge: 1,
+        lt: 1,
+        le: 1,
+        sub: 2,
+        add: 3,
+        mod: 4,
+        div: 5,
+        mul: 6
     }, ODataParser = exports.ODataParser = OMeta._extend({
         Process: function() {
             var $elf = this, _fromIdx = this.input.idx, tree;
@@ -287,100 +301,26 @@
             this._applyWithArgs("seq", name);
             return this._applyWithArgs("exactly", "=");
         },
-        FilterByExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._apply("FilterAndExpression");
-        },
-        FilterAndExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
+        FilterByExpression: function(minPrecedence) {
+            var $elf = this, _fromIdx = this.input.idx, lhs, minPrecedence, op, precedence, rhs;
             return this._or(function() {
-                lhs = this._apply("FilterAndExpression");
-                op = this._apply("FilterAndOperand");
-                rhs = this._apply("FilterLogicalExpression");
-                return this._or(function() {
-                    this._pred(op == lhs[0]);
-                    return [ op ].concat(lhs.slice(1), [ rhs ]);
-                }, function() {
-                    return [ op, lhs, rhs ];
+                minPrecedence = minPrecedence || 0;
+                lhs = this._apply("FilterByValue");
+                this._many(function() {
+                    op = this._apply("FilterByOperand");
+                    precedence = operatorPrecedence[op];
+                    this._pred(precedence >= minPrecedence);
+                    rhs = this._applyWithArgs("FilterByExpression", precedence + 1);
+                    return lhs = this._or(function() {
+                        this._pred(op == lhs[0]);
+                        return [ op ].concat(lhs.slice(1), [ rhs ]);
+                    }, function() {
+                        return [ op, lhs, rhs ];
+                    });
                 });
+                return lhs;
             }, function() {
-                return this._apply("FilterLogicalExpression");
-            });
-        },
-        FilterLogicalExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
-            return this._or(function() {
-                lhs = this._apply("FilterLogicalExpression");
-                op = this._apply("FilterByOperand");
-                rhs = this._apply("FilterSubExpression");
-                return [ op, lhs, rhs ];
-            }, function() {
-                return this._apply("FilterSubExpression");
-            });
-        },
-        FilterSubExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
-            return this._or(function() {
-                lhs = this._apply("FilterSubExpression");
-                this._apply("spaces");
-                op = this._applyWithArgs("FilterRecognisedMathOperand", "sub");
-                this._apply("spaces");
-                rhs = this._apply("FilterAddExpression");
-                return [ op, lhs, rhs ];
-            }, function() {
-                return this._apply("FilterAddExpression");
-            });
-        },
-        FilterAddExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
-            return this._or(function() {
-                lhs = this._apply("FilterAddExpression");
-                this._apply("spaces");
-                op = this._applyWithArgs("FilterRecognisedMathOperand", "add");
-                this._apply("spaces");
-                rhs = this._apply("FilterModExpression");
-                return [ op, lhs, rhs ];
-            }, function() {
-                return this._apply("FilterModExpression");
-            });
-        },
-        FilterModExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
-            return this._or(function() {
-                lhs = this._apply("FilterModExpression");
-                this._apply("spaces");
-                op = this._applyWithArgs("FilterRecognisedMathOperand", "mod");
-                this._apply("spaces");
-                rhs = this._apply("FilterDivExpression");
-                return [ op, lhs, rhs ];
-            }, function() {
-                return this._apply("FilterDivExpression");
-            });
-        },
-        FilterDivExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
-            return this._or(function() {
-                lhs = this._apply("FilterDivExpression");
-                this._apply("spaces");
-                op = this._applyWithArgs("FilterRecognisedMathOperand", "div");
-                this._apply("spaces");
-                rhs = this._apply("FilterMulExpression");
-                return [ op, lhs, rhs ];
-            }, function() {
-                return this._apply("FilterMulExpression");
-            });
-        },
-        FilterMulExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, lhs, op, rhs;
-            return this._or(function() {
-                lhs = this._apply("FilterMulExpression");
-                this._apply("spaces");
-                op = this._applyWithArgs("FilterRecognisedMathOperand", "mul");
-                this._apply("spaces");
-                rhs = this._apply("FilterByValue");
-                return [ op, lhs, rhs ];
-            }, function() {
-                return this._apply("FilterByValue");
+                return this._apply("FilterByExpression");
             });
         },
         FilterByValue: function() {
@@ -418,36 +358,30 @@
             this._applyWithArgs("exactly", ")");
             return expr;
         },
-        FilterRecognisedMathOperand: function(name) {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("seq", name);
-        },
-        FilterAndOperand: function() {
-            var $elf = this, _fromIdx = this.input.idx, op;
-            this._apply("spaces");
-            op = function() {
-                switch (this.anything()) {
-                  case "a":
-                    this._applyWithArgs("exactly", "n");
-                    this._applyWithArgs("exactly", "d");
-                    return "and";
-
-                  case "o":
-                    this._applyWithArgs("exactly", "r");
-                    return "or";
-
-                  default:
-                    throw this._fail();
-                }
-            }.call(this);
-            this._apply("spaces");
-            return op;
-        },
         FilterByOperand: function() {
             var $elf = this, _fromIdx = this.input.idx, op;
             this._apply("spaces");
             op = function() {
                 switch (this.anything()) {
+                  case "a":
+                    switch (this.anything()) {
+                      case "d":
+                        this._applyWithArgs("exactly", "d");
+                        return "add";
+
+                      case "n":
+                        this._applyWithArgs("exactly", "d");
+                        return "and";
+
+                      default:
+                        throw this._fail();
+                    }
+
+                  case "d":
+                    this._applyWithArgs("exactly", "i");
+                    this._applyWithArgs("exactly", "v");
+                    return "div";
+
                   case "e":
                     this._applyWithArgs("exactly", "q");
                     return "eq";
@@ -476,9 +410,32 @@
                         throw this._fail();
                     }
 
+                  case "m":
+                    switch (this.anything()) {
+                      case "o":
+                        this._applyWithArgs("exactly", "d");
+                        return "mod";
+
+                      case "u":
+                        this._applyWithArgs("exactly", "l");
+                        return "mul";
+
+                      default:
+                        throw this._fail();
+                    }
+
                   case "n":
                     this._applyWithArgs("exactly", "e");
                     return "ne";
+
+                  case "o":
+                    this._applyWithArgs("exactly", "r");
+                    return "or";
+
+                  case "s":
+                    this._applyWithArgs("exactly", "u");
+                    this._applyWithArgs("exactly", "b");
+                    return "sub";
 
                   default:
                     throw this._fail();
@@ -1534,6 +1491,6 @@
         return this.binds[key.bind];
     };
     ODataParser._enableTokens = function() {
-        OMeta._enableTokens.call(this, [ "Text", "ResourceName", "Number", "RecognisedOption", "FilterAndOperand", "FilterByOperand", "FilterRecognisedMathOperand" ]);
+        OMeta._enableTokens.call(this, [ "Text", "ResourceName", "Number", "RecognisedOption", "FilterByOperand" ]);
     };
 });
