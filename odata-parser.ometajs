@@ -74,7 +74,8 @@ export ometa ODataParser {
 		|	CountOption
 		|	InlineCountOption
 		|	FormatOption
-		|	OperationParam
+		
+	|	OperationParam
 	,
 
 	OperationParam =
@@ -352,7 +353,7 @@ export ometa ODataParser {
 			-> true
 		)?:count
 		(	'('
-			listOf(`ExpandPathOption, '&'):options
+			listOf(`QueryOption, '&'):options
 			ParseOptionsObject(options):optionsObj
 			')'
 		)?
@@ -360,18 +361,6 @@ export ometa ODataParser {
 			PropertyPath:next
 		)?
 		-> { name: resource, property: next, count: count, options: optionsObj}
-	,
-	ExpandPathOption =
-			SelectOption
-		|	FilterByOption
-		|	ExpandOption
-		|	SortOption
-		|	TopOption
-		|	SkipOption
-		|	CountOption
-		|	InlineCountOption
-		|	FormatOption
-		|	OperationParam
 	,
 
 	LambdaPropertyPath =

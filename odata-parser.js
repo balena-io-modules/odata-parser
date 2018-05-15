@@ -974,7 +974,7 @@
             });
             this._opt(function() {
                 this._applyWithArgs("exactly", "(");
-                options = this._applyWithArgs("listOf", "ExpandPathOption", "&");
+                options = this._applyWithArgs("listOf", "QueryOption", "&");
                 optionsObj = this._applyWithArgs("ParseOptionsObject", options);
                 return this._applyWithArgs("exactly", ")");
             });
@@ -988,30 +988,6 @@
                 count: count,
                 options: optionsObj
             };
-        },
-        ExpandPathOption: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return this._apply("SelectOption");
-            }, function() {
-                return this._apply("FilterByOption");
-            }, function() {
-                return this._apply("ExpandOption");
-            }, function() {
-                return this._apply("SortOption");
-            }, function() {
-                return this._apply("TopOption");
-            }, function() {
-                return this._apply("SkipOption");
-            }, function() {
-                return this._apply("CountOption");
-            }, function() {
-                return this._apply("InlineCountOption");
-            }, function() {
-                return this._apply("FormatOption");
-            }, function() {
-                return this._apply("OperationParam");
-            });
         },
         LambdaPropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, lambda, next, resource;
