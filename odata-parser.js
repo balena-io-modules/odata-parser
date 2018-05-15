@@ -488,27 +488,13 @@
             return op;
         },
         FilterNegateExpression: function() {
-            var $elf = this, _fromIdx = this.input.idx, expr, value;
+            var $elf = this, _fromIdx = this.input.idx, value;
             this._apply("spaces");
             this._applyWithArgs("exactly", "n");
             this._applyWithArgs("exactly", "o");
             this._applyWithArgs("exactly", "t");
             this._apply("spaces");
-            value = this._or(function() {
-                return this._apply("FilterByValue");
-            }, function() {
-                switch (this.anything()) {
-                  case "(":
-                    this._apply("spaces");
-                    expr = this._apply("FilterByExpression");
-                    this._apply("spaces");
-                    this._applyWithArgs("exactly", ")");
-                    return expr;
-
-                  default:
-                    throw this._fail();
-                }
-            });
+            value = this._apply("FilterByValue");
             return [ "not", value ];
         },
         FilterMethodCallExpression: function() {
