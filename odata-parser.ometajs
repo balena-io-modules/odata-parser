@@ -467,17 +467,9 @@ export ometa ODataParser {
 	,
 
 	Boolean =
-			True
-		|	False
-	,
-
-	True =
 		seq('true')
 		-> true
-	,
-
-	False =
-		seq('false')
+	|	seq('false')
 		-> false
 	,
 
