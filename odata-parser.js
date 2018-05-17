@@ -1213,28 +1213,25 @@
         },
         Boolean: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._or(function() {
-                return this._apply("True");
-            }, function() {
-                return this._apply("False");
-            });
-        },
-        True: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            this._applyWithArgs("exactly", "t");
-            this._applyWithArgs("exactly", "r");
-            this._applyWithArgs("exactly", "u");
-            this._applyWithArgs("exactly", "e");
-            return !0;
-        },
-        False: function() {
-            var $elf = this, _fromIdx = this.input.idx;
-            this._applyWithArgs("exactly", "f");
-            this._applyWithArgs("exactly", "a");
-            this._applyWithArgs("exactly", "l");
-            this._applyWithArgs("exactly", "s");
-            this._applyWithArgs("exactly", "e");
-            return !1;
+            return function() {
+                switch (this.anything()) {
+                  case "f":
+                    this._applyWithArgs("exactly", "a");
+                    this._applyWithArgs("exactly", "l");
+                    this._applyWithArgs("exactly", "s");
+                    this._applyWithArgs("exactly", "e");
+                    return !1;
+
+                  case "t":
+                    this._applyWithArgs("exactly", "r");
+                    this._applyWithArgs("exactly", "u");
+                    this._applyWithArgs("exactly", "e");
+                    return !0;
+
+                  default:
+                    throw this._fail();
+                }
+            }.call(this);
         },
         Duration: function() {
             var $elf = this, _fromIdx = this.input.idx, day, hour, minute, second, sign, timeExists;
