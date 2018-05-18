@@ -271,10 +271,7 @@ export ometa ODataParser {
 		spaces
 		seq('not')
 		spaces
-		(	FilterByValue
-		|	'(' spaces FilterByExpression:expr spaces ')'
-			-> expr
-		):value
+		FilterByValue:value
 		-> [ 'not', value ]
 	,
 
