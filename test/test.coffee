@@ -1,5 +1,4 @@
-require('ometa-js')
-{ ODataParser } = require '../odata-parser.ometajs'
+{ ODataParser } = require '../odata-parser'
 { expect } = require 'chai'
 _ = require 'lodash'
 
