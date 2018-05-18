@@ -32,6 +32,39 @@ var methods = {
 	year: 1
 };
 
+var operatorPrecedence = {
+	or: 0,
+	and: 0,
+	eq: 1,
+	ne: 1,
+	gt: 1,
+	ge: 1,
+	lt: 1,
+	le: 1,
+	sub: 2,
+	add: 3,
+	mod: 4,
+	div: 5,
+	mul: 6
+}
+
+// v4 operator precedence
+// var operatorPrecedence = {
+// 	or: 0,
+// 	and: 1,
+// 	eq: 2,
+// 	ne: 2,
+// 	gt: 3,
+// 	ge: 3,
+// 	lt: 3,
+// 	le: 3,
+// 	add: 4,
+// 	sub: 4,
+// 	mul: 5,
+// 	div: 5,
+// 	mod: 5
+// }
+
 export ometa ODataParser {
 
 	Process =
@@ -161,66 +194,23 @@ export ometa ODataParser {
 		'='
 	,
 
-	FilterByExpression =
-		FilterAndExpression
-	,
+	FilterByExpression :minPrecedence =
+		{minPrecedence || 0}:minPrecedence
+		FilterByValue:lhs
 
-	FilterAndExpression =
-		FilterAndExpression:lhs
-		FilterAndOperand:op
-		FilterLogicalExpression:rhs
-		(	?(op == lhs[0])
-			-> [ op ].concat(lhs.slice(1), [rhs])
-		|	-> [ op, lhs, rhs ]
-		)
-	|	FilterLogicalExpression
-	,
+		(	FilterByOperand:op
 
-	FilterLogicalExpression =
-		FilterLogicalExpression:lhs
-		FilterByOperand:op
-		FilterSubExpression:rhs
-		-> [op, lhs, rhs ]
-	|	FilterSubExpression
-	,
+			{operatorPrecedence[op]}:precedence
+			?(precedence >= minPrecedence)
 
-	FilterSubExpression =
-		FilterSubExpression:lhs
-		spaces FilterRecognisedMathOperand('sub'):op spaces
-		FilterAddExpression:rhs
-		-> [ op, lhs, rhs ]
-	|	FilterAddExpression
-	,
-
-	FilterAddExpression =
-		FilterAddExpression:lhs
-		spaces FilterRecognisedMathOperand('add'):op spaces
-		FilterModExpression:rhs
-		-> [ op, lhs, rhs ]
-	|	FilterModExpression
-	,
-
-	FilterModExpression =
-		FilterModExpression:lhs
-		spaces FilterRecognisedMathOperand('mod'):op spaces
-		FilterDivExpression:rhs
-		-> [ op, lhs, rhs ]
-	|	FilterDivExpression
-	,
-	FilterDivExpression =
-		FilterDivExpression:lhs
-		spaces FilterRecognisedMathOperand('div'):op spaces
-		FilterMulExpression:rhs
-		-> [ op, lhs, rhs ]
-	|	FilterMulExpression
-	,
-
-	FilterMulExpression =
-		FilterMulExpression:lhs
-		spaces FilterRecognisedMathOperand('mul'):op spaces
-		FilterByValue:rhs
-		-> [ op, lhs, rhs ]
-	|	FilterByValue
+			FilterByExpression(precedence + 1):rhs
+			(	?(op == lhs[0])
+				-> [ op ].concat(lhs.slice(1), [rhs])
+			|	-> [ op, lhs, rhs ]
+			):lhs
+		)*
+		-> lhs
+	|	FilterByExpression
 	,
 
 	FilterByValue =
@@ -242,18 +232,6 @@ export ometa ODataParser {
 		-> expr
 	,
 
-	FilterRecognisedMathOperand :name =
-		seq(name)
-	,
-
-	FilterAndOperand =
-		spaces
-		(	seq('and')
-		|	seq('or')
-		):op
-		spaces -> op
-	,
-
 	FilterByOperand =
 		spaces
 		(	seq('eq')
@@ -262,6 +240,13 @@ export ometa ODataParser {
 		|	seq('ge')
 		|	seq('lt')
 		|	seq('le')
+		|	seq('and')
+		|	seq('or')
+		|	seq('sub')
+		|	seq('add')
+		|	seq('mod')
+		|	seq('div')
+		|	seq('mul')
 		):op
 		spaces
 		-> op
@@ -749,5 +734,5 @@ ODataParser.getBind = function(key) {
 };
 
 ODataParser._enableTokens = function() {
-	OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterAndOperand', 'FilterByOperand', 'FilterRecognisedMathOperand']);
+	OMeta._enableTokens.call(this, ['Text', 'ResourceName', 'Number', 'RecognisedOption', 'FilterByOperand']);
 };
