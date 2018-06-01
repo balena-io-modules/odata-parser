@@ -312,7 +312,7 @@
                     this._pred(precedence >= minPrecedence);
                     rhs = this._applyWithArgs("FilterByExpression", precedence + 1);
                     return lhs = this._or(function() {
-                        this._pred(op == lhs[0]);
+                        this._pred(Array.isArray(lhs) && op == lhs[0]);
                         return [ op ].concat(lhs.slice(1), [ rhs ]);
                     }, function() {
                         return [ op, lhs, rhs ];
