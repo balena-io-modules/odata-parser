@@ -29,6 +29,23 @@ module.exports = (test) ->
 					it 'rhr should be a bind', ->
 						expect(result.options.$filter[2]).to.have.property('bind').that.equals(0)
 
+			test "$filter=#{odataValue} #{op} Foo", binds, (result) ->
+				it 'A filter should be present', ->
+					expect(result.options.$filter).to.exist
+
+				it "Filter should be an instance of '#{op}'", ->
+					expect(result.options.$filter[0]).to.equal(op)
+
+				if odataValue is null or _.isObject(value)
+					it "lhr should be #{value}", ->
+						expect(result.options.$filter[1]).to.deep.equal(value)
+				else
+					it 'lhr should be a bind', ->
+						expect(result.options.$filter[1]).to.have.property('bind').that.equals(0)
+
+				it 'rhr should be Foo', ->
+					expect(result.options.$filter[2]).to.have.property('name').that.equals('Foo')
+
 		operandTest('eq')
 		operandTest('ne')
 		operandTest('gt')
@@ -231,7 +248,7 @@ module.exports = (test) ->
 			it "Filter should be an instance of 'gt'", ->
 				assert.equal(result.options.$filter[0], 'gt')
 
-			lexpr = result.options.$filter[1]
+			lexpr = result?.options?.$filter?[1]
 
 			it 'should be Price div {expr}', ->
 				assert.equal(lexpr[0], 'div')
@@ -254,7 +271,7 @@ module.exports = (test) ->
 			it "Filter should be an instance of 'gt'", ->
 				assert.equal(result.options.$filter[0], 'gt')
 
-			lexpr = result.options.$filter[1]
+			lexpr = result?.options?.$filter?[1]
 
 			it 'should be {expr} mul $0', ->
 				assert.equal(lexpr[0], 'mul')
@@ -385,7 +402,7 @@ module.exports = (test) ->
 				it 'Filter should be on the child resource', ->
 					assert.equal(result.options.$filter.name, 'child')
 
-				lambdaAsserts(result.options.$filter.lambda)
+				lambdaAsserts(result?.options?.$filter?.lambda)
 
 			test "$filter=child/#{methodName}(long_name:long_name/name eq 'cake')", ['cake'], (result, err) ->
 				if err
@@ -397,7 +414,7 @@ module.exports = (test) ->
 				it 'Filter should be on the child resource', ->
 					assert.equal(result.options.$filter.name, 'child')
 
-				lambdaAsserts(result.options.$filter.lambda, 'long_name')
+				lambdaAsserts(result?.options?.$filter?.lambda, 'long_name')
 
 			test "$filter=child/grandchild/#{methodName}(d:d/name eq 'cake')", ['cake'], (result, err) ->
 				if err
@@ -411,7 +428,7 @@ module.exports = (test) ->
 					assert.notEqual(result.options.$filter.property, null)
 					assert.equal(result.options.$filter.property.name, 'grandchild')
 
-				lambdaAsserts(result.options.$filter.property.lambda)
+				lambdaAsserts(result?.options?.$filter?.property?.lambda)
 
 		lambdaTest('any')
 		lambdaTest('all')

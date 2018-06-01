@@ -107,8 +107,7 @@ export ometa ODataParser {
 		|	CountOption
 		|	InlineCountOption
 		|	FormatOption
-		
-	|	OperationParam
+		|	OperationParam
 	,
 
 	OperationParam =
@@ -204,7 +203,7 @@ export ometa ODataParser {
 			?(precedence >= minPrecedence)
 
 			FilterByExpression(precedence + 1):rhs
-			(	?(op == lhs[0])
+			(	?(Array.isArray(lhs) && op == lhs[0])
 				-> [ op ].concat(lhs.slice(1), [rhs])
 			|	-> [ op, lhs, rhs ]
 			):lhs
