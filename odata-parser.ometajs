@@ -45,7 +45,8 @@ var operatorPrecedence = {
 	add: 3,
 	mod: 4,
 	div: 5,
-	mul: 6
+	mul: 6,
+	in: 7
 }
 
 // v4 operator precedence
@@ -62,7 +63,8 @@ var operatorPrecedence = {
 // 	sub: 4,
 // 	mul: 5,
 // 	div: 5,
-// 	mod: 5
+// 	mod: 5,
+// 	in: 6
 // }
 
 export ometa ODataParser {
@@ -222,6 +224,9 @@ export ometa ODataParser {
 				-> [ op ].concat(lhs.slice(1), [rhs])
 			|	-> [ op, lhs, rhs ]
 			):lhs
+		|	spaces seq('in'):op spaces
+			GroupedPrimitive:rhs
+			{[ op, lhs, rhs ]}:lhs
 		)*
 		-> lhs
 	|	FilterByExpression
@@ -233,6 +238,12 @@ export ometa ODataParser {
 	|	FilterMethodCallExpression
 	|	FilterNegateExpression
 	|	ParameterAlias
+	|	Primitive
+	,
+
+	Primitive =
+		'(' spaces Primitive:expr spaces ')'
+		-> expr
 	|	NumberBind
 	|	BooleanBind
 	|	Null
@@ -273,6 +284,14 @@ export ometa ODataParser {
 		spaces
 		FilterByValue:value
 		-> [ 'not', value ]
+	,
+
+	GroupedPrimitive =
+		'(' spaces
+			Primitive:first
+			(',' spaces Primitive)*:rest
+		')'
+		-> [ first ].concat(rest)
 	,
 
 	FilterMethodCallExpression =

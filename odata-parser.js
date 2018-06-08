@@ -48,7 +48,8 @@
         add: 3,
         mod: 4,
         div: 5,
-        mul: 6
+        mul: 6,
+        in: 7
     }, ODataParser = exports.ODataParser = OMeta._extend({
         Process: function() {
             var $elf = this, _fromIdx = this.input.idx, tree;
@@ -329,15 +330,25 @@
                 minPrecedence = minPrecedence || 0;
                 lhs = this._apply("FilterByValue");
                 this._many(function() {
-                    op = this._apply("FilterByOperand");
-                    precedence = operatorPrecedence[op];
-                    this._pred(precedence >= minPrecedence);
-                    rhs = this._applyWithArgs("FilterByExpression", precedence + 1);
-                    return lhs = this._or(function() {
-                        this._pred(Array.isArray(lhs) && op == lhs[0]);
-                        return [ op ].concat(lhs.slice(1), [ rhs ]);
+                    return this._or(function() {
+                        op = this._apply("FilterByOperand");
+                        precedence = operatorPrecedence[op];
+                        this._pred(precedence >= minPrecedence);
+                        rhs = this._applyWithArgs("FilterByExpression", precedence + 1);
+                        return lhs = this._or(function() {
+                            this._pred(Array.isArray(lhs) && op == lhs[0]);
+                            return [ op ].concat(lhs.slice(1), [ rhs ]);
+                        }, function() {
+                            return [ op, lhs, rhs ];
+                        });
                     }, function() {
-                        return [ op, lhs, rhs ];
+                        this._apply("spaces");
+                        this._applyWithArgs("exactly", "i");
+                        this._applyWithArgs("exactly", "n");
+                        op = "in";
+                        this._apply("spaces");
+                        rhs = this._apply("GroupedPrimitive");
+                        return lhs = [ op, lhs, rhs ];
                     });
                 });
                 return lhs;
@@ -357,6 +368,24 @@
                 return this._apply("FilterNegateExpression");
             }, function() {
                 return this._apply("ParameterAlias");
+            }, function() {
+                return this._apply("Primitive");
+            });
+        },
+        Primitive: function() {
+            var $elf = this, _fromIdx = this.input.idx, expr;
+            return this._or(function() {
+                switch (this.anything()) {
+                  case "(":
+                    this._apply("spaces");
+                    expr = this._apply("Primitive");
+                    this._apply("spaces");
+                    this._applyWithArgs("exactly", ")");
+                    return expr;
+
+                  default:
+                    throw this._fail();
+                }
             }, function() {
                 return this._apply("NumberBind");
             }, function() {
@@ -477,6 +506,19 @@
             this._apply("spaces");
             value = this._apply("FilterByValue");
             return [ "not", value ];
+        },
+        GroupedPrimitive: function() {
+            var $elf = this, _fromIdx = this.input.idx, first, rest;
+            this._applyWithArgs("exactly", "(");
+            this._apply("spaces");
+            first = this._apply("Primitive");
+            rest = this._many(function() {
+                this._applyWithArgs("exactly", ",");
+                this._apply("spaces");
+                return this._apply("Primitive");
+            });
+            this._applyWithArgs("exactly", ")");
+            return [ first ].concat(rest);
         },
         FilterMethodCallExpression: function() {
             var $elf = this, _fromIdx = this.input.idx, args, methodName;
