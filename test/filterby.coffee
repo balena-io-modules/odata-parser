@@ -188,247 +188,247 @@ module.exports = (test) ->
 			assert.equal(rhs[2].bind, 0)
 
 
-		test '$filter=Price add 5 gt 10', [5, 10], (result) ->
+	test '$filter=Price add 5 gt 10', [5, 10], (result) ->
 
-			it 'A filter should be present', ->
-				assert.notEqual(result.options.$filter, null)
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
 
-			it "Filter should be an instance of 'gt'", ->
-				assert.equal(result.options.$filter[0], 'gt')
+		it "Filter should be an instance of 'gt'", ->
+			assert.equal(result.options.$filter[0], 'gt')
 
-			it 'lhr should be Price add $0', ->
-				rhs = result.options.$filter[1]
-				assert.equal(rhs[0], 'add')
-				assert.equal(rhs[1].name, 'Price')
-				assert.equal(rhs[2].bind, 0)
+		it 'lhr should be Price add $0', ->
+			rhs = result.options.$filter[1]
+			assert.equal(rhs[0], 'add')
+			assert.equal(rhs[1].name, 'Price')
+			assert.equal(rhs[2].bind, 0)
 
-			it 'rhr should be $1', ->
-				assert.equal(result.options.$filter[2].bind, 1)
-
-
-		test '$filter=Price sub 5 gt 10', [5, 10], (result) ->
-			it 'A filter should be present', ->
-				assert.notEqual(result.options.$filter, null)
-
-			it "Filter should be an instance of 'gt'", ->
-				assert.equal(result.options.$filter[0], 'gt')
-
-			it 'lhr should be Price sub $0', ->
-				rhs = result.options.$filter[1]
-				assert.equal(rhs[0], 'sub')
-				assert.equal(rhs[1].name, 'Price')
-				assert.equal(rhs[2].bind, 0)
-
-			it 'rhr should be $1', ->
-				assert.equal(result.options.$filter[2].bind, 1)
+		it 'rhr should be $1', ->
+			assert.equal(result.options.$filter[2].bind, 1)
 
 
-		test '$filter=Price mul 5 gt 10', [5, 10], (result) ->
+	test '$filter=Price sub 5 gt 10', [5, 10], (result) ->
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
 
-			it 'A filter should be present', ->
-				assert.notEqual(result.options.$filter, null)
+		it "Filter should be an instance of 'gt'", ->
+			assert.equal(result.options.$filter[0], 'gt')
 
-			it "Filter should be an instance of 'gt'", ->
-				assert.equal(result.options.$filter[0], 'gt')
+		it 'lhr should be Price sub $0', ->
+			rhs = result.options.$filter[1]
+			assert.equal(rhs[0], 'sub')
+			assert.equal(rhs[1].name, 'Price')
+			assert.equal(rhs[2].bind, 0)
 
-			it 'lhr should be Price add $0', ->
-				lhs = result.options.$filter[1]
-				assert.equal(lhs[0], 'mul')
-				assert.equal(lhs[1].name, 'Price')
-				assert.equal(lhs[2].bind, 0)
-
-			it 'rhr should be $1', ->
-				assert.equal(result.options.$filter[2].bind, 1)
-
-
-		test '$filter=Price div Price mul 5 gt 10', [5, 10], (result) ->
-			it 'A filter should be present', ->
-				assert.notEqual(result.options.$filter, null)
-
-			it "Filter should be an instance of 'gt'", ->
-				assert.equal(result.options.$filter[0], 'gt')
-
-			lexpr = result?.options?.$filter?[1]
-
-			it 'should be Price div {expr}', ->
-				assert.equal(lexpr[0], 'div')
-				assert.equal(lexpr[1].name, 'Price')
+		it 'rhr should be $1', ->
+			assert.equal(result.options.$filter[2].bind, 1)
 
 
-			it 'should be Price mul $0', ->
-				assert.equal(lexpr[2][0], 'mul')
-				assert.equal(lexpr[2][1].name, 'Price')
-				assert.equal(lexpr[2][2].bind, 0)
+	test '$filter=Price mul 5 gt 10', [5, 10], (result) ->
 
-			it 'rhr should be $1', ->
-				assert.equal(result.options.$filter[2].bind, 1)
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
 
+		it "Filter should be an instance of 'gt'", ->
+			assert.equal(result.options.$filter[0], 'gt')
 
-		test '$filter=(Price div Price) mul 5 gt 10', [5, 10], (result) ->
-			it 'A filter should be present', ->
-				assert.notEqual(result.options.$filter, null)
+		it 'lhr should be Price add $0', ->
+			lhs = result.options.$filter[1]
+			assert.equal(lhs[0], 'mul')
+			assert.equal(lhs[1].name, 'Price')
+			assert.equal(lhs[2].bind, 0)
 
-			it "Filter should be an instance of 'gt'", ->
-				assert.equal(result.options.$filter[0], 'gt')
-
-			lexpr = result?.options?.$filter?[1]
-
-			it 'should be {expr} mul $0', ->
-				assert.equal(lexpr[0], 'mul')
-				assert.equal(lexpr[2].bind, 0)
-
-			it 'should be {Price div Price}', ->
-				assert.equal(lexpr[1][0], 'div')
-				assert.equal(lexpr[1][1].name, 'Price')
-				assert.equal(lexpr[1][2].name, 'Price' )
-
-			it 'rhr should be $1', ->
-				assert.equal(result.options.$filter[2].bind, 1)
-
-		methodTest = (args, binds, argsTest) ->
-			(methodName, expectFailure) ->
-				test "$filter=#{methodName}(#{args}) eq 'cake'", binds.concat('cake'), (result, err) ->
-					if expectFailure
-						it "Should fail because it's invalid", ->
-							assert.notEqual(err, null)
-					else if err
-						throw err
-
-					it 'A filter should be present', ->
-						assert.notEqual(result.options.$filter, null)
-
-					it "Filter should be an instance of 'eq'", ->
-						assert.equal(result.options.$filter[0], 'eq')
-
-					it 'lhs should be a call', ->
-						assert.equal(result.options.$filter[1][0], 'call')
-
-					it "lhs should be #{methodName} with correct args", ->
-						assert.equal(result.options.$filter[1][1].method, methodName)
-						argsTest(result.options.$filter[1][1].args)
-
-					it 'rhs should be bound to the last arg', ->
-						assert.equal(result.options.$filter[2].bind, binds.length)
-
-		methodTestWithThreeArgs = methodTest "'alfred', Product, 2", ['alfred', 2], (argsResult) ->
-			assert.equal(argsResult[0].bind, 0)
-			assert.equal(argsResult[1].name, 'Product')
-			assert.equal(argsResult[2].bind, 1)
-
-		methodTestWithTwoArgs = methodTest "'alfred', Product", ['alfred'], (argsResult) ->
-			assert.equal(argsResult[0].bind, 0)
-			assert.equal(argsResult[1].name, 'Product')
-
-		methodTestWithOneArg = methodTest "'alfred'", ['alfred'], (argsResult) ->
-			assert.equal(argsResult[0].bind, 0)
-
-		methodTestWithZeroArg = methodTest '', [], (argsResult) ->
-			assert.equal(argsResult.length, 0)
+		it 'rhr should be $1', ->
+			assert.equal(result.options.$filter[2].bind, 1)
 
 
-		methodTestWithTwoArgs('contains')
-		methodTestWithTwoArgs('endswith')
-		methodTestWithTwoArgs('startswith')
-		methodTestWithOneArg('length')
-		methodTestWithTwoArgs('indexof')
-		methodTestWithTwoArgs('substring')
-		methodTestWithThreeArgs('substring')
-		methodTestWithOneArg('tolower')
-		methodTestWithOneArg('toupper')
-		methodTestWithOneArg('trim')
-		methodTestWithTwoArgs('concat')
-		methodTestWithOneArg('year')
-		methodTestWithOneArg('month')
-		methodTestWithOneArg('day')
-		methodTestWithOneArg('hour')
-		methodTestWithOneArg('minute')
-		methodTestWithOneArg('second')
-		methodTestWithOneArg('fractionalseconds')
-		methodTestWithOneArg('date')
-		methodTestWithOneArg('time')
-		methodTestWithOneArg('totaloffsetminutes')
-		methodTestWithZeroArg('now')
-		methodTestWithZeroArg('maxdatetime')
-		methodTestWithZeroArg('mindatetime')
-		methodTestWithOneArg('totalseconds')
-		methodTestWithOneArg('round')
-		methodTestWithOneArg('floor')
-		methodTestWithOneArg('ceiling')
-		methodTestWithOneArg('isof')
-		methodTestWithTwoArgs('isof')
-		methodTestWithOneArg('cast')
-		methodTestWithTwoArgs('cast')
-		methodTestWithTwoArgs('substringof')
-		methodTestWithThreeArgs('replace')
+	test '$filter=Price div Price mul 5 gt 10', [5, 10], (result) ->
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
 
-		### Not sure about whether I want this or not - up to you but it's here
-		methodTestWithThreeArgs('substringof', true)
-		methodTestWithThreeArgs('endswith', true)
-		methodTestWithThreeArgs('startswith', true)
-		methodTestWithTwoArgs('length', true)
-		methodTestWithThreeArgs('indexof', true)
-		###
+		it "Filter should be an instance of 'gt'", ->
+			assert.equal(result.options.$filter[0], 'gt')
+
+		lexpr = result?.options?.$filter?[1]
+
+		it 'should be Price div {expr}', ->
+			assert.equal(lexpr[0], 'div')
+			assert.equal(lexpr[1].name, 'Price')
 
 
-		lambdaTest = (methodName) ->
-			lambdaAsserts = (lambda, alias = 'd') ->
-				it 'where it is a lambda', ->
-					assert.notEqual(lambda, null)
+		it 'should be Price mul $0', ->
+			assert.equal(lexpr[2][0], 'mul')
+			assert.equal(lexpr[2][1].name, 'Price')
+			assert.equal(lexpr[2][2].bind, 0)
 
-				it "of type '#{methodName}'", ->
-					assert.equal(lambda.method, methodName)
+		it 'rhr should be $1', ->
+			assert.equal(result.options.$filter[2].bind, 1)
 
-				it "with the element identified by '#{alias}'", ->
-					assert.equal(lambda.identifier, alias)
 
-				it 'and an expression that is d/name', ->
-					assert.equal(lambda.expression[1].name, alias)
-					assert.equal(lambda.expression[1].property.name, 'name')
-					assert.equal(lambda.expression[1].property.property, null)
+	test '$filter=(Price div Price) mul 5 gt 10', [5, 10], (result) ->
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
 
-				it "'eq'", ->
-					assert.equal(lambda.expression[0], 'eq')
+		it "Filter should be an instance of 'gt'", ->
+			assert.equal(result.options.$filter[0], 'gt')
 
-				it '$0', ->
-					assert.equal(lambda.expression[2].bind, 0)
+		lexpr = result?.options?.$filter?[1]
 
-			test "$filter=child/#{methodName}(d:d/name eq 'cake')", ['cake'], (result, err) ->
-				if err
+		it 'should be {expr} mul $0', ->
+			assert.equal(lexpr[0], 'mul')
+			assert.equal(lexpr[2].bind, 0)
+
+		it 'should be {Price div Price}', ->
+			assert.equal(lexpr[1][0], 'div')
+			assert.equal(lexpr[1][1].name, 'Price')
+			assert.equal(lexpr[1][2].name, 'Price' )
+
+		it 'rhr should be $1', ->
+			assert.equal(result.options.$filter[2].bind, 1)
+
+	methodTest = (args, binds, argsTest) ->
+		(methodName, expectFailure) ->
+			test "$filter=#{methodName}(#{args}) eq 'cake'", binds.concat('cake'), (result, err) ->
+				if expectFailure
+					it "Should fail because it's invalid", ->
+						assert.notEqual(err, null)
+				else if err
 					throw err
 
 				it 'A filter should be present', ->
 					assert.notEqual(result.options.$filter, null)
 
-				it 'Filter should be on the child resource', ->
-					assert.equal(result.options.$filter.name, 'child')
+				it "Filter should be an instance of 'eq'", ->
+					assert.equal(result.options.$filter[0], 'eq')
 
-				lambdaAsserts(result?.options?.$filter?.lambda)
+				it 'lhs should be a call', ->
+					assert.equal(result.options.$filter[1][0], 'call')
 
-			test "$filter=child/#{methodName}(long_name:long_name/name eq 'cake')", ['cake'], (result, err) ->
-				if err
-					throw err
+				it "lhs should be #{methodName} with correct args", ->
+					assert.equal(result.options.$filter[1][1].method, methodName)
+					argsTest(result.options.$filter[1][1].args)
 
-				it 'A filter should be present', ->
-					assert.notEqual(result.options.$filter, null)
+				it 'rhs should be bound to the last arg', ->
+					assert.equal(result.options.$filter[2].bind, binds.length)
 
-				it 'Filter should be on the child resource', ->
-					assert.equal(result.options.$filter.name, 'child')
+	methodTestWithThreeArgs = methodTest "'alfred', Product, 2", ['alfred', 2], (argsResult) ->
+		assert.equal(argsResult[0].bind, 0)
+		assert.equal(argsResult[1].name, 'Product')
+		assert.equal(argsResult[2].bind, 1)
 
-				lambdaAsserts(result?.options?.$filter?.lambda, 'long_name')
+	methodTestWithTwoArgs = methodTest "'alfred', Product", ['alfred'], (argsResult) ->
+		assert.equal(argsResult[0].bind, 0)
+		assert.equal(argsResult[1].name, 'Product')
 
-			test "$filter=child/grandchild/#{methodName}(d:d/name eq 'cake')", ['cake'], (result, err) ->
-				if err
-					throw err
+	methodTestWithOneArg = methodTest "'alfred'", ['alfred'], (argsResult) ->
+		assert.equal(argsResult[0].bind, 0)
 
-				it 'A filter should be present', ->
-					assert.notEqual(result.options.$filter, null)
+	methodTestWithZeroArg = methodTest '', [], (argsResult) ->
+		assert.equal(argsResult.length, 0)
 
-				it 'Filter should be on the child/grandchild resource', ->
-					assert.equal(result.options.$filter.name, 'child')
-					assert.notEqual(result.options.$filter.property, null)
-					assert.equal(result.options.$filter.property.name, 'grandchild')
 
-				lambdaAsserts(result?.options?.$filter?.property?.lambda)
+	methodTestWithTwoArgs('contains')
+	methodTestWithTwoArgs('endswith')
+	methodTestWithTwoArgs('startswith')
+	methodTestWithOneArg('length')
+	methodTestWithTwoArgs('indexof')
+	methodTestWithTwoArgs('substring')
+	methodTestWithThreeArgs('substring')
+	methodTestWithOneArg('tolower')
+	methodTestWithOneArg('toupper')
+	methodTestWithOneArg('trim')
+	methodTestWithTwoArgs('concat')
+	methodTestWithOneArg('year')
+	methodTestWithOneArg('month')
+	methodTestWithOneArg('day')
+	methodTestWithOneArg('hour')
+	methodTestWithOneArg('minute')
+	methodTestWithOneArg('second')
+	methodTestWithOneArg('fractionalseconds')
+	methodTestWithOneArg('date')
+	methodTestWithOneArg('time')
+	methodTestWithOneArg('totaloffsetminutes')
+	methodTestWithZeroArg('now')
+	methodTestWithZeroArg('maxdatetime')
+	methodTestWithZeroArg('mindatetime')
+	methodTestWithOneArg('totalseconds')
+	methodTestWithOneArg('round')
+	methodTestWithOneArg('floor')
+	methodTestWithOneArg('ceiling')
+	methodTestWithOneArg('isof')
+	methodTestWithTwoArgs('isof')
+	methodTestWithOneArg('cast')
+	methodTestWithTwoArgs('cast')
+	methodTestWithTwoArgs('substringof')
+	methodTestWithThreeArgs('replace')
 
-		lambdaTest('any')
-		lambdaTest('all')
+	### Not sure about whether I want this or not - up to you but it's here
+	methodTestWithThreeArgs('substringof', true)
+	methodTestWithThreeArgs('endswith', true)
+	methodTestWithThreeArgs('startswith', true)
+	methodTestWithTwoArgs('length', true)
+	methodTestWithThreeArgs('indexof', true)
+	###
+
+
+	lambdaTest = (methodName) ->
+		lambdaAsserts = (lambda, alias = 'd') ->
+			it 'where it is a lambda', ->
+				assert.notEqual(lambda, null)
+
+			it "of type '#{methodName}'", ->
+				assert.equal(lambda.method, methodName)
+
+			it "with the element identified by '#{alias}'", ->
+				assert.equal(lambda.identifier, alias)
+
+			it 'and an expression that is d/name', ->
+				assert.equal(lambda.expression[1].name, alias)
+				assert.equal(lambda.expression[1].property.name, 'name')
+				assert.equal(lambda.expression[1].property.property, null)
+
+			it "'eq'", ->
+				assert.equal(lambda.expression[0], 'eq')
+
+			it '$0', ->
+				assert.equal(lambda.expression[2].bind, 0)
+
+		test "$filter=child/#{methodName}(d:d/name eq 'cake')", ['cake'], (result, err) ->
+			if err
+				throw err
+
+			it 'A filter should be present', ->
+				assert.notEqual(result.options.$filter, null)
+
+			it 'Filter should be on the child resource', ->
+				assert.equal(result.options.$filter.name, 'child')
+
+			lambdaAsserts(result?.options?.$filter?.lambda)
+
+		test "$filter=child/#{methodName}(long_name:long_name/name eq 'cake')", ['cake'], (result, err) ->
+			if err
+				throw err
+
+			it 'A filter should be present', ->
+				assert.notEqual(result.options.$filter, null)
+
+			it 'Filter should be on the child resource', ->
+				assert.equal(result.options.$filter.name, 'child')
+
+			lambdaAsserts(result?.options?.$filter?.lambda, 'long_name')
+
+		test "$filter=child/grandchild/#{methodName}(d:d/name eq 'cake')", ['cake'], (result, err) ->
+			if err
+				throw err
+
+			it 'A filter should be present', ->
+				assert.notEqual(result.options.$filter, null)
+
+			it 'Filter should be on the child/grandchild resource', ->
+				assert.equal(result.options.$filter.name, 'child')
+				assert.notEqual(result.options.$filter.property, null)
+				assert.equal(result.options.$filter.property.name, 'grandchild')
+
+			lambdaAsserts(result?.options?.$filter?.property?.lambda)
+
+	lambdaTest('any')
+	lambdaTest('all')
