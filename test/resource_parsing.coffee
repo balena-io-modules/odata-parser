@@ -14,6 +14,13 @@ checkKeyBind = (result) ->
 		.that.has.property 'bind'
 		.that.equals 0
 
+checkKeyParam = (result, paramAlias) ->
+	it 'should have the key specified for the source', ->
+		expect(result)
+		.to.have.property 'key'
+		.that.has.property 'bind'
+		.that.equals paramAlias
+
 describe 'Resource Parsing', ->
 	test '/', (result) ->
 		it 'Service root should point to $serviceroot', ->
@@ -44,6 +51,17 @@ describe 'Resource Parsing', ->
 		it 'should have the resource specified', ->
 			checkResource(result, 'model')
 		checkKeyBind(result)
+
+
+	test '/model(@id)?@id=1', null, null, { '@id': 1 }, (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		checkKeyParam(result, '@id')
+
+	test "/model(@id)?@id='TextKey'", null, null, { '@id': 'TextKey' }, (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		checkKeyParam(result, '@id')
 
 
 	test '/model(1)/child', [1], (result) ->

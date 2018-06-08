@@ -135,7 +135,29 @@
                 return this._apply("FormatOption");
             }, function() {
                 return this._apply("OperationParam");
+            }, function() {
+                return this._apply("ParameterAliasOption");
             });
+        },
+        ParameterAliasOption: function() {
+            var $elf = this, _fromIdx = this.input.idx, b, n, name, s, value;
+            this._applyWithArgs("exactly", "@");
+            name = this._apply("Text");
+            this._applyWithArgs("exactly", "=");
+            value = this._or(function() {
+                n = this._apply("Number");
+                return [ "Real", n ];
+            }, function() {
+                b = this._apply("Boolean");
+                return [ "Boolean", b ];
+            }, function() {
+                s = this._apply("QuotedText");
+                return [ "Text", s ];
+            }, function() {
+                return this._apply("Date");
+            });
+            this._pred(!this.binds["@" + name]);
+            return this.binds["@" + name] = value;
         },
         OperationParam: function() {
             var $elf = this, _fromIdx = this.input.idx, name, value;
@@ -333,6 +355,8 @@
                 return this._apply("FilterMethodCallExpression");
             }, function() {
                 return this._apply("FilterNegateExpression");
+            }, function() {
+                return this._apply("ParameterAlias");
             }, function() {
                 return this._apply("NumberBind");
             }, function() {
@@ -963,6 +987,8 @@
                 return this._apply("NumberBind");
             }, function() {
                 return this._apply("QuotedTextBind");
+            }, function() {
+                return this._apply("ParameterAlias");
             });
         },
         ExternalKeyBind: function() {
@@ -1318,6 +1344,14 @@
             this._apply("Apostrophe");
             return decodeURIComponent(text.join(""));
         },
+        ParameterAlias: function() {
+            var $elf = this, _fromIdx = this.input.idx, param;
+            this._applyWithArgs("exactly", "@");
+            param = this._apply("ResourceName");
+            return {
+                bind: "@" + param
+            };
+        },
         Bind: function(type, value) {
             var $elf = this, _fromIdx = this.input.idx;
             this.binds.push([ type, value ]);
@@ -1330,7 +1364,7 @@
             n = this._apply("Number");
             return this._applyWithArgs("Bind", "Real", n);
         },
-        DateBind: function() {
+        Date: function() {
             var $elf = this, _fromIdx = this.input.idx, date, type;
             type = function() {
                 switch (this.anything()) {
@@ -1376,7 +1410,12 @@
             date = this._apply("QuotedText");
             date = Date.parse(date);
             this._pred(!isNaN(date));
-            return this._applyWithArgs("Bind", type, date);
+            return [ type, date ];
+        },
+        DateBind: function() {
+            var $elf = this, _fromIdx = this.input.idx, d;
+            d = this._apply("Date");
+            return this._applyWithArgs("Bind", d[0], d[1]);
         },
         BooleanBind: function() {
             var $elf = this, _fromIdx = this.input.idx, b;

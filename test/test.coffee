@@ -13,8 +13,10 @@ getBindType = (value) ->
 		return value
 
 raw = (describe, input, optArgs..., expectation) ->
-	[ binds = [], entry = 'Process' ] = optArgs
+	[ binds = [], entry = 'Process', params = {} ] = optArgs
 	binds = _.map(binds, getBindType)
+	_.each params, (value, key) ->
+		binds[key] = getBindType(value)
 	describe "Parsing #{input}", ->
 		try
 			result = ODataParser.matchAll(input, entry)
