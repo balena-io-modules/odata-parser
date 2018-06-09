@@ -220,6 +220,22 @@ module.exports = (test) ->
 			assert.equal(result.options.$filter[2][1].bind, 1)
 			assert.equal(result.options.$filter[2][2].bind, 2)
 
+	test "$filter=Price in ('a', 'b', 'c')", ['a', 'b', 'c'], (result) ->
+
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
+
+		it "Filter should be an instance of 'in'", ->
+			assert.equal(result.options.$filter[0], 'in')
+
+		it 'lhr should be Price', ->
+			assert.equal(result.options.$filter[1].name, 'Price')
+
+		it 'rhr should be [ $1, $2, $3 ]', ->
+			assert.equal(result.options.$filter[2][0].bind, 0)
+			assert.equal(result.options.$filter[2][1].bind, 1)
+			assert.equal(result.options.$filter[2][2].bind, 2)
+
 
 	test '$filter=Price add 5 gt 10', [5, 10], (result) ->
 
