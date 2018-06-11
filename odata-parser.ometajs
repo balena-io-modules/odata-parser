@@ -234,7 +234,6 @@ export ometa ODataParser {
 
 	FilterByValue =
 		GroupedPrecedenceExpression
-	|	QuotedTextBind
 	|	FilterMethodCallExpression
 	|	FilterNegateExpression
 	|	ParameterAlias
@@ -244,6 +243,7 @@ export ometa ODataParser {
 	Primitive =
 		'(' spaces Primitive:expr spaces ')'
 		-> expr
+	|	QuotedTextBind
 	|	NumberBind
 	|	BooleanBind
 	|	Null
