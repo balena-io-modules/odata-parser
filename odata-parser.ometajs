@@ -134,7 +134,7 @@ export ometa ODataParser {
 
 	SortOption =
 		RecognisedOption('orderby')
-		listOf(`SortProperty, ','):properties
+		requiredListOf(`SortProperty, ','):properties
 		-> { name: '$orderby', value: { properties: properties } }
 	,
 
@@ -351,7 +351,7 @@ export ometa ODataParser {
 	,
 
 	PropertyPathList =
-		listOf(`PropertyPath, ',')
+		requiredListOf(`PropertyPath, ',')
 	,
 	PropertyPath =
 		ResourceName:resource
@@ -361,7 +361,7 @@ export ometa ODataParser {
 		-> { name: resource, property: next}
 	,
 	ExpandPropertyPathList =
-		listOf(`ExpandPropertyPath, ',')
+		requiredListOf(`ExpandPropertyPath, ',')
 	,
 	ExpandPropertyPath =
 		ResourceName:resource
@@ -741,6 +741,16 @@ ODataParser.space = function() {
 	if (!this.IsSpace()) {
 		throw this._fail();
 	}
+};
+
+ODataParser.requiredListOf = function(rule, delim) {
+	var r = this._apply(rule);
+	return this._many(function() {
+			this._applyWithArgs("token", delim);
+			return this._apply(rule);
+		},
+		r
+	);
 };
 
 ODataParser.numberOf = function(rule, count, separator) {

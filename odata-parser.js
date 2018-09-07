@@ -173,7 +173,7 @@
         SortOption: function() {
             var $elf = this, _fromIdx = this.input.idx, properties;
             this._applyWithArgs("RecognisedOption", "orderby");
-            properties = this._applyWithArgs("listOf", "SortProperty", ",");
+            properties = this._applyWithArgs("requiredListOf", "SortProperty", ",");
             return {
                 name: "$orderby",
                 value: {
@@ -361,8 +361,6 @@
             return this._or(function() {
                 return this._apply("GroupedPrecedenceExpression");
             }, function() {
-                return this._apply("QuotedTextBind");
-            }, function() {
                 return this._apply("FilterMethodCallExpression");
             }, function() {
                 return this._apply("FilterNegateExpression");
@@ -386,6 +384,8 @@
                   default:
                     throw this._fail();
                 }
+            }, function() {
+                return this._apply("QuotedTextBind");
             }, function() {
                 return this._apply("NumberBind");
             }, function() {
@@ -950,7 +950,7 @@
         },
         PropertyPathList: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("listOf", "PropertyPath", ",");
+            return this._applyWithArgs("requiredListOf", "PropertyPath", ",");
         },
         PropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, next, resource;
@@ -966,7 +966,7 @@
         },
         ExpandPropertyPathList: function() {
             var $elf = this, _fromIdx = this.input.idx;
-            return this._applyWithArgs("listOf", "ExpandPropertyPath", ",");
+            return this._applyWithArgs("requiredListOf", "ExpandPropertyPath", ",");
         },
         ExpandPropertyPath: function() {
             var $elf = this, _fromIdx = this.input.idx, count, next, options, optionsObj, resource;
@@ -1546,6 +1546,13 @@
     };
     ODataParser.space = function() {
         if (!this.IsSpace()) throw this._fail();
+    };
+    ODataParser.requiredListOf = function(rule, delim) {
+        var r = this._apply(rule);
+        return this._many(function() {
+            this._applyWithArgs("token", delim);
+            return this._apply(rule);
+        }, r);
     };
     ODataParser.numberOf = function(rule, count, separator) {
         if (count.length) {
