@@ -14,7 +14,7 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "ometa-js": "^1.5.2"
+    "ometa-js": "^1.5.3"
   },
   "devDependencies": {
     "chai": "^4.1.2",

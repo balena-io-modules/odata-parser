@@ -1,4 +1,5 @@
-test = require('./test').raw
+resourceTest = require('./test')
+test = resourceTest.raw
 assert = require 'assert'
 { expect } = require 'chai'
 
@@ -207,3 +208,27 @@ describe 'Resource Parsing', ->
 
 		it 'rhr should be $0', ->
 			assert.equal(filter[2].bind, 0)
+
+	resourceTest '$select=', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
+
+	resourceTest '$expand=', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
+
+	resourceTest '$orderby=', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
+
+	resourceTest '$expand=test($select=)', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
+
+	resourceTest '$expand=test($expand=)', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
+
+	resourceTest '$expand=test($orderby=)', (result) ->
+		it 'should fail because it is invalid', ->
+			assert(result instanceof SyntaxError)
