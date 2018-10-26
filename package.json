@@ -18,7 +18,7 @@
     "coffee-script": "~1.12.7",
     "lodash": "^4.16.4",
     "mocha": "^5.2.0",
-    "pegjs": "^0.10.0",
+    "pegjs": "^0.11.0-dev.325",
     "require-npm4-to-publish": "^1.0.0",
     "resin-lint": "^1.5.7"
   }

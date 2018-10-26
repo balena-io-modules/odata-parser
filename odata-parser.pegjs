@@ -115,8 +115,7 @@ QueryOptions =
 	option:QueryOption
 	options:(
 		'&'
-		x:QueryOption
-		{ return x }
+		@QueryOption
 	)*
 	{ return ParseOptionsObject([option].concat(options)) }
 
@@ -124,7 +123,7 @@ QueryOption =
 		(	'$'
 		/	'%24'
 		)
-		x:(	SelectOption
+		@(	SelectOption
 		/	FilterByOption
 		/	ExpandOption
 		/	SortOption
@@ -134,7 +133,6 @@ QueryOption =
 		/	InlineCountOption
 		/	FormatOption
 		)
-		{ return x }
 	/	OperationParam
 	/	ParameterAliasOption
 
@@ -161,8 +159,7 @@ SortOption =
 	property:SortProperty
 	properties:(
 		','
-		x:SortProperty
-		{ return x }
+		@SortProperty
 	)*
 	{ return { name: '$orderby', value: { properties: [property].concat(properties) } } }
 
@@ -232,8 +229,7 @@ FilterByExpression =
 	('' {
 		precedence = 0;
 	})
-	expr:FilterByExpressionLoop
-	{ return expr }
+	@FilterByExpressionLoop
 
 FilterByExpressionLoop =
 	minPrecedence:(
@@ -241,7 +237,7 @@ FilterByExpressionLoop =
 			return precedence;
 		}
 	)
-	expr:(
+	@(
 		lhs:(
 			x:FilterByValue
 			{ return [x] }
@@ -272,7 +268,6 @@ FilterByExpressionLoop =
 			return peg$parseFilterByExpressionLoop()
 		}
 	)
-	{ return expr }
 
 FilterByValue =
 	GroupedPrecedenceExpression
@@ -282,8 +277,7 @@ FilterByValue =
 /	Primitive
 
 Primitive =
-		'(' spaces expr:Primitive spaces ')'
-		{ return expr}
+		'(' spaces @Primitive spaces ')'
 	/	QuotedTextBind
 	/	NumberBind
 	/	BooleanBind
@@ -294,12 +288,11 @@ Primitive =
 	/	PropertyPath
 
 GroupedPrecedenceExpression =
-	'(' spaces expr:FilterByExpression spaces ')'
-	{ return expr }
+	'(' spaces @FilterByExpression spaces ')'
 
 FilterByOperand =
 	spaces
-	op:(
+	@(
 		'eq'
 	/	'ne'
 	/	'gt'
@@ -315,7 +308,6 @@ FilterByOperand =
 	/	'mul'
 	)
 	spaces
-	{ return op }
 
 FilterNegateExpression =
 	spaces
@@ -323,8 +315,7 @@ FilterNegateExpression =
 	spaces
 	value:(
 		FilterByValue
-	/	'(' spaces expr:FilterByExpression spaces ')'
-		{ return expr }
+	/	'(' spaces @FilterByExpression spaces ')'
 	)
 	{ return [ 'not', value ] }
 
@@ -334,8 +325,7 @@ GroupedPrimitive =
 		rest:(
 			','
 			spaces
-			x:Primitive
-			{ return x}
+			@Primitive
 		)*
 	')'
 	{ return [ first ].concat(rest) }
@@ -383,8 +373,7 @@ FilterMethodCallExpression =
 				spaces
 				','
 				spaces
-				x:FilterByExpression
-				{ return x }
+				@FilterByExpression
 			)*
 			spaces
 			{ return [ first ].concat(rest) }
@@ -412,24 +401,21 @@ PropertyPathList =
 	path:PropertyPath
 	paths:(
 		','
-		x:PropertyPath
-		{ return x }
+		@PropertyPath
 	)*
 	{ return [path].concat(paths) }
 PropertyPath =
 	resource:ResourceName
 	property:(
 		'/'
-		x:PropertyPath
-		{ return x }
+		@PropertyPath
 	)?
 	{ return { name: resource, property } }
 ExpandPropertyPathList =
 	path:ExpandPropertyPath
 	paths:(
 		','
-		x:ExpandPropertyPath
-		{ return x }
+		@ExpandPropertyPath
 	)*
 	{ return [path].concat(paths) }
 ExpandPropertyPath =
@@ -440,39 +426,34 @@ ExpandPropertyPath =
 	)?
 	optionsObj:(
 		'('
-		x:(	option:QueryOption
+		@(	option:QueryOption
 			options:(
 				'&'
-				x:QueryOption
-				{ return x }
+				@QueryOption
 			)*
 			{ return ParseOptionsObject([option].concat(options)) }
 		/ '' { return {} }
 		)
 		')'
-		{ return x }
 	)?
 	next:(
 		'/'
-		x:PropertyPath
-		{ return x }
+		@PropertyPath
 	)?
 	{ return { name: resource, property: next, count: count, options: optionsObj} }
 
 LambdaPropertyPath =
 	resource:ResourceName
 	'/'
-	x:(	next:LambdaPropertyPath
+	@(	next:LambdaPropertyPath
 		{ return { name: resource, property: next } }
 	/	lambda:LambdaMethodCall
 		{ return { name: resource, lambda: lambda } }
 	)
-	{ return x }
 Key =
 	'('
-	key:KeyBind
+	@KeyBind
 	')'
-	{ return key }
 KeyBind =
 		NumberBind
 	/	QuotedTextBind
@@ -480,14 +461,13 @@ KeyBind =
 
 Links =
 	'/$links'
-	link:SubPathSegment
-	{ return link }
+	@SubPathSegment
 
 PathSegment =
 	result:(
 		'/'
 		result:(
-			resource: ResourceName
+			resource:ResourceName
 			{ return { resource } }
 		)
 		(
@@ -592,27 +572,23 @@ Duration =
 	'P'
 	// The order of elements is fixed (PnDTnHnMnS)
 	day:(
-		n:DurationInteger
+		@DurationInteger
 		'D'
-		{ return n }
 	)?
 	time:(
 		// T must be present for time parts to be specified
 		'T'
 		hour:(
-			n:DurationInteger
+			@DurationInteger
 			'H'
-			{ return n }
 		)?
 		minute:(
-			n:DurationInteger
+			@DurationInteger
 			'M'
-			{ return n }
 		)?
 		second:(
-			n:DurationNumber
+			@DurationNumber
 			'S'
-			{ return n }
 		)?
 		// If T is present there must be a time part
 		&{return hour || minute || second}
@@ -668,11 +644,9 @@ Apostrophe =
 QuotedText =
 	Apostrophe
 	text:(
-		Apostrophe x:Apostrophe
-		{ return x }
+		Apostrophe @Apostrophe
 	/	!Apostrophe
-		x:.
-		{ return x }
+		@.
 	)*
 	Apostrophe
 	{ return decodeURIComponent(text.join('')) }
