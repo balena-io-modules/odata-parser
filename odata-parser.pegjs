@@ -647,11 +647,7 @@ DurationNumber =
 	)
 
 ReservedUriComponent =
-		// GenDelim
-		':' / '/' / '?' / '#' / '[' / ']' / '@'
-	/
-		// SubDelim
-		'!' / '$' / '*' / '&' / '(' / ')' / '+' / ',' / ';' / '='
+	[:/?#\[\]@!$*&()+,;=]
 
 
 Text =
