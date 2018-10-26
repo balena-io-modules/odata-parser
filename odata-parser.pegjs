@@ -547,12 +547,8 @@ ContentType =
 	)
 
 ResourceName =
-	resourceName:$(
-		(
-			!(ReservedUriComponent / space)
-			.
-		)+
-	)
+	// This regex is equivalent to `!(ReservedUriComponent / [ %])`
+	resourceName:$[^:/?#\[\]@!$*&()+,;= %]+
 	{ return decodeURIComponent(resourceName) }
 
 Number =
@@ -651,16 +647,9 @@ DurationNumber =
 	/	DurationInteger
 	)
 
-ReservedUriComponent =
-	[:/?#\[\]@!$*&()+,;=]
-
-
 Text =
-	text:$(
-		(	!ReservedUriComponent
-			.
-		)*
-	)
+	// This regex is equivalent to `(!ReservedUriComponent)`
+	text:$[^:/?#\[\]@!$*&()+,;=]*
 	{ return decodeURIComponent(text) }
 
 Sign =
