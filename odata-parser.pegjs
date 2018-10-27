@@ -681,11 +681,6 @@ ParameterAlias =
 	'@' param:ResourceName
 	{ return { bind: '@' + param } }
 
-space =
-		' '
-	/	'%20'
-		{ return ' ' }
-
 NumberBind =
 	n:Number
 	{ return Bind('Real', n) }
@@ -725,7 +720,9 @@ QuotedTextBind =
 	{ return Bind('Text', t) }
 
 spaces =
-	space*
+	(	' '
+	/	'%20'
+	)*
 
 letter =
 	[a-z]i
