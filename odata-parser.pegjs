@@ -121,15 +121,20 @@ QueryOptions =
 	{ return ParseOptionsObject([option].concat(options)) }
 
 QueryOption =
-		SelectOption
-	/	FilterByOption
-	/	ExpandOption
-	/	SortOption
-	/	TopOption
-	/	SkipOption
-	/	CountOption
-	/	InlineCountOption
-	/	FormatOption
+		(	'$'
+		/	'%24'
+		)
+		x:(	SelectOption
+		/	FilterByOption
+		/	ExpandOption
+		/	SortOption
+		/	TopOption
+		/	SkipOption
+		/	CountOption
+		/	InlineCountOption
+		/	FormatOption
+		)
+		{ return x }
 	/	OperationParam
 	/	ParameterAliasOption
 
@@ -152,7 +157,7 @@ OperationParam =
 	{ return { name: name, value: value } }
 
 SortOption =
-	Dollar 'orderby='
+	'orderby='
 	property:SortProperty
 	properties:(
 		','
@@ -175,17 +180,17 @@ SortProperty =
 	}
 
 TopOption =
-	Dollar 'top='
+	'top='
 	value:UnsignedInteger
 	{ return { name: '$top', value: value } }
 
 SkipOption =
-	Dollar 'skip='
+	'skip='
 	value:UnsignedInteger
 	{ return { name: '$skip', value: value } }
 
 InlineCountOption =
-	Dollar 'inlinecount='
+	'inlinecount='
 	value:(
 		'allpages'
 	/	'none'
@@ -194,17 +199,17 @@ InlineCountOption =
 	{ return { name: '$inlinecount', value: value } }
 
 CountOption =
-	Dollar 'count='
+	'count='
 	value:Boolean
 	{ return { name: '$count', value: value } }
 
 ExpandOption =
-	Dollar 'expand='
+	'expand='
 	properties:ExpandPropertyPathList
 	{ return { name: '$expand', value: { properties: properties } } }
 
 SelectOption =
-	Dollar 'select='
+	'select='
 	value:(
 		'*'
 	/	properties:PropertyPathList
@@ -214,12 +219,12 @@ SelectOption =
 
 
 FilterByOption =
-	Dollar 'filter='
+	'filter='
 	expr:FilterByExpression
 	{ return { name: '$filter', value: expr } }
 
 FormatOption =
-	Dollar 'format='
+	'format='
 	type:ContentType
 	{ return { name: '$format', value: type } }
 
@@ -670,11 +675,6 @@ Apostrophe =
 		'\''
 	/	'%27'
 		{ return '\'' }
-
-Dollar =
-		'$'
-	/	'%24'
-		{ return '$' }
 
 QuotedText =
 	Apostrophe
