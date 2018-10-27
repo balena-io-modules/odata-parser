@@ -311,13 +311,12 @@ FilterByOperand =
 
 FilterNegateExpression =
 	spaces
-	'not'
+	@'not'
 	spaces
-	value:(
+	@(
 		FilterByValue
 	/	'(' spaces @FilterByExpression spaces ')'
 	)
-	{ return [ 'not', value ] }
 
 GroupedPrimitive =
 	'(' spaces
