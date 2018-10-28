@@ -537,19 +537,19 @@ Number =
 Decimal =
 	sign:Sign
 	d:$(
-		digit+
+		[0-9]+
 		'.'
-		digit+
+		[0-9]+
 	)
 	{ return Number(sign + d) }
 
 Integer =
 	sign:Sign
-	d:$(digit+)
+	d:$[0-9]+
 	{ return parseInt(sign + d, 10) }
 
 UnsignedInteger =
-	d:$(digit+)
+	d:$[0-9]+
 	{ return parseInt(d, 10) }
 
 Null =
@@ -614,9 +614,9 @@ DurationInteger =
 
 DurationNumber =
 	(	d:$(
-			digit+
+			[0-9]+
 			'.'
-			digit+
+			[0-9]+
 		)
 		{ return Number(d) }
 	/	DurationInteger
@@ -696,6 +696,3 @@ spaces =
 	(	' '
 	/	'%20'
 	)*
-
-digit =
-	[0-9]
