@@ -519,10 +519,10 @@ SubPathSegment =
 	{ return result }
 
 ContentType =
-	$(	letter+
+	$(	[a-z]i+
 		'/'
-		letter+
-		('+' letter+)?
+		[a-z]i+
+		('+' [a-z]i+)?
 	)
 
 ResourceName =
@@ -696,9 +696,6 @@ spaces =
 	(	' '
 	/	'%20'
 	)*
-
-letter =
-	[a-z]i
 
 digit =
 	[0-9]
