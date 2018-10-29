@@ -5,10 +5,10 @@
   "main": "odata-parser.js",
   "scripts": {
     "lint": "resin-lint test",
-    "pretest": "npm run lint && npm run prepublishOnly",
+    "pretest": "npm run lint && npm run prepare",
     "test": "mocha",
     "prepublish": "require-npm4-to-publish",
-    "prepublishOnly": "pegjs --cache --allowed-start-rules Process,ProcessRule -o odata-parser.js odata-parser.pegjs"
+    "prepare": "pegjs --cache --allowed-start-rules Process,ProcessRule -o odata-parser.js odata-parser.pegjs"
   },
   "repository": "https://github.com/resin-io-modules/odata-parser.git",
   "author": "",
