@@ -8,7 +8,7 @@
     "pretest": "npm run lint && npm run prepare",
     "test": "mocha",
     "prepublish": "require-npm4-to-publish",
-    "prepare": "pegjs --cache --allowed-start-rules Process,ProcessRule -o odata-parser.js odata-parser.pegjs"
+    "prepare": "pegjs --config=odata-parser.config.js"
   },
   "repository": "https://github.com/resin-io-modules/odata-parser.git",
   "author": "",
