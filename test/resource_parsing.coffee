@@ -2,6 +2,7 @@ resourceTest = require('./test')
 test = resourceTest.raw
 assert = require 'assert'
 { expect } = require 'chai'
+{ SyntaxError } = require '../odata-parser'
 
 checkResource = (result, expected) ->
 	expect(result)
@@ -195,11 +196,11 @@ describe 'Resource Parsing', ->
 			assert.equal(rhs[1].name, 'id')
 			assert.equal(rhs[2].bind, 1)
 
-	test ['FilterByExpression', 'foo eq $INVALID'], ['$INVALID'], 'ProcessRule', (result) ->
+	test 'foo eq $INVALID', ['$INVALID'], { startRule: 'ProcessRule', rule: 'FilterByExpression' }, (result) ->
 		it 'should fail because it is invalid', ->
 			assert(result instanceof SyntaxError)
 
-	test ['FilterByExpression', "foo eq 'valid'"], ['valid'], 'ProcessRule', (filter) ->
+	test "foo eq 'valid'", ['valid'], { startRule: 'ProcessRule', rule: 'FilterByExpression' }, (filter) ->
 		it "Filter should be an instance of 'eq'", ->
 			assert.equal(filter[0], 'eq')
 
