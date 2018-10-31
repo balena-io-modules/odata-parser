@@ -120,9 +120,7 @@ QueryOptions =
 	{ return ParseOptionsObject([option].concat(options)) }
 
 QueryOption =
-		(	'$'
-		/	'%24'
-		)
+		Dollar
 		@(	SelectOption
 		/	FilterByOption
 		/	ExpandOption
@@ -135,6 +133,10 @@ QueryOption =
 		)
 	/	OperationParam
 	/	ParameterAliasOption
+
+Dollar '$ query options' =
+		'$'
+	/	'%24'
 
 ParameterAliasOption =
 	'@' name:Text '='
