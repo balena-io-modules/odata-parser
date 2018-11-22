@@ -10,7 +10,7 @@
     "prepublish": "require-npm4-to-publish",
     "prepare": "pegjs --config=odata-parser.config.js"
   },
-  "repository": "https://github.com/resin-io-modules/odata-parser.git",
+  "repository": "https://github.com/balena-io-modules/odata-parser.git",
   "author": "",
   "license": "BSD",
   "devDependencies": {
