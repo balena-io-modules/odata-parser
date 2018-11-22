@@ -1,6 +1,6 @@
 ## odata-parser
 
-[![npm version](https://badge.fury.io/js/odata-parser.svg)](https://badge.fury.io/js/odata-parser)
+[![npm version](https://badge.fury.io/js/%40resin%2Fodata-parser.svg)](https://badge.fury.io/js/%40resin%2Fodata-parser)
 
 An OData parser written in OMeta.
 
@@ -8,7 +8,7 @@ OData is a protocol build on top of REST and HTTP, it's goal is to provide a uni
 For a full specification of the protocol refer to this [link](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html)
 
 
-This module is a part of the [odata-compiler](https://github.com/resin-io-modules/odata-compiler)
+This module is a part of the [odata-compiler](https://github.com/balena-io-modules/odata-compiler)
 
 The parser takes an input string representing the odata request and returns an object `{tree, binds}` if the parse is successful.
 
