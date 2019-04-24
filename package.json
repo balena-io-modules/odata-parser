@@ -1,5 +1,5 @@
 {
-  "name": "@resin/odata-parser",
+  "name": "@balena.io/odata-parser",
   "version": "1.0.2",
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
