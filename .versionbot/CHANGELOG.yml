@@ -1,0 +1,368 @@
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 70ac83b0059a99d1d42e986f0a42fb7120c35ee8
+    subject: Update dependencies
+  date: "2019-04-15T06:51:46Z"
+  version: 1.0.2
+- commits:
+  - author: Lucian
+    body: 'Fixes #28'
+    footers:
+      change-type: patch
+      signed-off-by: Lucian <lucian.buzzo@gmail.com>
+    hash: 43e023bd8103ab54e3464d348ef684be0e700d27
+    subject: Update README npm badge and change github links to balena-io-modules
+  date: "2018-11-22T02:37:11Z"
+  version: 1.0.1
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: major
+    hash: 8ffdb2919bd0f9b10ae8a8a1895ffd56c1ac2c2a
+    subject: Convert to pegjs
+  - author: Pagan Gazzard
+    body: ""
+    hash: cb29bf28a20b75685b1025238a15b52ac57b8e2c
+    subject: Optimise ReservedUriComponent
+  - author: Pagan Gazzard
+    body: ""
+    hash: a51d8235e62b960371784817c2fa6109002daffc
+    subject: Optimise out ReservedUriComponent
+  - author: Pagan Gazzard
+    body: ""
+    hash: 13e8846e1eeefbb1b7de219457ac8a3cc953ab59
+    subject: Drop the standalone space rule as an optimisation
+  - author: Pagan Gazzard
+    body: |-
+      This is a nice optimisation but does comes at the cost of error
+      messages only specifying "expected $" instead of $select/$top/etc
+    hash: 859b7c22ce2d9ef507c474bd019e2f0c2045e90f
+    subject: Optimise out Dollar
+  - author: Pagan Gazzard
+    body: ""
+    hash: 110b41d6cd649851b01c552bf83f05e10a2b8289
+    subject: Update to pegjs 0.11
+  - author: Pagan Gazzard
+    body: ""
+    hash: 892b5e91b47f332c93d4452ac3a9adbfcd11affd
+    subject: Optimise FilterNegateExpression
+  - author: Pagan Gazzard
+    body: ""
+    hash: 356b3829865c9edd85f72c089267976f5fb2ad66
+    subject: Optimise out `letter`
+  - author: Pagan Gazzard
+    body: ""
+    hash: 3ab8f57d1b778bd35a4fc94e767c049738348181
+    subject: Optimise out `digit`
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: minor
+    hash: 8c250428ec46b9c00b3ab159f489cc5ae587dac8
+    subject: Use a prepare script instead of committing compiled files
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: major
+    hash: ad33e66c843d47a083484d7b0e67a26c75701c17
+    subject: Drop node 4 support
+  - author: Pagan Gazzard
+    body: ""
+    hash: 38b9791650fc08c1dea87534df642b5f7ebb8ffd
+    subject: Use a config file for options and disable unused features
+  - author: Pagan Gazzard
+    body: ""
+    hash: 0b5577b67c4018dc5aef2bc15208182ad4e107a3
+    subject: Add a specific error message for the $ query option check
+  date: "2018-10-31T07:32:54Z"
+  version: 1.0.0
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+      signed-off-by: Pagan Gazzard <page@resin.io>
+    hash: efacf6d5e110ef69fc2a1b55cd098c5a8f56d80d
+    subject: Correctly fail on empty options that are invalid
+  date: "2018-09-07T07:40:01Z"
+  version: 0.3.6
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 250ca2bae5a884a5b3298720cd1102cb7100db3d
+    subject: Fix `in` for text literals.
+  date: "2018-06-11T07:39:27Z"
+  version: 0.3.5
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: a294db9da8c3a555eae0002117f1177e3e8cd631
+    subject: Add support for the `in` operator.
+  date: "2018-06-08T11:44:34Z"
+  version: 0.3.4
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 459b999bee8916e98c0079382217524002ec7139
+    subject: Add support for parameter aliases of literal values.
+  date: "2018-06-08T11:35:13Z"
+  version: 0.3.3
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 709449fcf57b4c56e872b7511fc0bb41a9c0a3a3
+    subject: Fix tests indentations.
+  date: "2018-06-08T11:22:58Z"
+  version: 0.3.2
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 25c199128560c68aaf3741faf8bbf7226416dfa9
+    subject: Check lhs is an array before trying to merge matching operators, fixes
+      cases where the lhs is "null", eg "null eq Foo"
+  date: "2018-06-01T15:46:07Z"
+  version: 0.3.1
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: minor
+    hash: 9f4b1f8d4d95a0ad990b3d61465016dcf30c6fab
+    subject: Switch to using a precedence climbing method for handling precedence,
+      it offers much better performance and also makes the precedence ordering clearer.
+  date: "2018-05-17T19:46:37Z"
+  version: 0.3.0
+- commits:
+  - author: Pagan Gazzard
+    body: This results in an ~30% improvement for my benchmark
+    footers:
+      change-type: patch
+    hash: b6fafdaaad9336d515872b64d5e3e602bba96e81
+    subject: Inline `Apostrophe` into `ReservedUriComponent`.
+  date: "2018-05-09T09:55:24Z"
+  version: 0.2.9
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: cb57ff359144a8630a6bf584ae05f25c74a13665
+    subject: Optimise the `FilterMethodCallExpr`.
+  date: "2018-05-03T10:37:55Z"
+  version: 0.2.8
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: d2569f54d807ee734a5977c043d82cc0acab54fe
+    subject: Optimise the custom `space` rule. It is a very hot rule and gains significant
+      benefits from this.
+  date: "2018-05-03T09:48:51Z"
+  version: 0.2.7
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 726da74e04f83a8d4eddbfa6b3e599d37a82d285
+    subject: Move circle.yml to .circleci/config.yml
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 41ffc6c7d8f14ff738b9105278d00059b964eadd
+    subject: Add node 10 to the circleci tests
+  date: "2018-04-30T09:17:09Z"
+  version: 0.2.6
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 1f58fb32347a0511d7e12f9be4d7aded4c49dd1a
+    subject: Refactor `ReservedUriComponent` to improve performance of the generated
+      code
+  date: "2018-03-06T07:31:14Z"
+  version: 0.2.5
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: c63befd23c6bc5db1bfb9d98acd42241664adbf2
+    subject: Fix parsing of reserved options if the $ is quoted
+  date: "2018-01-27T03:27:36Z"
+  version: 0.2.4
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 0c384476a47b4f51a6a817c52916614529155bc4
+    subject: Set up circleci auto-publishing
+  date: "2017-12-04T13:18:16Z"
+  version: 0.2.3
+- commits:
+  - author: Giovanni Garufi
+    body: ""
+    footers:
+      change-type: patch
+    hash: 1f2a8fa99fd992b5e4f1d6489485d168332ed9b7
+    subject: Added versionist
+  date: "2017-09-25T06:47:30Z"
+  version: 0.2.2
+- commits:
+  - author: Giovanni Garufi
+    body: This entry points parses a suitable value to an OdataBind
+    hash: 1dffb0f2397e056127a04da48ffb2e6002d1ca8f
+    subject: Added ExternalKeyBind
+  - author: Giovanni Garufi
+    body: ""
+    hash: 1e8cff0aec91c0e2dafdce24fa8453b5e5858cff
+    subject: Fixed spacing
+  - author: Giovanni Garufi
+    body: ""
+    hash: 201a7ef61e2493f464dfe9b5687a43b59e8167ec
+    subject: Add some general information in the README
+  - author: Giovanni Garufi
+    body: ""
+    hash: 260e587b48d7cba5bf018bbafe7e1582e75dd16f
+    subject: Add support for changeset syntax
+  - author: Giovanni Garufi
+    body: ""
+    hash: f5d05b8b1b730cf84c4fb0e5b327aa7c60696e55
+    subject: Refactored references among requests as Binds
+  - author: Giovanni Garufi
+    body: ""
+    hash: 5e2bfa51806d201cf080d16a9f2ac064bca8845c
+    subject: Reverted js file to master branch version
+  - author: Giovanni Garufi
+    body: ""
+    hash: e9c12ee9758ba82507dd3532cffd33cfb9cc4b3e
+    subject: Fixed according to review
+  - author: Giovanni Garufi
+    body: ""
+    hash: f4147b6c9529872dbe4c53db4a6066e109e4ea5d
+    subject: Unified ContentReference and slightly changed API. If the resource is
+      a reference it is represented with the bind
+  - author: Giovanni Garufi
+    body: ""
+    hash: 3eab31e6c4edf8468fd3ad680db3fe6a82ae5432
+    subject: Fixed indentation and renamed Ref to ContentReference
+  date: "2017-05-03T02:14:40Z"
+  version: 0.2.1
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: c2433755975e62e4ac2d3f33be55ae5013af4b3d
+    subject: Remove redundant section from `FilterNegateExpression` which is already
+      covered by `FilterByValue` -> `GroupedPrecedenceExpression`
+  date: "2018-05-17T19:42:21Z"
+  version: 0.2.15
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: d3c90414bcba2e72ee4f121a963ed78ca6efc393
+    subject: Use the compiled odata-parser for tests rather than compiling on the
+      fly.
+  date: "2018-05-17T19:39:08Z"
+  version: 0.2.14
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: e489ce4b81feb023fb9f0bf4d990f368760393f2
+    subject: Optimise `Boolean`
+  date: "2018-05-17T13:11:16Z"
+  version: 0.2.13
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 948153c27c1bb1032d420d6c945959af3d64dfc0
+    subject: Optimise `QueryOption`/`ExpandPathOption`
+  date: "2018-05-17T09:56:54Z"
+  version: 0.2.12
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: bfcb73763449af237c991b50504d23e64881c09e
+    subject: Optimise `ODataParser.space`
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 069acc258bf17c02b21a6c5f9f43f86e016c6f77
+    subject: Optimise `ResourceName`.
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 8ea36c8c07f32259112fe922e942edfe9d3e3696
+    subject: Optimise `spaces`
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: 19e590aa31472f45a4133d8094f2db80c3e8ed84
+    subject: Optimise `ExpandPathOption` and `QueryOption` by checking the more common
+      options first.
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: cedbd699d437c5aacd80910812f2a6fc20335252
+    subject: Optimise `FilterByValue` by checking the more common options first where
+      possible.
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: fdc285aaeb2466fa845e9fdfe176aa3426487a73
+    subject: Optimise `ResourceName` further.
+  date: "2018-05-14T10:13:27Z"
+  version: 0.2.11
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    footers:
+      change-type: patch
+    hash: d2dffc64843aa7a461c0bd06e8af1694ee5e84cc
+    subject: Update dependencies
+  date: "2018-05-10T00:03:21Z"
+  version: 0.2.10
+- commits:
+  - author: Pagan Gazzard
+    body: ""
+    hash: d07b64b4847af7c2f6655e2cc88f5afe2676be67
+    subject: Return the odata tree and bindings separately, so that is is possible
+      to easily reuse trees even when bindings change.
+  - author: Pagan Gazzard
+    body: ""
+    hash: 44cda9dd5e1da248262504eb96d65200971c3241
+    subject: Add linting
+  date: "2016-10-28T16:57:49Z"
+  version: 0.2.0
