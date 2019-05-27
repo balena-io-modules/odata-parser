@@ -1,4 +1,21 @@
 - commits:
+    - subject: Add support for using null as a parameter alias
+      hash: 4f7e136323082f7ee8d70f312819b1394b833dbb
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+    - subject: Fix adding parameter alias to the options object
+      hash: 247af0df0b4f3d6879d4415bced14fdf17beef76
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 1.1.0
+  date: 2019-05-27T16:05:44.547Z
+- commits:
     - subject: Add .versionbot/CHANGELOG.yml for downstream changelogs
       hash: d871880a00c86b8eeec37489cf1d62a3688aabcc
       body: ''
