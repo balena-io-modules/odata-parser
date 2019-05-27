@@ -147,6 +147,7 @@ ParameterAliasOption =
 		{ return [ 'Boolean', b ] }
 	/	s:QuotedText
 		{ return [ 'Text', s ] }
+	/	Null
 	/	Date
 	)
 	&{ return !binds['@' + name] }

@@ -65,6 +65,11 @@ describe 'Resource Parsing', ->
 			checkResource(result, 'model')
 		checkKeyParam(result, '@id')
 
+	test '/model(@id)?@id=null', null, null, { '@id': null }, (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		checkKeyParam(result, '@id')
+
 
 	test '/model(1)/child', [1], (result) ->
 		it 'should have the resource specified', ->
