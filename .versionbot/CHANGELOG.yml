@@ -1,4 +1,14 @@
 - commits:
+    - subject: Fix adding parameter alias to the options object
+      hash: 247af0df0b4f3d6879d4415bced14fdf17beef76
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 1.0.4
+  date: 2019-05-27T16:09:15.294Z
+- commits:
     - subject: Add .versionbot/CHANGELOG.yml for downstream changelogs
       hash: d871880a00c86b8eeec37489cf1d62a3688aabcc
       body: ''
