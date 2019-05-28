@@ -150,7 +150,13 @@ ParameterAliasOption =
 	/	Date
 	)
 	&{ return !binds['@' + name] }
-	{ return binds['@' + name] = value }
+	{
+		binds['@' + name] = value
+		return {
+			name: '@' + name,
+			value: value
+		}
+	}
 
 OperationParam =
 	name:Text '=' value:Text
@@ -672,7 +678,7 @@ Date =
 		{ return Date.parse(date) }
 	)
 	!{ return isNaN(date) }
-	{ return[type, date] }
+	{ return [type, date] }
 
 DateBind =
 	d:Date
