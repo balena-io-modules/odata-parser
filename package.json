@@ -4,11 +4,12 @@
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
   "scripts": {
-    "lint": "resin-lint test",
-    "pretest": "npm run lint && npm run prepare",
+    "lint": "resin-lint test && resin-lint --typescript odata-parser.d.ts",
+    "pretest": "npm run lint && npm run prepare && npx tsc --noEmit odata-parser.d.ts",
     "test": "mocha",
     "prepublish": "require-npm4-to-publish",
-    "prepare": "pegjs --config=odata-parser.config.js"
+    "prepare": "pegjs --config=odata-parser.config.js",
+    "prettify": "prettier --config ./node_modules/resin-lint/config/.prettierrc --write odata-parser.d.ts"
   },
   "repository": "https://github.com/balena-io-modules/odata-parser.git",
   "author": "",
@@ -16,10 +17,18 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "coffee-script": "~1.12.7",
+    "husky": "^2.4.0",
+    "lint-staged": "^8.1.7",
     "lodash": "^4.16.4",
-    "mocha": "^6.1.3",
+    "mocha": "^6.1.4",
     "pegjs": "^0.11.0-master.f69239d",
     "require-npm4-to-publish": "^1.0.0",
-    "resin-lint": "^2.0.1"
+    "resin-lint": "^3.0.4",
+    "typescript": "^3.5.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
