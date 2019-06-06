@@ -1,4 +1,14 @@
 - commits:
+    - subject: Add typings
+      hash: a2c4bfe660bbe8d5de554f15cd89ef5a9c30de74
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 1.1.0
+  date: 2019-06-06T12:47:33.222Z
+- commits:
     - subject: Fix adding parameter alias to the options object
       hash: 247af0df0b4f3d6879d4415bced14fdf17beef76
       body: ''
