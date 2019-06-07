@@ -435,7 +435,7 @@ ExpandPropertyPath =
 		'('
 		@(	option:QueryOption
 			options:(
-				'&'
+				[&;]
 				@QueryOption
 			)*
 			{ return ParseOptionsObject([option].concat(options)) }
