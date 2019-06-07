@@ -6,6 +6,11 @@ export type SupportedMethod =
 	| 'MERGE'
 	| 'DELETE'
 	| 'OPTIONS';
+
+export type NumberBind = ['Real', number];
+export type BooleanBind = ['Boolean', boolean];
+export type TextBind = ['Text', string];
+export type DateBind = ['Date' | 'Date Time', Date];
 export interface PropertyPath {
 	name: string;
 	property?: PropertyPath;
@@ -22,6 +27,7 @@ export type SelectOption =
 	| {
 			properties: PropertyPath[];
 	  };
+export type FilterOption = any;
 export interface ExpandOption {
 	properties: ExpandPropertyPath[];
 }
@@ -30,7 +36,7 @@ export interface OrderByOption {
 }
 export interface ODataOptions {
 	$select?: SelectOption;
-	$filter?: any;
+	$filter?: FilterOption;
 	$expand?: ExpandOption;
 	$orderby?: OrderByOption;
 	$top?: number;
@@ -42,10 +48,10 @@ export interface ODataOptions {
 	[key: string]:  // User defined options, do not start with $ or @
 		| string
 		// Parameter aliases (start with @)
-		| ['Real', number]
-		| ['Boolean', boolean]
-		| ['Text', string]
-		| ['Date' | 'Date Time', Date]
+		| NumberBind
+		| BooleanBind
+		| TextBind
+		| DateBind
 		// known $ options
 		| SelectOption
 		| ExpandOption
@@ -68,8 +74,29 @@ export interface ODataBinds extends Array<any> {
 export class SyntaxError extends Error {}
 export function parse(
 	url: string,
-	opts?: { startRule: string; rule: string },
+	opts?: { startRule: 'ProcessRule'; rule: 'OData' },
 ): {
 	tree: ODataQuery;
+	binds: ODataBinds;
+};
+export function parse(
+	url: string,
+	opts?: { startRule: 'ProcessRule'; rule: 'KeyBind' },
+): {
+	tree: { bind: string };
+	binds: ODataBinds;
+};
+export function parse(
+	url: string,
+	opts?: { startRule: 'ProcessRule'; rule: 'FilterByExpression' },
+): {
+	tree: FilterOption;
+	binds: ODataBinds;
+};
+export function parse(
+	url: string,
+	opts?: { startRule: 'ProcessRule'; rule: string },
+): {
+	tree: any;
 	binds: ODataBinds;
 };
