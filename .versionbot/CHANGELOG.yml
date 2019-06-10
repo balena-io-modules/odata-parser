@@ -1,4 +1,14 @@
 - commits:
+    - subject: Support `;` for separating expand options
+      hash: 3af2ad056411015b25f7479550e5c194dfbaa4db
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 1.2.0
+  date: 2019-06-07T14:49:44.320Z
+- commits:
     - subject: Improve typings
       hash: 11ace6373275b227497acbf2e40c2a33884adf7e
       body: ''
