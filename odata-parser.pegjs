@@ -706,4 +706,5 @@ QuotedTextBind =
 spaces =
 	(	' '
 	/	'%20'
+	/	'+'
 	)*
