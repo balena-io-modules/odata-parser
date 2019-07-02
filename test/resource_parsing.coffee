@@ -39,6 +39,11 @@ describe 'Resource Parsing', ->
 			checkResource(result, 'model')
 
 
+	test '/model?', (result) ->
+		it 'should allow a trailing ?', ->
+			checkResource(result, 'model')
+
+
 	test '/model/child', (result) ->
 		it 'should fail, since a key needs to be specified for the first collection', ->
 			expect(result).to.be.an.instanceof SyntaxError
