@@ -1,4 +1,14 @@
 - commits:
+    - subject: Accept `+` in place of ` `/`%20` as some tools encode spaces that way
+      hash: 6efd353cd3d7dac3af983a1762eeccbb05b9a366
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 1.2.2
+  date: 2019-07-03T12:21:08.102Z
+- commits:
     - subject: Accept trailing `?` with no query parameters
       hash: 9b17b794a02d62611c1a658b886d0b5370ae1de5
       body: ''
