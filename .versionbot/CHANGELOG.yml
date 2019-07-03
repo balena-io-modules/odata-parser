@@ -1,4 +1,14 @@
 - commits:
+    - subject: Accept trailing `?` with no query parameters
+      hash: 9b17b794a02d62611c1a658b886d0b5370ae1de5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 1.2.1
+  date: 2019-07-02T20:45:24.171Z
+- commits:
     - subject: Support `;` for separating expand options
       hash: 3af2ad056411015b25f7479550e5c194dfbaa4db
       body: ''
