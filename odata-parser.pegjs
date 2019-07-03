@@ -111,7 +111,6 @@ OData =
 		{ return { resource: '$serviceroot' } }
 
 QueryOptions =
-	'?'
 	option:QueryOption
 	options:(
 		'&'
@@ -498,8 +497,10 @@ PathSegment =
 		)?
 		{ return result }
 	)
-	(	options:QueryOptions
-		{result.options = options}
+	(	'?'
+		(	options:QueryOptions
+			{result.options = options}
+		)?
 	)?
 	{ return result }
 SubPathSegment =
@@ -521,8 +522,10 @@ SubPathSegment =
 	('/$count'
 		{result.count = true}
 	)?
-	(	options:QueryOptions
-		{result.options = options}
+	(	'?'
+		(	options:QueryOptions
+			{result.options = options}
+		)?
 	)?
 	{ return result }
 
