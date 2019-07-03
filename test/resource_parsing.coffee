@@ -142,7 +142,7 @@ describe 'Resource Parsing', ->
 		it 'should have the count specified for the linked child', ->
 			assert.equal(result.link.count, true)
 
-	test '/model/$count?$filter=id gt 5', [5], (result) ->
+	filterIdCallback = (result) ->
 		it 'should have the resource specified', ->
 			checkResource(result, 'model')
 
@@ -160,6 +160,10 @@ describe 'Resource Parsing', ->
 
 		it 'rhr should be $0', ->
 			assert.equal(result.options.$filter[2].bind, 0)
+
+	test('/model/$count?$filter=id gt 5', [5], filterIdCallback)
+
+	test('/model/$count?$filter=id+gt+5', [5], filterIdCallback)
 
 	test '$1', [['ContentReference', '1']], (result) ->
 		it 'should bind resource to Content-ID 1', ->
