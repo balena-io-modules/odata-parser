@@ -116,7 +116,7 @@ QueryOptions =
 		'&'
 		@QueryOption
 	)*
-	{ return ParseOptionsObject([option].concat(options)) }
+	{ return ParseOptionsObject([option, ...options]) }
 
 QueryOption =
 		Dollar
@@ -168,7 +168,7 @@ SortOption =
 		','
 		@SortProperty
 	)*
-	{ return { name: '$orderby', value: { properties: [property].concat(properties) } } }
+	{ return { name: '$orderby', value: { properties: [property, ...properties] } } }
 
 SortProperty =
 	property:PropertyPath
@@ -258,8 +258,8 @@ FilterByExpressionLoop =
 
 			rhs:FilterByExpressionLoop
 			{
-				if (Array.isArray(lhs[0]) && op == lhs[0][0]) {
-					lhs[0] = [ op ].concat(lhs[0].slice(1), [rhs]);
+				if (Array.isArray(lhs[0]) && op === lhs[0][0]) {
+					lhs[0].push(rhs);
 				} else {
 					lhs[0] = [ op, lhs[0], rhs ];
 				}
@@ -334,7 +334,7 @@ GroupedPrimitive =
 			@Primitive
 		)*
 	')'
-	{ return [ first ].concat(rest) }
+	{ return [ first, ...rest ] }
 
 
 FilterMethodCallExpression =
@@ -382,7 +382,7 @@ FilterMethodCallExpression =
 				@FilterByExpression
 			)*
 			spaces
-			{ return [ first ].concat(rest) }
+			{ return [ first, ...rest ] }
 		/ '' { return [] }
 		)
 		&{ return args.length === methods[methodName] || (Array.isArray(methods[methodName]) && methods[methodName].includes(args.length)) }
@@ -409,7 +409,7 @@ PropertyPathList =
 		','
 		@PropertyPath
 	)*
-	{ return [path].concat(paths) }
+	{ return [path, ...paths] }
 PropertyPath =
 	resource:ResourceName
 	property:(
@@ -423,7 +423,7 @@ ExpandPropertyPathList =
 		','
 		@ExpandPropertyPath
 	)*
-	{ return [path].concat(paths) }
+	{ return [path, ...paths] }
 ExpandPropertyPath =
 	resource:ResourceName
 	count:(
@@ -437,7 +437,7 @@ ExpandPropertyPath =
 				[&;]
 				@QueryOption
 			)*
-			{ return ParseOptionsObject([option].concat(options)) }
+			{ return ParseOptionsObject([option, ...options]) }
 		/ '' { return {} }
 		)
 		')'
@@ -614,7 +614,7 @@ Duration =
 	&{return day || time}
 	Apostrophe
 	{ return {
-		negative: sign == '-',
+		negative: sign === '-',
 		day: day || undefined,
 		hour: time ? time.hour : undefined,
 		minute: time ? time.minute : undefined,
