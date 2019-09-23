@@ -1,4 +1,14 @@
 - commits:
+    - subject: Optimise merging of operands in `FilterByExpressionLoop`
+      hash: 1f094ccea303ecf8b8e713bf897af55126358e5a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 1.2.3
+  date: 2019-09-20T16:40:26.961Z
+- commits:
     - subject: Accept `+` in place of ` `/`%20` as some tools encode spaces that way
       hash: 6efd353cd3d7dac3af983a1762eeccbb05b9a366
       body: ''
