@@ -416,7 +416,11 @@ PropertyPath =
 		'/'
 		@PropertyPath
 	)?
-	{ return { name: resource, property } }
+	count:(
+		'/$count'
+		{ return true }
+	)?
+	{ return { name: resource, property, count } }
 ExpandPropertyPathList =
 	path:ExpandPropertyPath
 	paths:(

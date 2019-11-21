@@ -17,14 +17,15 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "coffee-script": "~1.12.7",
-    "husky": "^3.0.5",
-    "lint-staged": "^9.2.5",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.4.3",
     "lodash": "^4.17.15",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.2",
     "pegjs": "^0.11.0-master.f69239d",
+    "prettier": "^1.19.1",
     "require-npm4-to-publish": "^1.0.0",
-    "resin-lint": "^3.1.0",
-    "typescript": "^3.6.3"
+    "resin-lint": "^3.1.1",
+    "typescript": "^3.7.2"
   },
   "husky": {
     "hooks": {

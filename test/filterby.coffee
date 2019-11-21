@@ -334,6 +334,21 @@ module.exports = (test) ->
 		it 'rhr should be $1', ->
 			assert.equal(result.options.$filter[2].bind, 1)
 
+
+	test '$filter=Products/$count eq 10', [10], (result) ->
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
+
+		it "Filter should be an instance of 'eq'", ->
+			assert.equal(result.options.$filter[0], 'eq')
+
+		it 'lhr should be Foo', ->
+			expect(result.options.$filter[1]).to.have.property('name').that.equals('Products')
+			expect(result.options.$filter[1]).to.have.property('count').that.equals(true)
+
+		it 'rhr should be $0', ->
+			assert.equal(result.options.$filter[2].bind, 0)
+
 	methodTest = (args, binds, argsTest) ->
 		(methodName, expectFailure) ->
 			test "$filter=#{methodName}(#{args}) eq 'cake'", binds.concat('cake'), (result, err) ->
