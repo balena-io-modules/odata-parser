@@ -45,8 +45,8 @@ export interface ODataOptions {
 	$inlinecount?: string;
 	$format?: string;
 
-	[key: string]:  // User defined options, do not start with $ or @
-		| string
+	[key: string]: // User defined options, do not start with $ or @
+	| string
 		// Parameter aliases (start with @)
 		| NumberBind
 		| BooleanBind
