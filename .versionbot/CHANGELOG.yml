@@ -1,4 +1,17 @@
 - commits:
+    - subject: '✨: Add support for canAccess method call on resource'
+      hash: bf99443b20616fef6344e3262832002d0d3909fd
+      body: |
+        Add support for `canAccess` method call on resource
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Andreas Fitzek <andreas@balena.io>
+        signed-off-by: Andreas Fitzek <andreas@balena.io>
+      author: Andreas Fitzek
+  version: 1.4.0
+  date: 2020-03-02T13:31:22.416Z
+- commits:
     - subject: Add CODEOWNERS
       hash: 35fbb37a9db0d21c9c26ddef90e1aa2f34f8ac13
       body: ''
