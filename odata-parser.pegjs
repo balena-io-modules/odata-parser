@@ -403,6 +403,25 @@ LambdaMethodCall =
 	')'
 	{ return { expression: expression, identifier: identifier, method: name } }
 
+ResourceMethodCall =
+	methodName:ResourceName
+	'('
+		spaces
+		args:(
+			first:FilterByExpression
+			rest:(
+				spaces
+				','
+				spaces
+				@FilterByExpression
+			)*
+			spaces
+			{ return [ first, ...rest ] }
+		/ '' { return [] }
+		)
+	')'
+	{ return [ 'call', { args: args, method: methodName } ] }
+
 PropertyPathList =
 	path:PropertyPath
 	paths:(
@@ -459,6 +478,8 @@ LambdaPropertyPath =
 		{ return { name: resource, property: next } }
 	/	lambda:LambdaMethodCall
 		{ return { name: resource, lambda: lambda } }
+	/	method:ResourceMethodCall
+		{ return { name: resource, method: method } }
 	)
 Key =
 	'('

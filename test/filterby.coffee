@@ -496,3 +496,18 @@ module.exports = (test) ->
 
 	lambdaTest('any')
 	lambdaTest('all')
+
+	test '$filter=child/canAccess(test)', [], (result, err) ->
+		if err
+			throw err
+
+		it 'A filter should be present', ->
+			assert.notEqual(result.options.$filter, null)
+
+		it 'Filter should be on the child resource', ->
+			assert.equal(result.options.$filter.name, 'child')
+
+		it 'Filter should show the canAccess method', ->
+			expect(result.options.$filter).to.have.property('method')
+			expect(result.options.$filter.method[0]).to.equal('call')
+			expect(result.options.$filter.method[1]).to.have.property('method').that.equals('canAccess')
