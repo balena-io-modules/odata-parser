@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update dependencies
+      hash: d991b20f6c90221c9a3734d0461540ec501576ad
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 1.4.1
+  date: 2020-04-10T14:30:05.458Z
+- commits:
     - subject: '✨: Add support for canAccess method call on resource'
       hash: bf99443b20616fef6344e3262832002d0d3909fd
       body: |
