@@ -31,6 +31,11 @@ jobs:
       - image: circleci/node:12
     steps: *buildSteps
 
+  node-14:
+    docker:
+      - image: circleci/node:14
+    steps: *buildSteps
+
 workflows:
   version: 2
   build:
@@ -38,3 +43,4 @@ workflows:
       - node-8
       - node-10
       - node-12
+      - node-14
