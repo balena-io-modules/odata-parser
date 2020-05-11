@@ -1,6 +1,6 @@
 ## odata-parser
 
-[![npm version](https://badge.fury.io/js/%40resin%2Fodata-parser.svg)](https://badge.fury.io/js/%40resin%2Fodata-parser)
+[![npm version](https://badge.fury.io/js/%40balena%2Fodata-parser.svg)](https://badge.fury.io/js/%40balena%2Fodata-parser)
 
 An OData parser written in OMeta.
 
