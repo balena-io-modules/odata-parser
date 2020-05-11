@@ -1,12 +1,6 @@
 version: 2
 
 buildSteps: &buildSteps
-  - run:
-      name: Ensure npm is at least at version 3
-      command: |
-        if [[ "$(npm --version)" = [12].* ]]; then
-          sudo npm install --global npm@3
-        fi
   - checkout
   - run:
       name: Install
@@ -16,11 +10,6 @@ buildSteps: &buildSteps
       command: npm test --loglevel warn
 
 jobs:
-  node-8:
-    docker:
-      - image: circleci/node:8
-    steps: *buildSteps
-
   node-10:
     docker:
       - image: circleci/node:10
@@ -40,7 +29,6 @@ workflows:
   version: 2
   build:
     jobs:
-      - node-8
       - node-10
       - node-12
       - node-14
