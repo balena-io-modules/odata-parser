@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'CI: Add nodejs 14 to the test matrix'
+      hash: 86c69609cad382db78014894d46e039898ceee62
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: 'CI: Remove circleci publishing in favor of balenaCI'
+      hash: 39515ff69eb0e6bc3137db79b351e5a9512f9b85
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 1.4.2
+  date: 2020-05-11T15:43:18.815Z
+- commits:
     - subject: Update dependencies
       hash: d991b20f6c90221c9a3734d0461540ec501576ad
       body: ''
