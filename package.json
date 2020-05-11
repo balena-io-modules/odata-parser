@@ -5,8 +5,9 @@
   "main": "odata-parser.js",
   "scripts": {
     "lint": "balena-lint test && balena-lint --typescript odata-parser.d.ts",
-    "pretest": "npm run lint && npm run prepare && npx tsc --noEmit odata-parser.d.ts",
+    "pretest": "npm run prepare && npx tsc --noEmit odata-parser.d.ts",
     "test": "mocha",
+    "posttest": "npm run lint",
     "prepublish": "require-npm4-to-publish",
     "prepare": "pegjs --config=odata-parser.config.js",
     "prettify": "balena-lint --typescript --fix odata-parser.d.ts"
