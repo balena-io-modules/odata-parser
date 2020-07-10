@@ -16,10 +16,26 @@ checkKeyBind = (result) ->
 		.that.has.property 'bind'
 		.that.equals 0
 
+checkNamedKeyBind = (result) ->
+	it 'should have the key specified for the source', ->
+		expect(result)
+		.to.have.property 'key'
+		.that.has.property 'id'
+		.that.has.property 'bind'
+		.that.equals 0
+
 checkKeyParam = (result, paramAlias) ->
 	it 'should have the key specified for the source', ->
 		expect(result)
 		.to.have.property 'key'
+		.that.has.property 'bind'
+		.that.equals paramAlias
+
+checkNamedKeyParam = (result, paramAlias) ->
+	it 'should have the key specified for the source', ->
+		expect(result)
+		.to.have.property 'key'
+		.that.has.property 'id'
 		.that.has.property 'bind'
 		.that.equals paramAlias
 
@@ -69,6 +85,44 @@ describe 'Resource Parsing', ->
 		it 'should have the resource specified', ->
 			checkResource(result, 'model')
 		checkKeyParam(result, '@id')
+
+
+	test '/model(id=1)', [1], (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		checkNamedKeyBind(result)
+
+	test "/model(id='TextKey')", ['TextKey'], (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		checkNamedKeyBind(result)
+
+
+	test '/model(id=@id)?@id=1', null, null, { '@id': 1 }, (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		checkNamedKeyParam(result, '@id')
+
+	test "/model(id=@id)?@id='TextKey'", null, null, { '@id': 'TextKey' }, (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		checkNamedKeyParam(result, '@id')
+
+
+	test '/model(a=1,b=2)', [1, 2], (result) ->
+		it 'should have the resource specified', ->
+			checkResource(result, 'model')
+		it 'should have the both keys specified', ->
+			expect(result)
+			.to.have.property 'key'
+			.that.has.property 'a'
+			.that.has.property 'bind'
+			.that.equals 0
+			expect(result)
+			.to.have.property 'key'
+			.that.has.property 'b'
+			.that.has.property 'bind'
+			.that.equals 1
 
 
 	test '/model(1)/child', [1], (result) ->
