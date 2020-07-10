@@ -1,4 +1,14 @@
 - commits:
+    - subject: Improve typings
+      hash: bb94134f7231ef71ce5b1ce52d255902b8e7e1a6
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.0.1
+  date: 2020-07-10T16:33:59.426Z
+- commits:
     - subject: Rename to @balena/odata-parser
       hash: 9c835596afc1abfc4b5a260fddcd3ee2f987e63f
       body: ''
