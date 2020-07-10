@@ -16,16 +16,16 @@
   "author": "",
   "license": "BSD",
   "devDependencies": {
-    "@balena/lint": "^5.0.4",
+    "@balena/lint": "^5.1.0",
     "chai": "^4.1.2",
     "coffee-script": "~1.12.7",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.2",
-    "lodash": "^4.17.15",
-    "mocha": "^7.1.2",
+    "lint-staged": "^10.2.11",
+    "lodash": "^4.17.19",
+    "mocha": "^7.2.0",
     "pegjs": "0.11.0-master.b7b87ea",
     "require-npm4-to-publish": "^1.0.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.6"
   },
   "husky": {
     "hooks": {

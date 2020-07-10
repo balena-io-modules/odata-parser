@@ -7,21 +7,33 @@ export type SupportedMethod =
 	| 'DELETE'
 	| 'OPTIONS';
 
+/**
+ * string for a parameter alias reference, number for an extracted constant
+ */
+export type BindReference = { bind: string | number };
+
 export type NumberBind = ['Real', number];
 export type BooleanBind = ['Boolean', boolean];
 export type TextBind = ['Text', string];
 export type DateBind = ['Date' | 'Date Time', Date];
-export interface PropertyPath {
-	name: string;
-	property?: PropertyPath;
+
+export interface ResourceOptions {
+	count?: true;
+	options?: ODataOptions;
 }
-export interface OrderByPropertyPath extends PropertyPath {
+
+interface GenericPropertyPath<T = any> {
+	name: string;
+	property?: T;
+}
+export interface PropertyPath extends GenericPropertyPath<PropertyPath> {}
+export interface OrderByPropertyPath
+	extends GenericPropertyPath<OrderByPropertyPath> {
 	order: 'asc' | 'desc';
 }
-export interface ExpandPropertyPath extends PropertyPath {
-	count?: true;
-	options: ODataOptions;
-}
+export interface ExpandPropertyPath
+	extends GenericPropertyPath<ExpandPropertyPath>,
+		ResourceOptions {}
 export type SelectOption =
 	| '*'
 	| {
@@ -59,13 +71,11 @@ export interface ODataOptions {
 		| number
 		| boolean;
 }
-export interface ODataQuery {
+export interface ODataQuery extends ResourceOptions {
 	resource: any;
-	key?: any;
+	key?: BindReference;
 	link?: any;
 	property?: any;
-	count?: true;
-	options?: ODataOptions;
 }
 export interface ODataBinds extends Array<any> {
 	[key: string]: any;
