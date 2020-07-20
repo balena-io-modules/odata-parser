@@ -73,7 +73,7 @@
 		precedence = 0;
 	};
 
-	function ParseOptionsObject(options) {
+	function CollapseObjectArray(options) {
 		var optionsObj = {};
 		for(var i in options) {
 			optionsObj[options[i].name] = options[i].value;
@@ -116,7 +116,7 @@ QueryOptions =
 		'&'
 		@QueryOption
 	)*
-	{ return ParseOptionsObject([option, ...options]) }
+	{ return CollapseObjectArray([option, ...options]) }
 
 QueryOption =
 		Dollar
@@ -460,7 +460,7 @@ ExpandPropertyPath =
 				[&;]
 				@QueryOption
 			)*
-			{ return ParseOptionsObject([option, ...options]) }
+			{ return CollapseObjectArray([option, ...options]) }
 		/ '' { return {} }
 		)
 		')'
@@ -483,8 +483,18 @@ LambdaPropertyPath =
 	)
 Key =
 	'('
-	@KeyBind
+	@(	KeyBind
+	/	keyBind:NamedKeyBind
+		keyBinds:(
+			','
+			@NamedKeyBind
+		)*
+		{ return CollapseObjectArray([keyBind, ...keyBinds]) }
+	)
 	')'
+NamedKeyBind =
+	name:ResourceName '=' value:KeyBind
+	{ return { name, value }}
 KeyBind =
 		NumberBind
 	/	QuotedTextBind

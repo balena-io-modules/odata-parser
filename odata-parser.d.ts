@@ -73,7 +73,11 @@ export interface ODataOptions {
 }
 export interface ODataQuery extends ResourceOptions {
 	resource: any;
-	key?: BindReference;
+	key?:
+		| BindReference
+		| {
+				[resourceName: string]: BindReference;
+		  };
 	link?: any;
 	property?: any;
 }
