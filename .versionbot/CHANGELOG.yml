@@ -1,4 +1,14 @@
 - commits:
+    - subject: Add support for metadata argument in $format
+      hash: eecb0df57610d3f13bfc6b168790690dc0dce038
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 2.2.0
+  date: 2020-08-18T16:23:49.447Z
+- commits:
     - subject: Add support for specifying named keys
       hash: 926615afa77b3c67db8429a03ac5437838fbf939
       body: ''
