@@ -227,10 +227,31 @@ FilterByOption =
 	expr:FilterByExpression
 	{ return { name: '$filter', value: expr } }
 
+
+ContentType =
+	$(	[a-z]i+
+		'/'
+		[a-z]i+
+		('+' [a-z]i+)?
+	/	'json'
+	/	'atom'
+	/	'xml'
+	)
 FormatOption =
 	'format='
 	type:ContentType
-	{ return { name: '$format', value: type } }
+	@(
+		';'
+		'odata.'?
+		'metadata='
+		metadata:(
+			'none'
+		/	'minimal'
+		/	'full'
+		)
+		{ return { name: '$format', value: { type, metadata } } }
+	/	'' { return { name: '$format', value: type } }
+	)
 
 FilterByExpression =
 	('' {
@@ -563,13 +584,6 @@ SubPathSegment =
 		)?
 	)?
 	{ return result }
-
-ContentType =
-	$(	[a-z]i+
-		'/'
-		[a-z]i+
-		('+' [a-z]i+)?
-	)
 
 ResourceName =
 	// This regex is equivalent to `!(ReservedUriComponent / [ %])`

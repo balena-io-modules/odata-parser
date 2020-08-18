@@ -46,6 +46,12 @@ export interface ExpandOption {
 export interface OrderByOption {
 	properties: OrderByPropertyPath[];
 }
+export type FormatOption =
+	| string
+	| {
+			type: string;
+			metadata: 'none' | 'minimal' | 'full';
+	  };
 export interface ODataOptions {
 	$select?: SelectOption;
 	$filter?: FilterOption;
@@ -55,7 +61,7 @@ export interface ODataOptions {
 	$skip?: number;
 	$count?: boolean;
 	$inlinecount?: string;
-	$format?: string;
+	$format?: FormatOption;
 
 	[key: string]: // User defined options, do not start with $ or @
 	| string
@@ -68,6 +74,7 @@ export interface ODataOptions {
 		| SelectOption
 		| ExpandOption
 		| OrderByOption
+		| FormatOption
 		| number
 		| boolean;
 }
