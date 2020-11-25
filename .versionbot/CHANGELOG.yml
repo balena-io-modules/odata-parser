@@ -1,4 +1,14 @@
 - commits:
+    - subject: Update dependencies
+      hash: a1906bf3447b6c8ab30ae9951883a738050d69aa
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.2.1
+  date: 2020-11-25T16:09:50.140Z
+- commits:
     - subject: Add support for metadata argument in $format
       hash: eecb0df57610d3f13bfc6b168790690dc0dce038
       body: ''
