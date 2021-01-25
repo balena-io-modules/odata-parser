@@ -1,4 +1,14 @@
 - commits:
+    - subject: Optimize number parsing
+      hash: e443ad68f1e3b68ae9aee771160b81da5f319e9c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.2.2
+  date: 2021-01-25T13:00:50.460Z
+- commits:
     - subject: Update dependencies
       hash: a1906bf3447b6c8ab30ae9951883a738050d69aa
       body: ''
