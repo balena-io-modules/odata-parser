@@ -591,22 +591,15 @@ ResourceName =
 	{ return decodeURIComponent(resourceName) }
 
 Number =
-		Decimal
-	/	Integer
-
-Decimal =
 	sign:Sign
 	d:$(
 		[0-9]+
-		'.'
-		[0-9]+
+		(
+			'.'
+			[0-9]+
+		)?
 	)
 	{ return Number(sign + d) }
-
-Integer =
-	sign:Sign
-	d:$[0-9]+
-	{ return parseInt(sign + d, 10) }
 
 UnsignedInteger =
 	d:$[0-9]+
