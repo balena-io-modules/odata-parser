@@ -696,9 +696,9 @@ Apostrophe =
 QuotedText =
 	Apostrophe
 	text:(
-		Apostrophe @Apostrophe
-	/	!Apostrophe
+		!Apostrophe
 		@.
+	/	Apostrophe @Apostrophe
 	)*
 	Apostrophe
 	{ return decodeURIComponent(text.join('')) }
