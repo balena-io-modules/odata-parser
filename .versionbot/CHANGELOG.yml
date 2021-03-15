@@ -1,4 +1,14 @@
 - commits:
+    - subject: Optimize `QuotedText` for the common case of few/no apostrophes
+      hash: d28bd7a207b37f23a43e140ed6f508d93a698b97
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.2.3
+  date: 2021-03-15T15:27:31.695Z
+- commits:
     - subject: Optimize number parsing
       hash: e443ad68f1e3b68ae9aee771160b81da5f319e9c
       body: ''
