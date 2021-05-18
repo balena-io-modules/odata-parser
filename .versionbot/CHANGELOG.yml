@@ -1,4 +1,14 @@
 - commits:
+    - subject: Ensure boundaries on keywords to fix parsing of eg `note eq 'foobar'`
+      hash: a76734e4b4748b6bbd45bdc80b46ad80007f1cb4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.2.4
+  date: 2021-05-18T11:51:40.154Z
+- commits:
     - subject: Optimize `QuotedText` for the common case of few/no apostrophes
       hash: d28bd7a207b37f23a43e140ed6f508d93a698b97
       body: ''
