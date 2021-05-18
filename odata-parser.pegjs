@@ -172,10 +172,12 @@ SortOption =
 
 SortProperty =
 	property:PropertyPath
-	spaces
 	order:(
-		'asc'
-	/	'desc'
+		boundary
+		@(
+			'asc'
+		/	'desc'
+		)
 	/	'' { return 'desc' }
 	)
 	{
@@ -285,7 +287,7 @@ FilterByExpressionLoop =
 					lhs[0] = [ op, lhs[0], rhs ];
 				}
 			}
-		/	spaces op:'in' spaces
+		/	boundary op:'in' boundary
 			rhs:GroupedPrimitive
 			{lhs[0] = [ op, lhs[0], rhs ]}
 		)*
@@ -335,12 +337,12 @@ FilterByOperand =
 	/	'div'
 	/	'mul'
 	)
-	spaces
+	boundary
 
 FilterNegateExpression =
 	spaces
 	@'not'
-	spaces
+	boundary
 	@(
 		FilterByValue
 	/	'(' spaces @FilterByExpression spaces ')'
@@ -745,8 +747,16 @@ QuotedTextBind =
 	t:QuotedText
 	{ return Bind('Text', t) }
 
+boundary =
+	(	&'('
+	/	space+
+	)
+
 spaces =
+	space*
+
+space =
 	(	' '
 	/	'%20'
 	/	'+'
-	)*
+	)
