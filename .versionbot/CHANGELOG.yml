@@ -1,4 +1,18 @@
 - commits:
+    - subject: Delete CODEOWNERS
+      hash: 7dda51dbe36cfa194bcb33a0a37dda737fb56313
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: >-
+          https://www.flowdock.com/app/rulemotion/pub/threads/trLcZFnSX9fLZn4LiaIv4xuBbah
+        see: >-
+          https://www.flowdock.com/app/rulemotion/pub/threads/trLcZFnSX9fLZn4LiaIv4xuBbah
+      author: Thodoris Greasidis
+  version: 2.2.5
+  date: 2021-06-30T21:32:05.794Z
+- commits:
     - subject: Ensure boundaries on keywords to fix parsing of eg `note eq 'foobar'`
       hash: a76734e4b4748b6bbd45bdc80b46ad80007f1cb4
       body: ''
