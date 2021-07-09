@@ -490,7 +490,7 @@ ExpandPropertyPath =
 	)?
 	next:(
 		'/'
-		@PropertyPath
+		@ExpandPropertyPath
 	)?
 	{ return { name: resource, property: next, count: count, options: optionsObj} }
 

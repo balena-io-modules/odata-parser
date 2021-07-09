@@ -38,6 +38,28 @@ module.exports = testExpands = (test, nested = 1) ->
 						assert.equal(result.options.$expand.properties[0].name, 'Products')
 					expectation(result.options?.$expand?.properties?[0])
 
+				test "$expand=Products/Suppliers(#{input})", optArgs..., (result) ->
+					it 'has an options property', ->
+						assert.notEqual(result.options, null)
+					it 'has an $expand value', ->
+						assert.notEqual(result.options.$expand, null)
+					it 'has a resource of Products', ->
+						assert.equal(result.options.$expand.properties[0].name, 'Products')
+					it 'has a child path of Suppliers', ->
+						assert.equal(result.options.$expand.properties[0].property.name, 'Suppliers')
+					expectation(result.options?.$expand?.properties?[0].property)
+
+				test "$expand=Products,Suppliers(#{input})", optArgs..., (result) ->
+					it 'has an options property', ->
+						assert.notEqual(result.options, null)
+					it 'has an $expand value', ->
+						assert.notEqual(result.options.$expand, null)
+					it 'has a resource of Products', ->
+						assert.equal(result.options.$expand.properties[0].name, 'Products')
+					it 'has a resource of Suppliers', ->
+						assert.equal(result.options.$expand.properties[1].name, 'Suppliers')
+					expectation(result.options?.$expand?.properties?[1])
+
 			testExpandOptionCount = (test, input, optArgs..., expectation) ->
 				test "$expand=Products/$count(#{input})", optArgs..., (result) ->
 					it 'has an options property', ->
