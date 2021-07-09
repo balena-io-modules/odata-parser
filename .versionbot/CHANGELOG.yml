@@ -1,4 +1,14 @@
 - commits:
+    - subject: Switch to peggy for compiling the grammar
+      hash: 57330ff50fda619d56d3bc32ebef6cf7cebfa395
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.2.6
+  date: 2021-07-09T12:31:51.225Z
+- commits:
     - subject: Delete CODEOWNERS
       hash: 7dda51dbe36cfa194bcb33a0a37dda737fb56313
       body: ''

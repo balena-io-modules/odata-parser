@@ -1,6 +1,6 @@
 {
   "name": "@balena/odata-parser",
-  "version": "2.2.5",
+  "version": "2.2.6",
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
   "scripts": {
@@ -38,5 +38,8 @@
     "require": "coffeescript/register",
     "_": "test/run.coffee"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "versionist": {
+    "publishedAt": "2021-07-09T12:31:51.286Z"
+  }
 }
