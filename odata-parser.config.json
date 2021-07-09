@@ -1,0 +1,7 @@
+{
+	"cache": true,
+	"allowedStartRules": [
+		"Process",
+		"ProcessRule"
+	]
+}
