@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"strict": true,
+		"strictFunctionTypes": false,
+		"strictBindCallApply": false,
+		"noImplicitThis": false,
+		"noUnusedParameters": true,
+		"noUnusedLocals": true,
+		"preserveConstEnums": true,
+		"removeComments": true,
+		"sourceMap": true,
+		"declaration": true,
+		"skipLibCheck": true,
+		"target": "es2018",
+		"outDir": "out",
+		"allowJs": true
+	},
+	"include": [
+		"test/**/*"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}
