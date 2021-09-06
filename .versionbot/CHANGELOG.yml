@@ -1,4 +1,14 @@
 - commits:
+    - subject: Convert tests to type checked javascript
+      hash: 5611426cad12ad04a6a1a682dd263d83ca8f7e0c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.2.7
+  date: 2021-09-06T18:18:46.827Z
+- commits:
     - subject: Switch to peggy for compiling the grammar
       hash: 57330ff50fda619d56d3bc32ebef6cf7cebfa395
       body: ''
