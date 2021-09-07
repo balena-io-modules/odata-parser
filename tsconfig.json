@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
+		"target": "es2018",
 		"strict": true,
 		"strictFunctionTypes": false,
 		"strictBindCallApply": false,
-		"noImplicitThis": false,
+		"noImplicitAny": true,
 		"noUnusedParameters": true,
 		"noUnusedLocals": true,
 		"preserveConstEnums": true,
@@ -12,7 +13,6 @@
 		"sourceMap": true,
 		"declaration": true,
 		"skipLibCheck": true,
-		"target": "es2018",
 		"outDir": "out",
 		"allowJs": true
 	},
