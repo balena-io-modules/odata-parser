@@ -1,4 +1,14 @@
 - commits:
+    - subject: Remove some typescript strict mode exceptions
+      hash: 639771285e9aaae52bff21ff38eda5f921101a63
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.2.8
+  date: 2021-09-07T13:33:26.405Z
+- commits:
     - subject: Convert tests to type checked javascript
       hash: 5611426cad12ad04a6a1a682dd263d83ca8f7e0c
       body: ''
