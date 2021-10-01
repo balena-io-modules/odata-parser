@@ -249,6 +249,28 @@ describe('Resource Parsing', function () {
 		});
 	});
 
+	test('/model(1)/canAccess', [1], (result) => {
+		it('should have the resource specified', () => {
+			checkResource(result, 'model');
+		});
+
+		checkKeyBind(result);
+
+		it('should have the child specified', () => {
+			assert.equal(result.property.resource, 'canAccess');
+		});
+	});
+
+	test('/model/canAccess', (result) => {
+		it('should have the resource specified', () => {
+			checkResource(result, 'model');
+		});
+
+		it('should have the child specified', () => {
+			assert.equal(result.property.resource, 'canAccess');
+		});
+	});
+
 	test('/model(1)/$links/child/$count', [1], function (result) {
 		it('should have the resource specified', () => {
 			checkResource(result, 'model');

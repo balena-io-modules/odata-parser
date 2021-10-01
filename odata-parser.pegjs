@@ -545,6 +545,8 @@ PathSegment =
 			)?
 		/	'/$count'
 			{result.count = true}
+		/	'/canAccess'
+			{result.property = { resource: 'canAccess' }}
 		)?
 		{ return result }
 	/	result:ContentReference
