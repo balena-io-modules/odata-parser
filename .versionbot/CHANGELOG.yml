@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add support for resource wide /canAccess
+      hash: ff1536d6b30aaf337bc2a76bd9faa6244e96dfdb
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: >-
+          https://www.flowdock.com/app/rulemotion/resin-tech/threads/7WcMXnx1te1vhkaOtmQB2fU-0n8
+        see: >-
+          https://www.flowdock.com/app/rulemotion/resin-tech/threads/7WcMXnx1te1vhkaOtmQB2fU-0n8
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 2.3.0
+  date: 2021-10-01T13:28:58.791Z
+- commits:
     - subject: Remove some typescript strict mode exceptions
       hash: 639771285e9aaae52bff21ff38eda5f921101a63
       body: ''
