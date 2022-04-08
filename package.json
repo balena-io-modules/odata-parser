@@ -16,19 +16,19 @@
   "author": "",
   "license": "BSD",
   "devDependencies": {
-    "@balena/lint": "^6.1.1",
-    "@types/chai": "^4.2.21",
-    "@types/lodash": "^4.14.172",
-    "@types/mocha": "^9.0.0",
-    "chai": "^4.3.4",
+    "@balena/lint": "^6.2.0",
+    "@types/chai": "^4.3.0",
+    "@types/lodash": "^4.14.181",
+    "@types/mocha": "^9.1.0",
+    "chai": "^4.3.6",
     "husky": "^4.3.8",
-    "lint-staged": "^11.1.2",
+    "lint-staged": "^12.3.7",
     "lodash": "^4.17.21",
-    "mocha": "^9.1.1",
+    "mocha": "^9.2.2",
     "peggy": "^1.2.0",
     "require-npm4-to-publish": "^1.0.0",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.2"
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
   },
   "husky": {
     "hooks": {
@@ -41,7 +41,6 @@
     "require": "ts-node/register/transpile-only",
     "_": "test/run.js"
   },
-  "dependencies": {},
   "versionist": {
     "publishedAt": "2021-09-07T13:33:26.470Z"
   }
