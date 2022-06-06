@@ -1,4 +1,15 @@
 - commits:
+    - subject: Add source map
+      hash: a6bb5e67fac1cdcc69491800ad042f003fa13556
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 2.3.0
+  title: "'Add source map'"
+  date: 2022-06-06T15:59:20.389Z
+- commits:
     - subject: Update dependencies
       hash: e63884d3e86c2654fd601cacc53f3e8e61bb1d87
       body: ""
