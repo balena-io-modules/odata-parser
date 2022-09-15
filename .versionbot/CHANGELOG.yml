@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add support for `/$count` with nested `$filter` in $orderby & $orderby
+      hash: 350c08b3a8a8877290f1c753a57e86404f0d9548
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: https://github.com/balena-io/pinejs/issues/577
+        see: https://github.com/balena-io/pinejs/issues/577
+        Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+        signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+      author: Thodoris Greasidis
+  version: 2.4.0
+  title: "'Add support for  with nested  in  & '"
+  date: 2022-09-15T06:56:48.376Z
+- commits:
     - subject: Add source map
       hash: a6bb5e67fac1cdcc69491800ad042f003fa13556
       body: ""
