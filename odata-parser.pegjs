@@ -458,11 +458,19 @@ PropertyPath =
 		'/'
 		@PropertyPath
 	)?
-	count:(
+	countOptions:(
 		'/$count'
-		{ return true }
+		optionsObj:(
+			'('
+			@(	Dollar
+				option:FilterByOption
+				{ return CollapseObjectArray([option]) }
+			)
+			')'
+		)?
+		{ return { count: true, options: optionsObj } }
 	)?
-	{ return { name: resource, property, count } }
+	{ return { name: resource, property, ...countOptions } }
 ExpandPropertyPathList =
 	path:ExpandPropertyPath
 	paths:(

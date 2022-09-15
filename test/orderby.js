@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import filterby from './filterby';
 
 export default (test) => {
 	describe('$orderby', function () {
@@ -91,5 +92,46 @@ export default (test) => {
 				);
 			});
 		});
+
+		test('$orderby=PropertyOne/$count', function (result) {
+			it('sort options are present on the result', () => {
+				assert.notEqual(result.options.$orderby, null);
+			});
+			it('sort options have property one name specified', () => {
+				assert.equal(result.options.$orderby.properties[0].name, 'PropertyOne');
+			});
+			it('has count defined', () => {
+				assert.equal(result.options.$orderby.properties[0].count, true);
+			});
+		});
+
+		const testFilterOption = function (nestedTest, input, ...optArgs) {
+			const expectation = optArgs.pop();
+			nestedTest(
+				`$orderby=PropertyOne/$count(${input})`,
+				...optArgs,
+				function (result) {
+					it('sort options are present on the result', () => {
+						assert.notEqual(result.options.$orderby, null);
+					});
+					it('sort options have property one name specified', () => {
+						assert.equal(
+							result.options.$orderby.properties[0].name,
+							'PropertyOne',
+						);
+					});
+					it('has count defined', () => {
+						assert.equal(result.options.$orderby.properties[0].count, true);
+					});
+					expectation(result?.options?.$orderby?.properties?.[0]);
+				},
+			);
+		};
+
+		const nestedFilterTest = testFilterOption.bind(null, test);
+		nestedFilterTest.skip = testFilterOption.bind(null, test.skip);
+		nestedFilterTest.only = testFilterOption.bind(null, test.only);
+
+		filterby(nestedFilterTest);
 	});
 };
