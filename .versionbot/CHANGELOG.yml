@@ -1,4 +1,15 @@
 - commits:
+    - subject: Switch from balenaCI to flowzone
+      hash: 3e0435348860242b9252c2725427a42e28925b4f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.4.1
+  title: ""
+  date: 2022-10-14T16:23:39.381Z
+- commits:
     - subject: Add support for `/$count` with nested `$filter` in $orderby & $orderby
       hash: 350c08b3a8a8877290f1c753a57e86404f0d9548
       body: ""
