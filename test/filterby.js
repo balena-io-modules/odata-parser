@@ -422,16 +422,16 @@ export default function (test) {
 
 			it('count options are present on the Product count', () => {
 				assert.notEqual(result.options.$filter[1].options, null);
-				console.log('***', result.options.$filter[1].options);
 			});
 
 			it('A filter should be present on the Product count lhs', () =>
 				assert.notEqual(result.options.$filter[1].options.$filter, null));
 
-			it(`has a Product count filter that is an instance of 'ge'`, () =>
-				assert.equal(result.options.$filter[1].options.$filter[0], 'lt'));
+			it(`has a Product count filter that is an instance of 'lt'`, () => {
+				assert.equal(result.options.$filter[1].options.$filter[0], 'lt');
+			});
 
-			it(`has an lhs on the Product count filter that is an instance of 'ge'`, () => {
+			it(`has an lhs on the Product count filter that is 'Price'`, () => {
 				expect(result.options.$filter[1].options.$filter[1])
 					.to.have.property('name')
 					.that.equals('Price');
@@ -443,8 +443,54 @@ export default function (test) {
 					.that.equals(0);
 			});
 
-			it('rhr should be $1', () =>
-				assert.equal(result.options.$filter[2].bind, 1));
+			it('rhr should be $1', () => {
+				assert.equal(result.options.$filter[2].bind, 1);
+			});
+		},
+	);
+
+	test(
+		'$filter=Products/$count($filter=Price gt 5 and Price lt 10) ge 1',
+		[5, 10, 1],
+		function (result) {
+			it('A filter should be present', () =>
+				assert.notEqual(result.options.$filter, null));
+
+			it("Filter should be an instance of 'ge'", () =>
+				assert.equal(result.options.$filter[0], 'ge'));
+
+			it('lhr should have the Product count', function () {
+				expect(result.options.$filter[1]).to.have.property('name', 'Products');
+				expect(result.options.$filter[1]).to.have.property('count', true);
+			});
+
+			it('count options are present on the Product count', () => {
+				assert.notEqual(result.options.$filter[1].options, null);
+			});
+
+			it('A filter should be present on the Product count lhs', () =>
+				assert.notEqual(result.options.$filter[1].options.$filter, null));
+
+			it(`has a Product count filter that is an instance of 'and'`, () =>
+				assert.equal(result.options.$filter[1].options.$filter[0], 'and'));
+
+			it(`has an lhs on the 'and' of the Product count filter that is Price gt $0`, () => {
+				const filter = result.options.$filter[1].options.$filter[1];
+				assert.equal(filter[0], 'gt');
+				expect(filter[1]).to.have.property('name', 'Price');
+				expect(filter[2]).to.have.property('bind', 0);
+			});
+
+			it(`has an lhs on the 'and' of the Product count filter that is Price lt $1`, () => {
+				const filter = result.options.$filter[1].options.$filter[2];
+				assert.equal(filter[0], 'lt');
+				expect(filter[1]).to.have.property('name', 'Price');
+				expect(filter[2]).to.have.property('bind', 1);
+			});
+
+			it('rhr should be $2', () => {
+				assert.equal(result.options.$filter[2].bind, 2);
+			});
 		},
 	);
 
