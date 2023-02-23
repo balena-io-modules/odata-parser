@@ -1,5 +1,5 @@
 {
-	var methods = {
+	const methods = {
 		cast: [ 1, 2 ],
 		ceiling: 1,
 		concat: 2,
@@ -33,7 +33,7 @@
 		year: 1
 	};
 
-	var operatorPrecedence = {
+	const operatorPrecedence = {
 		or: 0,
 		and: 0,
 		eq: 1,
@@ -50,7 +50,7 @@
 	};
 
 	// v4 operator precedence
-	// var operatorPrecedence = {
+	// const operatorPrecedence = {
 	// 	or: 0,
 	// 	and: 1,
 	// 	eq: 2,
@@ -66,16 +66,16 @@
 	// 	mod: 5
 	// };
 
-	var binds = [];
-	var precedence = 0;
+	let binds = [];
+	let precedence = 0;
 	function reset() {
 		binds = [];
 		precedence = 0;
 	};
 
 	function CollapseObjectArray(options) {
-		var optionsObj = {};
-		for(var i in options) {
+		const optionsObj = {};
+		for(const i in options) {
 			optionsObj[options[i].name] = options[i].value;
 		}
 		return optionsObj;
@@ -95,7 +95,7 @@ Process =
 ProcessRule =
 	'' {
 		reset();
-		var tree = eval(`peg$parse${options.rule}()`);
+		const tree = eval(`peg$parse${options.rule}()`);
 		return {
 			tree,
 			binds
@@ -747,7 +747,7 @@ ContentReference =
 	'$'
 	resource:ResourceName
 	{
-		var bind = Bind('ContentReference', resource)
+		const bind = Bind('ContentReference', resource)
 		return { resource: bind, key: bind }
 	}
 
