@@ -1,4 +1,15 @@
 - commits:
+    - subject: Use shorthand object notation
+      hash: 611c0480681965c7af06302264eac79fea18bded
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.4.4
+  title: ""
+  date: 2023-02-23T16:26:30.639Z
+- commits:
     - subject: Update dependencies
       hash: 25b153aca258347c6742cb8b4efe54c0ae199695
       body: ""
