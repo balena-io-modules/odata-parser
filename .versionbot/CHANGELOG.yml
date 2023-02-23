@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update dependencies
+      hash: 25b153aca258347c6742cb8b4efe54c0ae199695
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.4.3
+  title: ""
+  date: 2023-02-23T16:14:13.013Z
+- commits:
     - subject: Test that `/$count` works with a `$filter`containing an 'and'
       hash: cda0a1a54b2830cd393240dd5dddf1e4b42877c4
       body: ""
