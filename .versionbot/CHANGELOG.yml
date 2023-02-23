@@ -1,4 +1,15 @@
 - commits:
+    - subject: Use const/let as appropriate
+      hash: 0824fe7d85eeb97941319749fc802f9bae3c9fb6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.4.5
+  title: ""
+  date: 2023-02-23T16:31:08.299Z
+- commits:
     - subject: Use shorthand object notation
       hash: 611c0480681965c7af06302264eac79fea18bded
       body: ""
