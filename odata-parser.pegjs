@@ -90,7 +90,7 @@
 Process =
 	&{reset(); return true;}
 	tree:OData
-	{ return { tree: tree, binds: binds } }
+	{ return { tree, binds } }
 
 ProcessRule =
 	'' {
@@ -153,13 +153,13 @@ ParameterAliasOption =
 		binds['@' + name] = value
 		return {
 			name: '@' + name,
-			value: value
+			value
 		}
 	}
 
 OperationParam =
 	name:Text '=' value:Text
-	{ return { name: name, value: value } }
+	{ return { name, value } }
 
 SortOption =
 	'orderby='
@@ -188,12 +188,12 @@ SortProperty =
 TopOption =
 	'top='
 	value:UnsignedInteger
-	{ return { name: '$top', value: value } }
+	{ return { name: '$top', value } }
 
 SkipOption =
 	'skip='
 	value:UnsignedInteger
-	{ return { name: '$skip', value: value } }
+	{ return { name: '$skip', value } }
 
 InlineCountOption =
 	'inlinecount='
@@ -202,26 +202,26 @@ InlineCountOption =
 	/	'none'
 	/	Text { return '' }
 	)
-	{ return { name: '$inlinecount', value: value } }
+	{ return { name: '$inlinecount', value } }
 
 CountOption =
 	'count='
 	value:Boolean
-	{ return { name: '$count', value: value } }
+	{ return { name: '$count', value } }
 
 ExpandOption =
 	'expand='
 	properties:ExpandPropertyPathList
-	{ return { name: '$expand', value: { properties: properties } } }
+	{ return { name: '$expand', value: { properties } } }
 
 SelectOption =
 	'select='
 	value:(
 		'*'
 	/	properties:PropertyPathList
-		{ return { properties: properties } }
+		{ return { properties } }
 	)
-	{ return { name: '$select', value: value } }
+	{ return { name: '$select', value } }
 
 
 FilterByOption =
@@ -410,7 +410,7 @@ FilterMethodCallExpression =
 		)
 		&{ return args.length === methods[methodName] || (Array.isArray(methods[methodName]) && methods[methodName].includes(args.length)) }
 	')'
-	{ return [ 'call', { args: args, method: methodName } ] }
+	{ return [ 'call', { args, method: methodName } ] }
 
 LambdaMethodCall =
 	name:(
@@ -424,7 +424,7 @@ LambdaMethodCall =
 		expression:FilterByExpression
 		spaces
 	')'
-	{ return { expression: expression, identifier: identifier, method: name } }
+	{ return { expression, identifier, method: name } }
 
 ResourceMethodCall =
 	methodName:ResourceName
@@ -443,7 +443,7 @@ ResourceMethodCall =
 		/ '' { return [] }
 		)
 	')'
-	{ return [ 'call', { args: args, method: methodName } ] }
+	{ return [ 'call', { args, method: methodName } ] }
 
 PropertyPathList =
 	path:PropertyPath
@@ -500,7 +500,7 @@ ExpandPropertyPath =
 		'/'
 		@PropertyPath
 	)?
-	{ return { name: resource, property: next, count: count, options: optionsObj} }
+	{ return { name: resource, property: next, count, options: optionsObj} }
 
 LambdaPropertyPath =
 	resource:ResourceName
@@ -508,9 +508,9 @@ LambdaPropertyPath =
 	@(	next:LambdaPropertyPath
 		{ return { name: resource, property: next } }
 	/	lambda:LambdaMethodCall
-		{ return { name: resource, lambda: lambda } }
+		{ return { name: resource, lambda } }
 	/	method:ResourceMethodCall
-		{ return { name: resource, method: method } }
+		{ return { name: resource, method } }
 	)
 Key =
 	'('
