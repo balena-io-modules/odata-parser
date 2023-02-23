@@ -36,6 +36,10 @@
     "require": "ts-node/register/transpile-only",
     "_": "test/run.js"
   },
+  "engines": {
+    "node": ">=16.13.0",
+    "npm": ">=8.1.0"
+  },
   "versionist": {
     "publishedAt": "2023-04-26T11:09:24.666Z"
   }

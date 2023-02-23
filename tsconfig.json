@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es2018",
+		"target": "es2021",
 		"strict": true,
 		"strictFunctionTypes": false,
 		"strictBindCallApply": false,
