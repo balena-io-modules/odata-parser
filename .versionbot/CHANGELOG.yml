@@ -1,4 +1,15 @@
 - commits:
+    - subject: Improve typings
+      hash: ed5fa5675021485a775eb777f2358d8041b93ce1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 2.4.6
+  title: ""
+  date: 2023-02-24T17:02:58.272Z
+- commits:
     - subject: Use const/let as appropriate
       hash: 0824fe7d85eeb97941319749fc802f9bae3c9fb6
       body: ""
