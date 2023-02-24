@@ -17,7 +17,8 @@
 		"allowJs": true
 	},
 	"include": [
-		"test/**/*"
+		"test/**/*",
+		"odata-parser.d.ts"
 	],
 	"exclude": [
 		"node_modules"

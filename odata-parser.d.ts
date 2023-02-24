@@ -10,7 +10,8 @@ export type SupportedMethod =
 /**
  * string for a parameter alias reference, number for an extracted constant
  */
-export type BindReference = { bind: string | number };
+export type BindKey = `@${string}` | number;
+export type BindReference = { bind: BindKey };
 
 export type NumberBind = ['Real', number];
 export type BooleanBind = ['Boolean', boolean];
@@ -88,8 +89,8 @@ export interface ODataQuery extends ResourceOptions {
 	link?: any;
 	property?: any;
 }
-export interface ODataBinds extends Array<any> {
-	[key: string]: any;
+export interface ODataBinds extends Array<[type: string, value: any]> {
+	[key: `@${string}`]: [type: string, value: any];
 }
 
 export class SyntaxError extends Error {}
@@ -104,7 +105,7 @@ export function parse(
 	url: string,
 	opts?: { startRule: 'ProcessRule'; rule: 'KeyBind' },
 ): {
-	tree: { bind: string };
+	tree: BindReference;
 	binds: ODataBinds;
 };
 export function parse(
@@ -112,6 +113,13 @@ export function parse(
 	opts?: { startRule: 'ProcessRule'; rule: 'FilterByExpression' },
 ): {
 	tree: FilterOption;
+	binds: ODataBinds;
+};
+export function parse(
+	url: string,
+	opts?: { startRule: 'ProcessRule'; rule: 'QueryOptions' },
+): {
+	tree: ODataOptions;
 	binds: ODataBinds;
 };
 export function parse(
