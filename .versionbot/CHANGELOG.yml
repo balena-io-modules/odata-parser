@@ -1,4 +1,22 @@
 - commits:
+    - subject: Use optional chaining operator
+      hash: 1fb39ef2497b964af0f2cbc953a3f0843936fe02
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Pagan Gazzard
+    - subject: Set minimum supported nodejs version to 16.13.0
+      hash: 91b8f51691a9649e99f2dc64253cc5ce9b59035a
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Pagan Gazzard
+  version: 3.0.0
+  title: ""
+  date: 2023-04-26T14:57:49.416Z
+- commits:
     - subject: Update to peggy 3 and make us of the repetition operator
       hash: 3d091133ca54dfba71c2bc0d17e60780fb1bda22
       body: ""
