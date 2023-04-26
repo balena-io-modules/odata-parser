@@ -111,12 +111,8 @@ OData =
 		{ return { resource: '$serviceroot' } }
 
 QueryOptions =
-	option:QueryOption
-	options:(
-		'&'
-		@QueryOption
-	)*
-	{ return CollapseObjectArray([option, ...options]) }
+	options:QueryOption|1..,'&'|
+	{ return CollapseObjectArray(options) }
 
 QueryOption =
 		Dollar
@@ -163,12 +159,8 @@ OperationParam =
 
 SortOption =
 	'orderby='
-	property:SortProperty
-	properties:(
-		','
-		@SortProperty
-	)*
-	{ return { name: '$orderby', value: { properties: [property, ...properties] } } }
+	properties:SortProperty|1..,','|
+	{ return { name: '$orderby', value: { properties } } }
 
 SortProperty =
 	property:PropertyPath
@@ -350,15 +342,8 @@ FilterNegateExpression =
 
 GroupedPrimitive =
 	'(' spaces
-		first:Primitive
-		rest:(
-			','
-			spaces
-			@Primitive
-		)*
+		@Primitive|1..,',' spaces|
 	')'
-	{ return [ first, ...rest ] }
-
 
 FilterMethodCallExpression =
 	methodName:(
@@ -397,15 +382,8 @@ FilterMethodCallExpression =
 	'('
 		spaces
 		args:(
-			first:FilterByExpression
-			rest:(
-				spaces
-				','
-				spaces
-				@FilterByExpression
-			)*
+			@FilterByExpression|1..,spaces ',' spaces|
 			spaces
-			{ return [ first, ...rest ] }
 		/ '' { return [] }
 		)
 		&{ return args.length === methods[methodName] || (Array.isArray(methods[methodName]) && methods[methodName].includes(args.length)) }
@@ -431,27 +409,15 @@ ResourceMethodCall =
 	'('
 		spaces
 		args:(
-			first:FilterByExpression
-			rest:(
-				spaces
-				','
-				spaces
-				@FilterByExpression
-			)*
+			@FilterByExpression|1..,spaces ',' spaces|
 			spaces
-			{ return [ first, ...rest ] }
 		/ '' { return [] }
 		)
 	')'
 	{ return [ 'call', { args, method: methodName } ] }
 
 PropertyPathList =
-	path:PropertyPath
-	paths:(
-		','
-		@PropertyPath
-	)*
-	{ return [path, ...paths] }
+	PropertyPath|1..,','|
 PropertyPath =
 	resource:ResourceName
 	property:(
@@ -472,12 +438,7 @@ PropertyPath =
 	)?
 	{ return { name: resource, property, ...countOptions } }
 ExpandPropertyPathList =
-	path:ExpandPropertyPath
-	paths:(
-		','
-		@ExpandPropertyPath
-	)*
-	{ return [path, ...paths] }
+	ExpandPropertyPath|1..,','|
 ExpandPropertyPath =
 	resource:ResourceName
 	count:(
@@ -486,12 +447,8 @@ ExpandPropertyPath =
 	)?
 	optionsObj:(
 		'('
-		@(	option:QueryOption
-			options:(
-				[&;]
-				@QueryOption
-			)*
-			{ return CollapseObjectArray([option, ...options]) }
+		@(	options:QueryOption|1..,[&;]|
+			{ return CollapseObjectArray(options) }
 		/ '' { return {} }
 		)
 		')'
@@ -515,12 +472,8 @@ LambdaPropertyPath =
 Key =
 	'('
 	@(	KeyBind
-	/	keyBind:NamedKeyBind
-		keyBinds:(
-			','
-			@NamedKeyBind
-		)*
-		{ return CollapseObjectArray([keyBind, ...keyBinds]) }
+	/	keyBinds:NamedKeyBind|1..,','|
+		{ return CollapseObjectArray(keyBinds) }
 	)
 	')'
 NamedKeyBind =
