@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update to peggy 3 and make us of the repetition operator
+      hash: 3d091133ca54dfba71c2bc0d17e60780fb1bda22
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 2.5.0
+  title: ""
+  date: 2023-04-26T11:09:24.513Z
+- commits:
     - subject: Improve typings
       hash: ed5fa5675021485a775eb777f2358d8041b93ce1
       body: ""
