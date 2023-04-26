@@ -621,9 +621,9 @@ Duration =
 	{ return {
 		negative: sign === '-',
 		day: day || undefined,
-		hour: time ? time.hour : undefined,
-		minute: time ? time.minute : undefined,
-		second: time ? time.second : undefined,
+		hour: time?.hour,
+		minute: time?.minute,
+		second: time?.second,
 	} }
 DurationInteger =
 	UnsignedInteger
