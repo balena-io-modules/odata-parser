@@ -1,4 +1,15 @@
 - commits:
+    - subject: Allow running CI on external PRs
+      hash: 875af25a9e8ba9ade051f76f4500f5146db675a7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 3.0.1
+  title: ""
+  date: 2023-09-25T10:50:13.648Z
+- commits:
     - subject: Use optional chaining operator
       hash: 1fb39ef2497b964af0f2cbc953a3f0843936fe02
       body: ""
