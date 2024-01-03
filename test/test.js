@@ -43,10 +43,12 @@ const runExpectation = function (...args) {
 
 const test = runExpectation.bind(null, describe);
 test.skip = runExpectation.bind(null, describe.skip);
+// eslint-disable-next-line no-only-tests/no-only-tests
 test.only = runExpectation.bind(null, describe.only);
 
 test.raw = raw.bind(null, describe);
 test.raw.skip = raw.bind(null, describe.skip);
+// eslint-disable-next-line no-only-tests/no-only-tests
 test.raw.only = raw.bind(null, describe.only);
 
 export default test;
