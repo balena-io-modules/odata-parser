@@ -94,13 +94,15 @@ const testExpands = function (test, nested = 1) {
 
 			const nestedExpandTest = testExpandOption.bind(null, test);
 			nestedExpandTest.skip = testExpandOption.bind(null, test.skip);
+			// eslint-disable-next-line no-only-tests/no-only-tests
 			nestedExpandTest.only = testExpandOption.bind(null, test.only);
 
 			const nestedCountTest = testExpandOptionCount.bind(null, test);
 			nestedCountTest.skip = testExpandOptionCount.bind(null, test.skip);
+			// eslint-disable-next-line no-only-tests/no-only-tests
 			nestedCountTest.only = testExpandOptionCount.bind(null, test.only);
 
-			for (let nestedTest of [nestedExpandTest, nestedCountTest]) {
+			for (const nestedTest of [nestedExpandTest, nestedCountTest]) {
 				filterby(nestedTest);
 				format(nestedTest);
 				orderby(nestedTest);

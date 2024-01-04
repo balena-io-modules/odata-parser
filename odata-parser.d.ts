@@ -27,7 +27,7 @@ interface GenericPropertyPath<T = any> {
 	name: string;
 	property?: T;
 }
-export interface PropertyPath extends GenericPropertyPath<PropertyPath> {}
+export type PropertyPath = GenericPropertyPath<PropertyPath>;
 export interface OrderByPropertyPath
 	extends GenericPropertyPath<OrderByPropertyPath> {
 	order: 'asc' | 'desc';

@@ -130,6 +130,7 @@ export default (test) => {
 
 		const nestedFilterTest = testFilterOption.bind(null, test);
 		nestedFilterTest.skip = testFilterOption.bind(null, test.skip);
+		// eslint-disable-next-line no-only-tests/no-only-tests
 		nestedFilterTest.only = testFilterOption.bind(null, test.only);
 
 		filterby(nestedFilterTest);
