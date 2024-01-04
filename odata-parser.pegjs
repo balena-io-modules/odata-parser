@@ -1,4 +1,4 @@
-{
+{{
 	const methods = {
 		cast: [ 1, 2 ],
 		ceiling: 1,
@@ -66,19 +66,20 @@
 	// 	mod: 5
 	// };
 
-	let binds = [];
-	let precedence = 0;
-	function reset() {
-		binds = [];
-		precedence = 0;
-	};
-
 	function CollapseObjectArray(options) {
 		const optionsObj = {};
 		for(const i in options) {
 			optionsObj[options[i].name] = options[i].value;
 		}
 		return optionsObj;
+	};
+}}
+{
+	let binds = [];
+	let precedence = 0;
+	function reset() {
+		binds = [];
+		precedence = 0;
 	};
 
 	function Bind(type, value) {
