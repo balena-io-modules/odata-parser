@@ -86,6 +86,8 @@
 		binds.push([type, value])
 		return { bind: binds.length - 1 }
 	}
+	
+	input = decodeURIComponent(input)
 }
 
 Process =
@@ -132,7 +134,6 @@ QueryOption =
 
 Dollar '$ query options' =
 		'$'
-	/	'%24'
 
 ParameterAliasOption =
 	'@' name:Text '='
@@ -552,7 +553,7 @@ SubPathSegment =
 ResourceName =
 	// This regex is equivalent to `!(ReservedUriComponent / [ %])`
 	resourceName:$[^:/?#\[\]@!$*&()+,;= %]+
-	{ return decodeURIComponent(resourceName) }
+	{ return resourceName }
 
 Number =
 	sign:Sign
@@ -642,11 +643,10 @@ DurationNumber =
 Text =
 	// This regex is equivalent to `(!ReservedUriComponent)`
 	text:$[^:/?#\[\]@!$*&()+,;=]*
-	{ return decodeURIComponent(text) }
+	{ return text }
 
 Sign =
 		'+'
-	/	'%2B'
 		{ return '+' }
 	/	'-'
 	/	''
@@ -654,7 +654,6 @@ Sign =
 // TODO: This should really be done treating everything the same, but for now this hack should allow FF to work passably.
 Apostrophe =
 		'\''
-	/	'%27'
 		{ return '\'' }
 
 QuotedText =
@@ -665,7 +664,7 @@ QuotedText =
 	/	Apostrophe @Apostrophe
 	)*
 	Apostrophe
-	{ return decodeURIComponent(text.join('')) }
+	{ return text.join('') }
 
 ParameterAlias =
 	'@' param:ResourceName
@@ -719,6 +718,5 @@ spaces =
 
 space =
 	(	' '
-	/	'%20'
 	/	'+'
 	)

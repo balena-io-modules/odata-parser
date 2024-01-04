@@ -8,9 +8,23 @@ describe('Encoding', function () {
 			assert.equal(result.options.foo, 'hello world');
 		}));
 
+	test('foo=hello%2520world', (result) =>
+		it('should equal hello%20world with encoded %20 and only decoded once', () => {
+			assert.equal(result.options.foo, 'hello%20world');
+		}));
+
 	test.raw('/some%20thing?foo=hello%20world', (result) =>
 		it('should fail as we do not allow spaces in resource names', () => {
 			assert(result instanceof SyntaxError);
 		}),
 	);
+
+	test(`$filter=name+eq+'s%C3%BC%C3%9F'`, ['süß'], function (result, err) {
+		if (err) {
+			throw err;
+		}
+
+		it('A filter should be present', () =>
+			assert.notEqual(result.options.$filter, null));
+	});
 });
