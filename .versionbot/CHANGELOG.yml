@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update dependencies
+      hash: 0a7bd8ff2e506fa3988b6e1851e0098df5da3f86
+      body: >
+        - Update @balena/lint from 6.2.2 to 7.2.4
+
+        - Delete `require-npm4-to-publish` as handled by `engines` parameter in `package.json`
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: fisehara <harald@balena.io>
+        signed-off-by: fisehara <harald@balena.io>
+      author: fisehara
+  version: 3.0.2
+  title: ""
+  date: 2024-01-04T10:16:56.896Z
+- commits:
     - subject: Allow running CI on external PRs
       hash: 875af25a9e8ba9ade051f76f4500f5146db675a7
       body: ""
