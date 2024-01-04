@@ -1,4 +1,17 @@
 - commits:
+    - subject: Optimize by moving constant values into global init
+      hash: 94899b779fb879540f3675c3c9d7ca3f9d8af4bf
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: fisehara <harald@balena.io>
+        signed-off-by: fisehara <harald@balena.io>
+      author: fisehara
+  version: 3.0.3
+  title: ""
+  date: 2024-01-04T15:30:09.102Z
+- commits:
     - subject: Update dependencies
       hash: 0a7bd8ff2e506fa3988b6e1851e0098df5da3f86
       body: >
