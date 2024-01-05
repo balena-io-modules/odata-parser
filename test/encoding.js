@@ -13,6 +13,13 @@ describe('Encoding', function () {
 			assert.equal(result.options.foo, 'hello%20world');
 		}));
 
+	test('foo=hello%26world&test=second', (result) =>
+		it('should equal hello&world', () => {
+			console.log(`result:${JSON.stringify(result, null, 2)}`);
+			assert.equal(result.options.foo, 'hello&world');
+			assert.equal(result.options.test, 'second');
+		}));
+
 	test.raw('/some%20thing?foo=hello%20world', (result) =>
 		it('should fail as we do not allow spaces in resource names', () => {
 			assert(result instanceof SyntaxError);
