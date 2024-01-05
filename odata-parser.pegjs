@@ -118,7 +118,7 @@ QueryOptions =
 	{ return CollapseObjectArray(options) }
 
 QueryOption =
-		Dollar
+		'$'
 		@(	SelectOption
 		/	FilterByOption
 		/	ExpandOption
@@ -131,9 +131,6 @@ QueryOption =
 		)
 	/	OperationParam
 	/	ParameterAliasOption
-
-Dollar '$ query options' =
-		'$'
 
 ParameterAliasOption =
 	'@' name:Text '='
@@ -430,7 +427,7 @@ PropertyPath =
 		'/$count'
 		optionsObj:(
 			'('
-			@(	Dollar
+			@(	'$'
 				option:FilterByOption
 				{ return CollapseObjectArray([option]) }
 			)
@@ -552,11 +549,10 @@ SubPathSegment =
 
 ResourceName =
 	// This regex is equivalent to `!(ReservedUriComponent / [ %])`
-	resourceName:$[^:/?#\[\]@!$*&()+,;= %]+
-	{ return resourceName }
+	$[^:/?#\[\]@!$*&()+,;= %]+
 
 Number =
-	sign:Sign
+	sign:$[+-]?
 	d:$(
 		[0-9]+
 		(
@@ -584,7 +580,7 @@ Duration =
 	'duration'
 	Apostrophe
 	// Sign must appear first if it appears
-	sign:Sign
+	sign:$[+-]?
 	// P must always appear
 	'P'
 	// The order of elements is fixed (PnDTnHnMnS)
@@ -642,19 +638,12 @@ DurationNumber =
 
 Text =
 	// This regex is equivalent to `(!ReservedUriComponent)`
-	text:$[^:/?#\[\]@!$*&()+,;=]*
-	{ return text }
-
-Sign =
-		'+'
-		{ return '+' }
-	/	'-'
-	/	''
+	$[^:/?#\[\]@!$*&()+,;=]*
 
 // TODO: This should really be done treating everything the same, but for now this hack should allow FF to work passably.
 Apostrophe =
 		'\''
-		{ return '\'' }
+{ return '\'' }
 
 QuotedText =
 	Apostrophe
@@ -717,6 +706,4 @@ spaces =
 	space*
 
 space =
-	(	' '
-	/	'+'
-	)
+	[ +]
