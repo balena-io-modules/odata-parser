@@ -15,7 +15,7 @@
   "author": "",
   "license": "BSD",
   "devDependencies": {
-    "@balena/lint": "^7.2.4",
+    "@balena/lint": "^8.0.0",
     "@types/chai": "^4.3.4",
     "@types/lodash": "^4.14.194",
     "@types/mocha": "^10.0.1",
