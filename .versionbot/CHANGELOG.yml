@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency peggy to v4
+      hash: d0c83b2955f285f3cac927e4310e0b948d522189
+      body: |
+        Update peggy from 3.0.2 to 4.0.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+  version: 3.0.6
+  title: ""
+  date: 2024-04-12T09:10:02.194Z
+- commits:
     - subject: Update dependency lint-staged to v15
       hash: 703834a4c358dd348e1ffce797f6e3c37a03941f
       body: |
