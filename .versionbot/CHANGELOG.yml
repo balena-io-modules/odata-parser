@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency @balena/lint to v8
+      hash: 8048f717367a41233a995096edf2da6710e9e247
+      body: |
+        Update @balena/lint from 7.3.0 to 8.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+  version: 3.0.4
+  title: ""
+  date: 2024-04-12T02:48:22.037Z
+- commits:
     - subject: Optimize by moving constant values into global init
       hash: 94899b779fb879540f3675c3c9d7ca3f9d8af4bf
       body: ""
@@ -17,7 +29,8 @@
       body: >
         - Update @balena/lint from 6.2.2 to 7.2.4
 
-        - Delete `require-npm4-to-publish` as handled by `engines` parameter in `package.json`
+        - Delete `require-npm4-to-publish` as handled by `engines` parameter in
+        `package.json`
       footer:
         Change-type: patch
         change-type: patch
