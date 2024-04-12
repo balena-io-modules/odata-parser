@@ -21,7 +21,7 @@
     "@types/mocha": "^10.0.1",
     "chai": "^4.3.7",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.1",
+    "lint-staged": "^15.0.0",
     "lodash": "^4.17.21",
     "mocha": "^10.2.0",
     "peggy": "^3.0.2",
