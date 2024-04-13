@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency husky to v9
+      hash: 8d5929cbbce1765e8ad14a84a1b6e669daedd9a8
+      body: |
+        Update husky from 8.0.3 to 9.0.11
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+  version: 3.0.7
+  title: ""
+  date: 2024-04-13T14:30:01.103Z
+- commits:
     - subject: Update dependency peggy to v4
       hash: d0c83b2955f285f3cac927e4310e0b948d522189
       body: |
