@@ -77,7 +77,8 @@ export interface ODataOptions {
 		| OrderByOption
 		| FormatOption
 		| number
-		| boolean;
+		| boolean
+		| undefined;
 }
 export interface ODataQuery extends ResourceOptions {
 	resource: any;
