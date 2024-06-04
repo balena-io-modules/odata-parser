@@ -1,4 +1,15 @@
 - commits:
+    - subject: Fix type checking of the declaration file
+      hash: 17dc377da3031f28bb5f2ffaff9b2185d65159aa
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 3.0.8
+  title: ""
+  date: 2024-06-04T09:56:51.182Z
+- commits:
     - subject: Update dependency husky to v9
       hash: 8d5929cbbce1765e8ad14a84a1b6e669daedd9a8
       body: |
