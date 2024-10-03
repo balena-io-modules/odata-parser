@@ -1,4 +1,15 @@
 - commits:
+    - subject: Use bind vars for $top and $skip options
+      hash: f160a140209cc5c9d3abc617cf8de7a37a0abf16
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 3.1.0
+  title: ""
+  date: 2024-10-03T23:27:17.856Z
+- commits:
     - subject: Fix type checking of the declaration file
       hash: 17dc377da3031f28bb5f2ffaff9b2185d65159aa
       body: ""
