@@ -180,12 +180,12 @@ SortProperty =
 
 TopOption =
 	'top='
-	value:UnsignedInteger
+	value:UnsignedIntegerBind
 	{ return { name: '$top', value } }
 
 SkipOption =
 	'skip='
-	value:UnsignedInteger
+	value:UnsignedIntegerBind
 	{ return { name: '$skip', value } }
 
 InlineCountOption =
@@ -674,6 +674,10 @@ ParameterAlias =
 NumberBind =
 	n:Number
 	{ return Bind('Real', n) }
+
+UnsignedIntegerBind =
+	n:UnsignedInteger
+	{ return Bind('Integer', n) }
 
 Date =
 	type:(
