@@ -1,6 +1,6 @@
 {
   "name": "@balena/odata-parser",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "An OData parser written in OMeta",
   "main": "odata-parser.js",
   "scripts": {
@@ -39,6 +39,6 @@
     "npm": ">=8.1.0"
   },
   "versionist": {
-    "publishedAt": "2024-10-03T23:27:17.985Z"
+    "publishedAt": "2024-10-04T15:32:30.762Z"
   }
 }

@@ -1,4 +1,22 @@
 - commits:
+    - subject: Avoid setting `property`/`count`/`options` for expands when not provided
+      hash: 1f3e69085a7e4225c648ea55a594895c288c45e2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Avoid setting nested `property` for `PropertyPath` when not provided
+      hash: 020a2a429e8782c38c84650fe644953a90288321
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 3.1.1
+  title: ""
+  date: 2024-10-04T15:32:30.651Z
+- commits:
     - subject: Use bind vars for $top and $skip options
       hash: f160a140209cc5c9d3abc617cf8de7a37a0abf16
       body: ""
