@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import { expect } from 'chai';
 import $test from './test';
 import filterby from './filterby';
 import format from './format';
@@ -23,17 +24,42 @@ const testExpands = function (test, nested = 1) {
 					'Suppliers',
 				);
 			});
+			it('should not have a nested property on Suppliers', () => {
+				expect(
+					result.options.$expand.properties[0].property,
+				).to.not.have.property('property');
+			});
 		});
 
-		test('$expand=Products,Suppliers', function (result) {
+		test('$expand=Products,Suppliers()', function (result) {
 			it('has an $expand value', () => {
 				assert.notEqual(result.options.$expand, null);
 			});
 			it('has a resource of Products', () => {
 				assert.equal(result.options.$expand.properties[0].name, 'Products');
 			});
+			it('not have count set on Products', () => {
+				expect(result.options.$expand.properties[0]).to.not.have.property(
+					'count',
+				);
+			});
+			it('not have options set on Products', () => {
+				expect(result.options.$expand.properties[0]).to.not.have.property(
+					'options',
+				);
+			});
+			it('should not have a nested property on Products', () => {
+				expect(result.options.$expand.properties[0]).to.not.have.property(
+					'property',
+				);
+			});
 			it('has a resource of Suppliers', () => {
 				assert.equal(result.options.$expand.properties[1].name, 'Suppliers');
+			});
+			it('not have options set on Suppliers', () => {
+				expect(result.options.$expand.properties[1]).to.not.have.property(
+					'options',
+				);
 			});
 		});
 

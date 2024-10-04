@@ -282,6 +282,10 @@ describe('Resource Parsing', function () {
 			assert.equal(result.options.$filter[1].name, 'id');
 		});
 
+		it('lhr should not have a property', () => {
+			expect(result.options.$filter[1]).to.not.have.property('property');
+		});
+
 		it('rhr should be $0', () => {
 			assert.equal(result.options.$filter[2].bind, 0);
 		});
