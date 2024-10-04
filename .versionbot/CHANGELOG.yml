@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update dependencies
+      hash: e671fc822a9db4c4aa43fc5b3d46d7c9b2558700
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 3.1.2
+  title: ""
+  date: 2024-10-04T15:48:57.862Z
+- commits:
     - subject: Avoid setting `property`/`count`/`options` for expands when not provided
       hash: 1f3e69085a7e4225c648ea55a594895c288c45e2
       body: ""
