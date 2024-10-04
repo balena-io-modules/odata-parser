@@ -420,12 +420,16 @@ ResourceMethodCall =
 PropertyPathList =
 	PropertyPath|1..,','|
 PropertyPath =
-	resource:ResourceName
-	property:(
+	result:(
+		name:ResourceName
+		{ return { name } }
+	)
+	(
 		'/'
-		@PropertyPath
+		property:PropertyPath
+		{ result.property = property }
 	)?
-	countOptions:(
+	(
 		'/$count'
 		optionsObj:(
 			'('
@@ -435,9 +439,9 @@ PropertyPath =
 			)
 			')'
 		)?
-		{ return { count: true, options: optionsObj } }
+		{ result.count = true; result.options = optionsObj }
 	)?
-	{ return { name: resource, property, ...countOptions } }
+	{ return result }
 ExpandPropertyPathList =
 	ExpandPropertyPath|1..,','|
 ExpandPropertyPath =
