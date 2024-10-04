@@ -108,7 +108,7 @@ OData =
 		{ return model }
 	/	'/$metadata'
 		{ return { resource: '$metadata' } }
-	/	'/'
+	/	Slash
 		{ return { resource: '$serviceroot' } }
 
 QueryOptions =
@@ -135,7 +135,7 @@ Dollar '$ query options' =
 	/	'%24'
 
 ParameterAliasOption =
-	'@' name:Text '='
+	AtSign name:Text Equals
 	value:(
 		n:Number
 		{ return [ 'Real', n ] }
@@ -155,12 +155,12 @@ ParameterAliasOption =
 	}
 
 OperationParam =
-	name:Text '=' value:Text
+	name:Text Equals value:Text
 	{ return { name, value } }
 
 SortOption =
 	'orderby='
-	properties:SortProperty|1..,','|
+	properties:SortProperty|1..,Comma|
 	{ return { name: '$orderby', value: { properties } } }
 
 SortProperty =
@@ -210,7 +210,7 @@ ExpandOption =
 SelectOption =
 	'select='
 	value:(
-		'*'
+		Asterisk
 	/	properties:PropertyPathList
 		{ return { properties } }
 	)
@@ -236,9 +236,9 @@ FormatOption =
 	'format='
 	type:ContentType
 	@(
-		';'
+		Semicolon
 		'odata.'?
-		'metadata='
+		'metadata' Equals
 		metadata:(
 			'none'
 		/	'minimal'
@@ -300,7 +300,7 @@ FilterByValue =
 /	Primitive
 
 Primitive =
-		'(' spaces @Primitive spaces ')'
+		ParenOpen spaces @Primitive spaces ParenClose
 	/	QuotedTextBind
 	/	NumberBind
 	/	BooleanBind
@@ -311,7 +311,7 @@ Primitive =
 	/	PropertyPath
 
 GroupedPrecedenceExpression =
-	'(' spaces @FilterByExpression spaces ')'
+	ParenOpen spaces @FilterByExpression spaces ParenClose
 
 FilterByOperand =
 	spaces
@@ -338,13 +338,13 @@ FilterNegateExpression =
 	boundary
 	@(
 		FilterByValue
-	/	'(' spaces @FilterByExpression spaces ')'
+	/	ParenOpen spaces @FilterByExpression spaces ParenClose
 	)
 
 GroupedPrimitive =
-	'(' spaces
-		@Primitive|1..,',' spaces|
-	')'
+	ParenOpen spaces
+		@Primitive|1..,Comma spaces|
+	ParenClose
 
 FilterMethodCallExpression =
 	methodName:(
@@ -380,15 +380,15 @@ FilterMethodCallExpression =
 	/	'trim'
 	/	'year'
 	)
-	'('
+	ParenOpen
 		spaces
 		args:(
-			@FilterByExpression|1..,spaces ',' spaces|
+			@FilterByExpression|1..,spaces Comma spaces|
 			spaces
 		/ '' { return [] }
 		)
 		&{ return args.length === methods[methodName] || (Array.isArray(methods[methodName]) && methods[methodName].includes(args.length)) }
-	')'
+	ParenClose
 	{ return [ 'call', { args, method: methodName } ] }
 
 LambdaMethodCall =
@@ -396,50 +396,50 @@ LambdaMethodCall =
 		'any'
 	/	'all'
 	)
-	'('
+	ParenOpen
 		spaces
 		identifier:ResourceName
-		':'
+		Colon
 		expression:FilterByExpression
 		spaces
-	')'
+	ParenClose
 	{ return { expression, identifier, method: name } }
 
 ResourceMethodCall =
 	methodName:ResourceName
-	'('
+	ParenOpen
 		spaces
 		args:(
-			@FilterByExpression|1..,spaces ',' spaces|
+			@FilterByExpression|1..,spaces Comma spaces|
 			spaces
 		/ '' { return [] }
 		)
-	')'
+	ParenClose
 	{ return [ 'call', { args, method: methodName } ] }
 
 PropertyPathList =
-	PropertyPath|1..,','|
+	PropertyPath|1..,Comma|
 PropertyPath =
 	resource:ResourceName
 	property:(
-		'/'
+		Slash
 		@PropertyPath
 	)?
 	countOptions:(
 		'/$count'
 		optionsObj:(
-			'('
+			ParenOpen
 			@(	Dollar
 				option:FilterByOption
 				{ return CollapseObjectArray([option]) }
 			)
-			')'
+			ParenClose
 		)?
 		{ return { count: true, options: optionsObj } }
 	)?
 	{ return { name: resource, property, ...countOptions } }
 ExpandPropertyPathList =
-	ExpandPropertyPath|1..,','|
+	ExpandPropertyPath|1..,Comma|
 ExpandPropertyPath =
 	resource:ResourceName
 	count:(
@@ -447,22 +447,22 @@ ExpandPropertyPath =
 		{ return true }
 	)?
 	optionsObj:(
-		'('
+		ParenOpen
 		@(	options:QueryOption|1..,[&;]|
 			{ return CollapseObjectArray(options) }
 		/ '' { return {} }
 		)
-		')'
+		ParenClose
 	)?
 	next:(
-		'/'
+		Slash
 		@PropertyPath
 	)?
 	{ return { name: resource, property: next, count, options: optionsObj} }
 
 LambdaPropertyPath =
 	resource:ResourceName
-	'/'
+	Slash
 	@(	next:LambdaPropertyPath
 		{ return { name: resource, property: next } }
 	/	lambda:LambdaMethodCall
@@ -471,14 +471,14 @@ LambdaPropertyPath =
 		{ return { name: resource, method } }
 	)
 Key =
-	'('
+	ParenOpen
 	@(	KeyBind
-	/	keyBinds:NamedKeyBind|1..,','|
+	/	keyBinds:NamedKeyBind|1..,Comma|
 		{ return CollapseObjectArray(keyBinds) }
 	)
-	')'
+	ParenClose
 NamedKeyBind =
-	name:ResourceName '=' value:KeyBind
+	name:ResourceName Equals value:KeyBind
 	{ return { name, value }}
 KeyBind =
 		NumberBind
@@ -491,7 +491,7 @@ Links =
 
 PathSegment =
 	result:(
-		'/'
+		Slash
 		result:(
 			resource:ResourceName
 			{ return { resource } }
@@ -524,7 +524,7 @@ PathSegment =
 	)?
 	{ return result }
 SubPathSegment =
-	'/'
+	Slash
 	result:(
 		resource: ResourceName
 		{ return { resource } }
@@ -646,10 +646,69 @@ Text =
 
 Sign =
 		'+'
+	/	'%2b'
+		{ return '+' }
 	/	'%2B'
 		{ return '+' }
 	/	'-'
 	/	''
+
+Slash =
+		'/'
+	/	'%2f'
+		{ return '/' }
+	/	'%2F'
+		{ return '/' }
+
+Asterisk =
+		'*'
+	/	'%2a'
+		{ return '*' }
+	/	'%2A'
+		{ return '*' }
+
+Equals =
+		'='
+	/	'%3d'
+		{ return '=' }
+	/	'%3D'
+		{ return '=' }
+
+Comma =
+		','
+	/	'%2c'
+		{ return ',' }
+	/	'%2C'
+		{ return ',' }
+
+Semicolon =
+		';'
+	/	'%3b'
+		{ return ';' }
+	/	'%3B'
+		{ return ';' }
+
+AtSign =
+		'@'
+	/	'%40'
+		{ return '@' }
+
+Colon =
+		':'
+	/	'%3a'
+		{ return ':' }
+	/	'%3A'
+		{ return ':' }
+
+ParenOpen =
+		'('
+	/	'%28'
+		{ return '(' }
+
+ParenClose =
+		')'
+	/	'%29'
+		{ return ')' }
 
 // TODO: This should really be done treating everything the same, but for now this hack should allow FF to work passably.
 Apostrophe =
@@ -668,7 +727,7 @@ QuotedText =
 	{ return decodeURIComponent(text.join('')) }
 
 ParameterAlias =
-	'@' param:ResourceName
+	AtSign param:ResourceName
 	{ return { bind: '@' + param } }
 
 NumberBind =
@@ -714,7 +773,7 @@ QuotedTextBind =
 	{ return Bind('Text', t) }
 
 boundary =
-	(	&'('
+	(	&ParenOpen
 	/	space+
 	)
 
