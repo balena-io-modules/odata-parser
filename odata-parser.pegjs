@@ -445,24 +445,29 @@ PropertyPath =
 ExpandPropertyPathList =
 	ExpandPropertyPath|1..,','|
 ExpandPropertyPath =
-	resource:ResourceName
-	count:(
+	result:(
+		name:ResourceName
+		{ return { name } }
+	)
+	(
 		'/$count'
-		{ return true }
+		{ result.count = true }
 	)?
-	optionsObj:(
+	(
 		'('
-		@(	options:QueryOption|1..,[&;]|
-			{ return CollapseObjectArray(options) }
-		/ '' { return {} }
+		(
+			options:QueryOption|1..,[&;]|
+			{ result.options =  CollapseObjectArray(options) }
+		/ ''
 		)
 		')'
 	)?
-	next:(
+	(
 		'/'
-		@PropertyPath
+		next:PropertyPath
+		{ result.property = next }
 	)?
-	{ return { name: resource, property: next, count, options: optionsObj} }
+	{ return result }
 
 LambdaPropertyPath =
 	resource:ResourceName
