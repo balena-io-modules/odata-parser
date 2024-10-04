@@ -151,11 +151,13 @@ export default function (test) {
 	});
 
 	test('$filter=Price gt 5 and Price lt 10', [5, 10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'and'", () =>
-			assert.equal(result.options.$filter[0], 'and'));
+		it("Filter should be an instance of 'and'", () => {
+			assert.equal(result.options.$filter[0], 'and');
+		});
 
 		it('Left hand side should be Price gt $0', function () {
 			const lhs = result.options.$filter[1];
@@ -173,11 +175,13 @@ export default function (test) {
 	});
 
 	test('$filter=Price eq 5 or Price eq 10', [5, 10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'or'", () =>
-			assert.equal(result.options.$filter[0], 'or'));
+		it("Filter should be an instance of 'or'", () => {
+			assert.equal(result.options.$filter[0], 'or');
+		});
 
 		it('Left hand side should be Price eq $0', function () {
 			const lhs = result.options.$filter[1];
@@ -195,30 +199,37 @@ export default function (test) {
 	});
 
 	test('$filter=Published', function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("value should be 'Published'", () =>
-			assert.equal(result.options.$filter.name, 'Published'));
+		it("value should be 'Published'", () => {
+			assert.equal(result.options.$filter.name, 'Published');
+		});
 	});
 
 	test('$filter=not Published', function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'not'", () =>
-			assert.equal(result.options.$filter[0], 'not'));
+		it("Filter should be an instance of 'not'", () => {
+			assert.equal(result.options.$filter[0], 'not');
+		});
 
-		it("value should be 'Published'", () =>
-			assert.equal(result.options.$filter[1].name, 'Published'));
+		it("value should be 'Published'", () => {
+			assert.equal(result.options.$filter[1].name, 'Published');
+		});
 	});
 
 	test('$filter=not (Price gt 5)', [5], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'not'", () =>
-			assert.equal(result.options.$filter[0], 'not'));
+		it("Filter should be an instance of 'not'", () => {
+			assert.equal(result.options.$filter[0], 'not');
+		});
 
 		it('Value should be Price gt $0', function () {
 			const rhs = result.options.$filter[1];
@@ -229,14 +240,17 @@ export default function (test) {
 	});
 
 	test('$filter=Price in (1, 2, 3)', [1, 2, 3], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'in'", () =>
-			assert.equal(result.options.$filter[0], 'in'));
+		it("Filter should be an instance of 'in'", () => {
+			assert.equal(result.options.$filter[0], 'in');
+		});
 
-		it('lhr should be Price', () =>
-			assert.equal(result.options.$filter[1].name, 'Price'));
+		it('lhr should be Price', () => {
+			assert.equal(result.options.$filter[1].name, 'Price');
+		});
 
 		it('rhr should be [ $1, $2, $3 ]', function () {
 			assert.equal(result.options.$filter[2][0].bind, 0);
@@ -246,14 +260,17 @@ export default function (test) {
 	});
 
 	test('$filter=Price in ((1), ((2)), (((3))))', [1, 2, 3], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'in'", () =>
-			assert.equal(result.options.$filter[0], 'in'));
+		it("Filter should be an instance of 'in'", () => {
+			assert.equal(result.options.$filter[0], 'in');
+		});
 
-		it('lhr should be Price', () =>
-			assert.equal(result.options.$filter[1].name, 'Price'));
+		it('lhr should be Price', () => {
+			assert.equal(result.options.$filter[1].name, 'Price');
+		});
 
 		it('rhr should be [ $1, $2, $3 ]', function () {
 			assert.equal(result.options.$filter[2][0].bind, 0);
@@ -263,14 +280,17 @@ export default function (test) {
 	});
 
 	test("$filter=Price in ('a', 'b', 'c')", ['a', 'b', 'c'], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'in'", () =>
-			assert.equal(result.options.$filter[0], 'in'));
+		it("Filter should be an instance of 'in'", () => {
+			assert.equal(result.options.$filter[0], 'in');
+		});
 
-		it('lhr should be Price', () =>
-			assert.equal(result.options.$filter[1].name, 'Price'));
+		it('lhr should be Price', () => {
+			assert.equal(result.options.$filter[1].name, 'Price');
+		});
 
 		it('rhr should be [ $1, $2, $3 ]', function () {
 			assert.equal(result.options.$filter[2][0].bind, 0);
@@ -280,11 +300,13 @@ export default function (test) {
 	});
 
 	test('$filter=Price add 5 gt 10', [5, 10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'gt'", () =>
-			assert.equal(result.options.$filter[0], 'gt'));
+		it("Filter should be an instance of 'gt'", () => {
+			assert.equal(result.options.$filter[0], 'gt');
+		});
 
 		it('lhr should be Price add $0', function () {
 			const rhs = result.options.$filter[1];
@@ -293,16 +315,19 @@ export default function (test) {
 			assert.equal(rhs[2].bind, 0);
 		});
 
-		it('rhr should be $1', () =>
-			assert.equal(result.options.$filter[2].bind, 1));
+		it('rhr should be $1', () => {
+			assert.equal(result.options.$filter[2].bind, 1);
+		});
 	});
 
 	test('$filter=Price sub 5 gt 10', [5, 10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'gt'", () =>
-			assert.equal(result.options.$filter[0], 'gt'));
+		it("Filter should be an instance of 'gt'", () => {
+			assert.equal(result.options.$filter[0], 'gt');
+		});
 
 		it('lhr should be Price sub $0', function () {
 			const rhs = result.options.$filter[1];
@@ -311,16 +336,19 @@ export default function (test) {
 			assert.equal(rhs[2].bind, 0);
 		});
 
-		it('rhr should be $1', () =>
-			assert.equal(result.options.$filter[2].bind, 1));
+		it('rhr should be $1', () => {
+			assert.equal(result.options.$filter[2].bind, 1);
+		});
 	});
 
 	test('$filter=Price mul 5 gt 10', [5, 10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'gt'", () =>
-			assert.equal(result.options.$filter[0], 'gt'));
+		it("Filter should be an instance of 'gt'", () => {
+			assert.equal(result.options.$filter[0], 'gt');
+		});
 
 		it('lhr should be Price add $0', function () {
 			const lhs = result.options.$filter[1];
@@ -329,16 +357,19 @@ export default function (test) {
 			assert.equal(lhs[2].bind, 0);
 		});
 
-		it('rhr should be $1', () =>
-			assert.equal(result.options.$filter[2].bind, 1));
+		it('rhr should be $1', () => {
+			assert.equal(result.options.$filter[2].bind, 1);
+		});
 	});
 
 	test('$filter=Price div Price mul 5 gt 10', [5, 10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'gt'", () =>
-			assert.equal(result.options.$filter[0], 'gt'));
+		it("Filter should be an instance of 'gt'", () => {
+			assert.equal(result.options.$filter[0], 'gt');
+		});
 
 		const lexpr = result?.options?.$filter?.[1];
 
@@ -353,16 +384,19 @@ export default function (test) {
 			assert.equal(lexpr[2][2].bind, 0);
 		});
 
-		it('rhr should be $1', () =>
-			assert.equal(result.options.$filter[2].bind, 1));
+		it('rhr should be $1', () => {
+			assert.equal(result.options.$filter[2].bind, 1);
+		});
 	});
 
 	test('$filter=(Price div Price) mul 5 gt 10', [5, 10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'gt'", () =>
-			assert.equal(result.options.$filter[0], 'gt'));
+		it("Filter should be an instance of 'gt'", () => {
+			assert.equal(result.options.$filter[0], 'gt');
+		});
 
 		const lexpr = result?.options?.$filter?.[1];
 
@@ -377,16 +411,19 @@ export default function (test) {
 			assert.equal(lexpr[1][2].name, 'Price');
 		});
 
-		it('rhr should be $1', () =>
-			assert.equal(result.options.$filter[2].bind, 1));
+		it('rhr should be $1', () => {
+			assert.equal(result.options.$filter[2].bind, 1);
+		});
 	});
 
 	test('$filter=Products/$count eq 10', [10], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'eq'", () =>
-			assert.equal(result.options.$filter[0], 'eq'));
+		it("Filter should be an instance of 'eq'", () => {
+			assert.equal(result.options.$filter[0], 'eq');
+		});
 
 		it('lhr should be Foo', function () {
 			expect(result.options.$filter[1])
@@ -397,19 +434,22 @@ export default function (test) {
 				.that.equals(true);
 		});
 
-		it('rhr should be $0', () =>
-			assert.equal(result.options.$filter[2].bind, 0));
+		it('rhr should be $0', () => {
+			assert.equal(result.options.$filter[2].bind, 0);
+		});
 	});
 
 	test(
 		'$filter=Products/$count($filter=Price lt 5) ge 1',
 		[5, 1],
 		function (result) {
-			it('A filter should be present', () =>
-				assert.notEqual(result.options.$filter, null));
+			it('A filter should be present', () => {
+				assert.notEqual(result.options.$filter, null);
+			});
 
-			it("Filter should be an instance of 'ge'", () =>
-				assert.equal(result.options.$filter[0], 'ge'));
+			it("Filter should be an instance of 'ge'", () => {
+				assert.equal(result.options.$filter[0], 'ge');
+			});
 
 			it('lhr should have the Product count', function () {
 				expect(result.options.$filter[1])
@@ -424,8 +464,9 @@ export default function (test) {
 				assert.notEqual(result.options.$filter[1].options, null);
 			});
 
-			it('A filter should be present on the Product count lhs', () =>
-				assert.notEqual(result.options.$filter[1].options.$filter, null));
+			it('A filter should be present on the Product count lhs', () => {
+				assert.notEqual(result.options.$filter[1].options.$filter, null);
+			});
 
 			it(`has a Product count filter that is an instance of 'lt'`, () => {
 				assert.equal(result.options.$filter[1].options.$filter[0], 'lt');
@@ -453,11 +494,13 @@ export default function (test) {
 		'$filter=Products/$count($filter=Price gt 5 and Price lt 10) ge 1',
 		[5, 10, 1],
 		function (result) {
-			it('A filter should be present', () =>
-				assert.notEqual(result.options.$filter, null));
+			it('A filter should be present', () => {
+				assert.notEqual(result.options.$filter, null);
+			});
 
-			it("Filter should be an instance of 'ge'", () =>
-				assert.equal(result.options.$filter[0], 'ge'));
+			it("Filter should be an instance of 'ge'", () => {
+				assert.equal(result.options.$filter[0], 'ge');
+			});
 
 			it('lhr should have the Product count', function () {
 				expect(result.options.$filter[1]).to.have.property('name', 'Products');
@@ -468,11 +511,13 @@ export default function (test) {
 				assert.notEqual(result.options.$filter[1].options, null);
 			});
 
-			it('A filter should be present on the Product count lhs', () =>
-				assert.notEqual(result.options.$filter[1].options.$filter, null));
+			it('A filter should be present on the Product count lhs', () => {
+				assert.notEqual(result.options.$filter[1].options.$filter, null);
+			});
 
-			it(`has a Product count filter that is an instance of 'and'`, () =>
-				assert.equal(result.options.$filter[1].options.$filter[0], 'and'));
+			it(`has a Product count filter that is an instance of 'and'`, () => {
+				assert.equal(result.options.$filter[1].options.$filter[0], 'and');
+			});
 
 			it(`has an lhs on the 'and' of the Product count filter that is Price gt $0`, () => {
 				const filter = result.options.$filter[1].options.$filter[1];
@@ -495,19 +540,22 @@ export default function (test) {
 	);
 
 	test("$filter=note eq 'foobar'", ['foobar'], function (result) {
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it("Filter should be an instance of 'eq'", () =>
-			assert.equal(result.options.$filter[0], 'eq'));
+		it("Filter should be an instance of 'eq'", () => {
+			assert.equal(result.options.$filter[0], 'eq');
+		});
 
 		it('lhr should be Foo', () =>
 			expect(result.options.$filter[1])
 				.to.have.property('name')
 				.that.equals('note'));
 
-		it('rhr should be $0', () =>
-			assert.equal(result.options.$filter[2].bind, 0));
+		it('rhr should be $0', () => {
+			assert.equal(result.options.$filter[2].bind, 0);
+		});
 	});
 
 	const methodTest = (args, binds, argsTest) => (methodName, expectFailure) =>
@@ -516,28 +564,33 @@ export default function (test) {
 			binds.concat('cake'),
 			function (result, err) {
 				if (expectFailure) {
-					it("Should fail because it's invalid", () =>
-						assert.notEqual(err, null));
+					it("Should fail because it's invalid", () => {
+						assert.notEqual(err, null);
+					});
 				} else if (err) {
 					throw err;
 				}
 
-				it('A filter should be present', () =>
-					assert.notEqual(result.options.$filter, null));
+				it('A filter should be present', () => {
+					assert.notEqual(result.options.$filter, null);
+				});
 
-				it("Filter should be an instance of 'eq'", () =>
-					assert.equal(result.options.$filter[0], 'eq'));
+				it("Filter should be an instance of 'eq'", () => {
+					assert.equal(result.options.$filter[0], 'eq');
+				});
 
-				it('lhs should be a call', () =>
-					assert.equal(result.options.$filter[1][0], 'call'));
+				it('lhs should be a call', () => {
+					assert.equal(result.options.$filter[1][0], 'call');
+				});
 
 				it(`lhs should be ${methodName} with correct args`, function () {
 					assert.equal(result.options.$filter[1][1].method, methodName);
 					argsTest(result.options.$filter[1][1].args);
 				});
 
-				it('rhs should be bound to the last arg', () =>
-					assert.equal(result.options.$filter[2].bind, binds.length));
+				it('rhs should be bound to the last arg', () => {
+					assert.equal(result.options.$filter[2].bind, binds.length);
+				});
 			},
 		);
 
@@ -563,12 +616,14 @@ export default function (test) {
 	const methodTestWithOneArg = methodTest(
 		"'alfred'",
 		['alfred'],
-		(argsResult) => assert.equal(argsResult[0].bind, 0),
+		(argsResult) => {
+			assert.equal(argsResult[0].bind, 0);
+		},
 	);
 
-	const methodTestWithZeroArg = methodTest('', [], (argsResult) =>
-		assert.equal(argsResult.length, 0),
-	);
+	const methodTestWithZeroArg = methodTest('', [], (argsResult) => {
+		assert.equal(argsResult.length, 0);
+	});
 
 	methodTestWithTwoArgs('contains');
 	methodTestWithTwoArgs('endswith');
@@ -615,13 +670,17 @@ export default function (test) {
 
 	const lambdaTest = function (methodName) {
 		const lambdaAsserts = function (lambda, alias = 'd') {
-			it('where it is a lambda', () => assert.notEqual(lambda, null));
+			it('where it is a lambda', () => {
+				assert.notEqual(lambda, null);
+			});
 
-			it(`of type '${methodName}'`, () =>
-				assert.equal(lambda.method, methodName));
+			it(`of type '${methodName}'`, () => {
+				assert.equal(lambda.method, methodName);
+			});
 
-			it(`with the element identified by '${alias}'`, () =>
-				assert.equal(lambda.identifier, alias));
+			it(`with the element identified by '${alias}'`, () => {
+				assert.equal(lambda.identifier, alias);
+			});
 
 			it('and an expression that is d/name', function () {
 				assert.equal(lambda.expression[1].name, alias);
@@ -629,9 +688,13 @@ export default function (test) {
 				assert.equal(lambda.expression[1].property.property, null);
 			});
 
-			it("'eq'", () => assert.equal(lambda.expression[0], 'eq'));
+			it("'eq'", () => {
+				assert.equal(lambda.expression[0], 'eq');
+			});
 
-			it('$0', () => assert.equal(lambda.expression[2].bind, 0));
+			it('$0', () => {
+				assert.equal(lambda.expression[2].bind, 0);
+			});
 		};
 
 		test(
@@ -642,11 +705,13 @@ export default function (test) {
 					throw err;
 				}
 
-				it('A filter should be present', () =>
-					assert.notEqual(result.options.$filter, null));
+				it('A filter should be present', () => {
+					assert.notEqual(result.options.$filter, null);
+				});
 
-				it('Filter should be on the child resource', () =>
-					assert.equal(result.options.$filter.name, 'child'));
+				it('Filter should be on the child resource', () => {
+					assert.equal(result.options.$filter.name, 'child');
+				});
 
 				lambdaAsserts(result?.options?.$filter?.lambda);
 			},
@@ -660,11 +725,13 @@ export default function (test) {
 					throw err;
 				}
 
-				it('A filter should be present', () =>
-					assert.notEqual(result.options.$filter, null));
+				it('A filter should be present', () => {
+					assert.notEqual(result.options.$filter, null);
+				});
 
-				it('Filter should be on the child resource', () =>
-					assert.equal(result.options.$filter.name, 'child'));
+				it('Filter should be on the child resource', () => {
+					assert.equal(result.options.$filter.name, 'child');
+				});
 
 				lambdaAsserts(result?.options?.$filter?.lambda, 'long_name');
 			},
@@ -678,8 +745,9 @@ export default function (test) {
 					throw err;
 				}
 
-				it('A filter should be present', () =>
-					assert.notEqual(result.options.$filter, null));
+				it('A filter should be present', () => {
+					assert.notEqual(result.options.$filter, null);
+				});
 
 				it('Filter should be on the child/grandchild resource', function () {
 					assert.equal(result.options.$filter.name, 'child');
@@ -700,11 +768,13 @@ export default function (test) {
 			throw err;
 		}
 
-		it('A filter should be present', () =>
-			assert.notEqual(result.options.$filter, null));
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
 
-		it('Filter should be on the child resource', () =>
-			assert.equal(result.options.$filter.name, 'child'));
+		it('Filter should be on the child resource', () => {
+			assert.equal(result.options.$filter.name, 'child');
+		});
 
 		it('Filter should show the canAccess method', function () {
 			expect(result.options.$filter).to.have.property('method');

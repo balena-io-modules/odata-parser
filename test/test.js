@@ -38,7 +38,7 @@ const raw = function (describe, input, ...optArgs) {
 
 const runExpectation = function (...args) {
 	args[1] = '/resource?' + args[1];
-	return raw(...args);
+	raw(...args);
 };
 
 const test = runExpectation.bind(null, describe);
