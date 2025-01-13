@@ -239,65 +239,98 @@ export default function (test) {
 		});
 	});
 
-	test('$filter=Price in (1, 2, 3)', [1, 2, 3], function (result) {
-		it('A filter should be present', () => {
-			assert.notEqual(result.options.$filter, null);
-		});
+	test(
+		'$filter=Price in (1, 2, 3)',
+		[
+			[
+				'List',
+				[
+					['Real', 1],
+					['Real', 2],
+					['Real', 3],
+				],
+			],
+		],
+		function (result) {
+			it('A filter should be present', () => {
+				assert.notEqual(result.options.$filter, null);
+			});
 
-		it("Filter should be an instance of 'in'", () => {
-			assert.equal(result.options.$filter[0], 'in');
-		});
+			it("Filter should be an instance of 'in'", () => {
+				assert.equal(result.options.$filter[0], 'in');
+			});
 
-		it('lhr should be Price', () => {
-			assert.equal(result.options.$filter[1].name, 'Price');
-		});
+			it('lhr should be Price', () => {
+				assert.equal(result.options.$filter[1].name, 'Price');
+			});
 
-		it('rhr should be [ $1, $2, $3 ]', function () {
-			assert.equal(result.options.$filter[2][0].bind, 0);
-			assert.equal(result.options.$filter[2][1].bind, 1);
-			assert.equal(result.options.$filter[2][2].bind, 2);
-		});
-	});
+			it('rhr should be [ $1 ]', function () {
+				assert.equal(result.options.$filter[2].bind, 0);
+			});
+		},
+	);
 
-	test('$filter=Price in ((1), ((2)), (((3))))', [1, 2, 3], function (result) {
-		it('A filter should be present', () => {
-			assert.notEqual(result.options.$filter, null);
-		});
+	test(
+		'$filter=Price in ((1), ((2)), (((3))))',
+		[
+			[
+				'List',
+				[
+					['Real', 1],
+					['Real', 2],
+					['Real', 3],
+				],
+			],
+		],
+		function (result) {
+			it('A filter should be present', () => {
+				assert.notEqual(result.options.$filter, null);
+			});
 
-		it("Filter should be an instance of 'in'", () => {
-			assert.equal(result.options.$filter[0], 'in');
-		});
+			it("Filter should be an instance of 'in'", () => {
+				assert.equal(result.options.$filter[0], 'in');
+			});
 
-		it('lhr should be Price', () => {
-			assert.equal(result.options.$filter[1].name, 'Price');
-		});
+			it('lhr should be Price', () => {
+				assert.equal(result.options.$filter[1].name, 'Price');
+			});
 
-		it('rhr should be [ $1, $2, $3 ]', function () {
-			assert.equal(result.options.$filter[2][0].bind, 0);
-			assert.equal(result.options.$filter[2][1].bind, 1);
-			assert.equal(result.options.$filter[2][2].bind, 2);
-		});
-	});
+			it('rhr should be [ $1 ]', function () {
+				assert.equal(result.options.$filter[2].bind, 0);
+			});
+		},
+	);
 
-	test("$filter=Price in ('a', 'b', 'c')", ['a', 'b', 'c'], function (result) {
-		it('A filter should be present', () => {
-			assert.notEqual(result.options.$filter, null);
-		});
+	test(
+		"$filter=Price in ('a', 'b', 'c')",
+		[
+			[
+				'List',
+				[
+					['Text', 'a'],
+					['Text', 'b'],
+					['Text', 'c'],
+				],
+			],
+		],
+		function (result) {
+			it('A filter should be present', () => {
+				assert.notEqual(result.options.$filter, null);
+			});
 
-		it("Filter should be an instance of 'in'", () => {
-			assert.equal(result.options.$filter[0], 'in');
-		});
+			it("Filter should be an instance of 'in'", () => {
+				assert.equal(result.options.$filter[0], 'in');
+			});
 
-		it('lhr should be Price', () => {
-			assert.equal(result.options.$filter[1].name, 'Price');
-		});
+			it('lhr should be Price', () => {
+				assert.equal(result.options.$filter[1].name, 'Price');
+			});
 
-		it('rhr should be [ $1, $2, $3 ]', function () {
-			assert.equal(result.options.$filter[2][0].bind, 0);
-			assert.equal(result.options.$filter[2][1].bind, 1);
-			assert.equal(result.options.$filter[2][2].bind, 2);
-		});
-	});
+			it('rhr should be [ $1 ]', function () {
+				assert.equal(result.options.$filter[2].bind, 0);
+			});
+		},
+	);
 
 	test('$filter=Price add 5 gt 10', [5, 10], function (result) {
 		it('A filter should be present', () => {

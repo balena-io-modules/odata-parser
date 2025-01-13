@@ -343,8 +343,14 @@ FilterNegateExpression =
 
 GroupedPrimitive =
 	'(' spaces
-		@Primitive|1..,',' spaces|
-	')'
+		bindings:(@Primitive|1..,',' spaces|)
+	spaces ')'
+	{
+		const indices = bindings.map(binding => binding.bind);
+		const bindValues = indices.map(index => binds[index]);
+		binds.splice(indices[0], indices.length);
+		return Bind('List', bindValues);
+	}
 
 FilterMethodCallExpression =
 	methodName:(
