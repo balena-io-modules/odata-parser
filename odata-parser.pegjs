@@ -280,9 +280,9 @@ FilterByExpressionLoop =
 					lhs[0] = [ op, lhs[0], rhs ];
 				}
 			}
-		/	boundary op:'in' boundary
+		/	boundary 'in' boundary
 			rhs:GroupedPrimitive
-			{lhs[0] = [ op, lhs[0], rhs ]}
+			{lhs[0] = [ 'eqany', lhs[0], rhs ]}
 		)*
 		{ return lhs[0] }
 	/	&{return minPrecedence > 0}
@@ -343,8 +343,15 @@ FilterNegateExpression =
 
 GroupedPrimitive =
 	'(' spaces
-		@Primitive|1..,',' spaces|
+		bindings:(@Primitive|1..,',' spaces|)
+		spaces 
 	')'
+	{
+		const indices = bindings.map((binding) => binding.bind);
+		const bindValues = indices.map((index) => binds[index]);
+		binds.splice(indices[0], indices.length);
+		return Bind('List', bindValues);
+	}
 
 FilterMethodCallExpression =
 	methodName:(
