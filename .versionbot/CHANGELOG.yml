@@ -1,4 +1,15 @@
 - commits:
+    - subject: "feat: compile odata `in` to a abstract sql `eq any $listBind`"
+      hash: e0c9da393753d8bb056f7a822a6a821af1274e35
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Otavio Jacobi
+  version: 4.0.0
+  title: ""
+  date: 2025-01-29T15:24:40.161Z
+- commits:
     - subject: Update dependencies
       hash: e671fc822a9db4c4aa43fc5b3d46d7c9b2558700
       body: ""
