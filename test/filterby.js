@@ -332,6 +332,46 @@ export default function (test) {
 		},
 	);
 
+	test(
+		'$filter=Price in (1, 2, null, 3, null)',
+		[['List', [['Real', 1], ['Real', 2], ['Null'], ['Real', 3], ['Null']]]],
+		function (result) {
+			it('A filter should be present', () => {
+				assert.notEqual(result.options.$filter, null);
+			});
+
+			it("Filter should be an instance of 'eqany'", () => {
+				assert.equal(result.options.$filter[0], 'eqany');
+			});
+
+			it('lhr should be Price', () => {
+				assert.equal(result.options.$filter[1].name, 'Price');
+			});
+
+			it('rhr should be [ $1 ]', function () {
+				assert.equal(result.options.$filter[2].bind, 0);
+			});
+		},
+	);
+
+	test('$filter=Price in (null)', [['List', [['Null']]]], function (result) {
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
+
+		it("Filter should be an instance of 'eqany'", () => {
+			assert.equal(result.options.$filter[0], 'eqany');
+		});
+
+		it('lhr should be Price', () => {
+			assert.equal(result.options.$filter[1].name, 'Price');
+		});
+
+		it('rhr should be [ $1 ]', function () {
+			assert.equal(result.options.$filter[2].bind, 0);
+		});
+	});
+
 	test('$filter=Price add 5 gt 10', [5, 10], function (result) {
 		it('A filter should be present', () => {
 			assert.notEqual(result.options.$filter, null);

@@ -347,9 +347,21 @@ GroupedPrimitive =
 		spaces 
 	')'
 	{
-		const indices = bindings.map((binding) => binding.bind);
-		const bindValues = indices.map((index) => binds[index]);
-		binds.splice(indices[0], indices.length);
+		const bindValues = [];
+		let firstNonNullIndex = null;
+		let totalBoundIndexes = 0;
+		for (const binding of bindings) {
+			if (binding?.bind != null) {
+				firstNonNullIndex ??= binding.bind;
+				totalBoundIndexes++;
+				bindValues.push(binds[binding.bind]);
+			} else {
+				bindValues.push(['Null']);
+			}
+		}
+		if (firstNonNullIndex != null) {
+			binds.splice(firstNonNullIndex, totalBoundIndexes);
+		}
 		return Bind('List', bindValues);
 	}
 
