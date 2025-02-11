@@ -1,4 +1,15 @@
 - commits:
+    - subject: Allow ['Null'] inside a bound list
+      hash: ce0338116f41852351d253539f3630e085d095e0
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otavio Jacobi
+  version: 4.1.0
+  title: ""
+  date: 2025-02-11T13:47:36.947Z
+- commits:
     - subject: "feat: compile odata `in` to a abstract sql `eq any $listBind`"
       hash: e0c9da393753d8bb056f7a822a6a821af1274e35
       body: ""
