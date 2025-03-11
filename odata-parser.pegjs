@@ -443,24 +443,38 @@ PropertyPath =
 		name:ResourceName
 		{ return { name } }
 	)
-	(
+	( // singleNavigationExpr
 		'/'
 		property:PropertyPath
 		{ result.property = property }
-	)?
-	(
-		'/$count'
-		optionsObj:(
-			'('
-			@(	Dollar
-				option:FilterByOption
-				{ return CollapseObjectArray([option]) }
+	/	( // collectionNavigationExpr
+			( // collectionPathExpr
+				'/$count'
+				optionsObj:(
+					'('
+					@(	Dollar
+						option:FilterByOption
+						{ return CollapseObjectArray([option]) }
+					)
+					')'
+				)?
+				{ result.count = true; result.options = optionsObj }
 			)
-			')'
-		)?
-		{ result.count = true; result.options = optionsObj }
+		/	( // keyPredicate [ singleNavigationExpr ]
+				(
+					key:Key
+					{ result.key = key }
+				)
+				( // singleNavigationExpr
+					'/'
+					property:PropertyPath
+					{ result.property = property }
+				)?
+			)
+		)
 	)?
 	{ return result }
+
 ExpandPropertyPathList =
 	ExpandPropertyPath|1..,','|
 ExpandPropertyPath =
