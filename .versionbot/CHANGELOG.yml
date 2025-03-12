@@ -1,4 +1,17 @@
 - commits:
+    - subject: Support ordering by a Collection Navigation property using a Key notation
+      hash: 460e4f3775068621b914c3c4a12cac34aba5e0e0
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        See: https://balena.fibery.io/Work/Project/Shape--Build-Add-support-for-sorting-on-user-selected-tag-columns-in-the-server-side-paginated-devic-912
+        see: https://balena.fibery.io/Work/Project/Shape--Build-Add-support-for-sorting-on-user-selected-tag-columns-in-the-server-side-paginated-devic-912
+      author: Thodoris Greasidis
+  version: 4.2.0
+  title: ""
+  date: 2025-03-12T23:08:54.233Z
+- commits:
     - subject: Allow ['Null'] inside a bound list
       hash: ce0338116f41852351d253539f3630e085d095e0
       body: ""
