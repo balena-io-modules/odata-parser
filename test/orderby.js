@@ -134,5 +134,133 @@ export default (test) => {
 		nestedFilterTest.only = testFilterOption.bind(null, test.only);
 
 		filterby(nestedFilterTest);
+
+		test('$orderby=Products(1) asc', [1], function (result) {
+			it('sort options are present on the result', () => {
+				assert.notEqual(result.options.$orderby, null);
+			});
+			it('sort options have a single property specified', () => {
+				assert.equal(result.options.$orderby.properties.length, 1);
+			});
+			it('sort options property should be as expected', () => {
+				assert.deepStrictEqual(result.options.$orderby.properties, [
+					{
+						name: 'Products',
+						key: { bind: 0 },
+						order: 'asc',
+					},
+				]);
+			});
+		});
+
+		test('$orderby=Products(1)/Quantity asc', [1], function (result) {
+			it('sort options are present on the result', () => {
+				assert.notEqual(result.options.$orderby, null);
+			});
+			it('sort options have a single property specified', () => {
+				assert.equal(result.options.$orderby.properties.length, 1);
+			});
+			it('sort options property should be as expected', () => {
+				assert.deepStrictEqual(result.options.$orderby.properties, [
+					{
+						name: 'Products',
+						key: { bind: 0 },
+						property: { name: 'Quantity' },
+						order: 'asc',
+					},
+				]);
+			});
+		});
+
+		test(
+			`$orderby=Products(partialkey='a')/Quantity asc`,
+			['a'],
+			function (result) {
+				it('sort options are present on the result', () => {
+					assert.notEqual(result.options.$orderby, null);
+				});
+				it('sort options have a single property specified', () => {
+					assert.equal(result.options.$orderby.properties.length, 1);
+				});
+				it('sort options property should be as expected', () => {
+					assert.deepStrictEqual(result.options.$orderby.properties, [
+						{
+							name: 'Products',
+							key: {
+								partialkey: { bind: 0 },
+							},
+							property: { name: 'Quantity' },
+							order: 'asc',
+						},
+					]);
+				});
+			},
+		);
+
+		test('$orderby=Products(a=1,b=2)/Quantity asc', [1, 2], function (result) {
+			it('sort options are present on the result', () => {
+				assert.notEqual(result.options.$orderby, null);
+			});
+			it('sort options have a single property specified', () => {
+				assert.equal(result.options.$orderby.properties.length, 1);
+			});
+			it('sort options property should be as expected', () => {
+				assert.deepStrictEqual(result.options.$orderby.properties, [
+					{
+						name: 'Products',
+						key: {
+							a: { bind: 0 },
+							b: { bind: 1 },
+						},
+						property: { name: 'Quantity' },
+						order: 'asc',
+					},
+				]);
+			});
+		});
+
+		test(`$orderby=Products(1)/Orders/$count asc`, [1], function (result) {
+			it('sort options are present on the result', () => {
+				assert.notEqual(result.options.$orderby, null);
+			});
+			it('sort options have a single property specified', () => {
+				assert.equal(result.options.$orderby.properties.length, 1);
+			});
+			it('sort options property should be as expected', () => {
+				assert.deepStrictEqual(result.options.$orderby.properties, [
+					{
+						name: 'Products',
+						key: { bind: 0 },
+						property: { name: 'Orders', count: true, options: null },
+						order: 'asc',
+					},
+				]);
+			});
+		});
+
+		test(
+			`$orderby=Products(partialkey='a')/Orders/$count asc`,
+			['a'],
+			function (result) {
+				it('sort options are present on the result', () => {
+					assert.notEqual(result.options.$orderby, null);
+				});
+				it('sort options have a single property specified', () => {
+					assert.equal(result.options.$orderby.properties.length, 1);
+				});
+				it('sort options property should be as expected', () => {
+					assert.deepStrictEqual(result.options.$orderby.properties, [
+						{
+							name: 'Products',
+							key: {
+								partialkey: { bind: 0 },
+							},
+							property: { name: 'Orders', count: true, options: null },
+							order: 'asc',
+						},
+					]);
+				});
+			},
+		);
 	});
 };
