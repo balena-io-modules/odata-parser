@@ -27,9 +27,16 @@ interface GenericPropertyPath<T = any> {
 	name: string;
 	property?: T;
 }
-export type PropertyPath = GenericPropertyPath<PropertyPath>;
-export interface OrderByPropertyPath
-	extends GenericPropertyPath<OrderByPropertyPath> {
+export type PropertyPath = GenericPropertyPath<PropertyPath> & {
+	key?:
+		| BindReference
+		| {
+				[resourceName: string]: BindReference;
+		  };
+	count?: true;
+	options?: { $filter: FilterOption };
+};
+export interface OrderByPropertyPath extends GenericPropertyPath<PropertyPath> {
 	order: 'asc' | 'desc';
 }
 export interface ExpandPropertyPath
@@ -47,6 +54,7 @@ export interface ExpandOption {
 export interface OrderByOption {
 	properties: OrderByPropertyPath[];
 }
+export type MethodCall = ['call', { method: string; args: any[] }];
 export type FormatOption =
 	| string
 	| {
