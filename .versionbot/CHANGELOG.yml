@@ -1,4 +1,24 @@
 - commits:
+    - subject: Add the missing MethodCall type
+      hash: 78efcd852c6ff653da7eb17c9d15cdfaf18f177e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+    - subject: Add the missing properties in the PropertyPath typings
+      hash: dde814052753c19020bdf069050cb96c03229f24
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-io-modules/odata-parser/pull/96
+        see: https://github.com/balena-io-modules/odata-parser/pull/96
+      author: Thodoris Greasidis
+  version: 4.2.1
+  title: ""
+  date: 2025-03-18T11:16:09.003Z
+- commits:
     - subject: Support ordering by a Collection Navigation property using a Key notation
       hash: 460e4f3775068621b914c3c4a12cac34aba5e0e0
       body: ""
