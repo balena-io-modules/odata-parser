@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency mocha to v11
+      hash: 118d83467fc89b977ad89f7b9444897739399693
+      body: |
+        Update mocha from 10.8.2 to 11.1.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+  version: 4.2.2
+  title: ""
+  date: 2025-03-25T16:34:08.496Z
+- commits:
     - subject: Add the missing MethodCall type
       hash: 78efcd852c6ff653da7eb17c9d15cdfaf18f177e
       body: ""
