@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import { expect } from 'chai';
 import filterby from './filterby';
 
 export default (test) => {
@@ -102,6 +103,20 @@ export default (test) => {
 			});
 			it('has count defined', () => {
 				assert.equal(result.options.$orderby.properties[0].count, true);
+			});
+			it('has no count options defined', () => {
+				expect(result.options.$orderby.properties[0]).to.not.have.property(
+					'options',
+				);
+			});
+			it('sort options property should be as expected', () => {
+				assert.deepStrictEqual(result.options.$orderby.properties, [
+					{
+						name: 'PropertyOne',
+						count: true,
+						order: 'desc',
+					},
+				]);
 			});
 		});
 
@@ -231,7 +246,7 @@ export default (test) => {
 					{
 						name: 'Products',
 						key: { bind: 0 },
-						property: { name: 'Orders', count: true, options: null },
+						property: { name: 'Orders', count: true },
 						order: 'asc',
 					},
 				]);
@@ -255,7 +270,7 @@ export default (test) => {
 							key: {
 								partialkey: { bind: 0 },
 							},
-							property: { name: 'Orders', count: true, options: null },
+							property: { name: 'Orders', count: true },
 							order: 'asc',
 						},
 					]);

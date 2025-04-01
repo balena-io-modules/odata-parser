@@ -450,15 +450,15 @@ PropertyPath =
 	/	( // collectionNavigationExpr
 			( // collectionPathExpr
 				'/$count'
-				optionsObj:(
+				(
 					'('
-					@(	Dollar
+					(	Dollar
 						option:FilterByOption
-						{ return CollapseObjectArray([option]) }
+						{ result.options = CollapseObjectArray([option]) }
 					)
 					')'
 				)?
-				{ result.count = true; result.options = optionsObj }
+				{ result.count = true }
 			)
 		/	( // keyPredicate [ singleNavigationExpr ]
 				(
