@@ -1,4 +1,15 @@
 - commits:
+    - subject: Avoid setting $count `options` for $orderby when not provided
+      hash: 4e1f9750aed95dba4731d1fe9e7a46a000ea4ab6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Thodoris Greasidis
+  version: 4.2.3
+  title: ""
+  date: 2025-04-01T08:42:18.322Z
+- commits:
     - subject: Update dependency mocha to v11
       hash: 118d83467fc89b977ad89f7b9444897739399693
       body: |
