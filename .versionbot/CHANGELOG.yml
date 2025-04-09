@@ -1,4 +1,22 @@
 - commits:
+    - subject: "Tests: convert to typescript"
+      hash: 0f71c04f5812b10f4a9e09bdf280217c64caa0ee
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Improve typings
+      hash: 3a782a7b87c1f83bb279c509b62dfb6f796e5fe7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.5
+  title: ""
+  date: 2025-04-09T12:12:31.048Z
+- commits:
     - subject: 'Build: switch tsconfig to use module "Node16" with type "commonjs"'
       hash: 2a6499f3c5d259680f9a0f84379c8aed57636a62
       body: ""
