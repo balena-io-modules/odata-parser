@@ -1,6 +1,6 @@
 import resourceTest from './test';
 const { raw: test } = resourceTest;
-import * as assert from 'assert';
+import assert from 'assert';
 import { expect } from 'chai';
 import { SyntaxError } from '../odata-parser';
 

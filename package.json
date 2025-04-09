@@ -2,6 +2,7 @@
   "name": "@balena/odata-parser",
   "version": "4.2.3",
   "description": "An OData parser written in OMeta",
+  "type": "commonjs",
   "main": "odata-parser.js",
   "scripts": {
     "lint": "balena-lint -e ts -e js --typescript odata-parser.d.ts test && tsc --noEmit --project tsconfig.js.json",
