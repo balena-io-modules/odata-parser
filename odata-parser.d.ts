@@ -105,35 +105,35 @@ export interface ODataBinds extends Array<[type: string, value: any]> {
 export class SyntaxError extends Error {}
 export function parse(
 	url: string,
-	opts?: { startRule: 'ProcessRule'; rule: 'OData' },
+	opts?: { startRule: 'ProcessRule'; rule: 'OData' } | { startRule: 'Process' },
 ): {
 	tree: ODataQuery;
 	binds: ODataBinds;
 };
 export function parse(
 	url: string,
-	opts?: { startRule: 'ProcessRule'; rule: 'KeyBind' },
+	opts: { startRule: 'ProcessRule'; rule: 'KeyBind' },
 ): {
 	tree: BindReference;
 	binds: ODataBinds;
 };
 export function parse(
 	url: string,
-	opts?: { startRule: 'ProcessRule'; rule: 'FilterByExpression' },
+	opts: { startRule: 'ProcessRule'; rule: 'FilterByExpression' },
 ): {
 	tree: FilterOption;
 	binds: ODataBinds;
 };
 export function parse(
 	url: string,
-	opts?: { startRule: 'ProcessRule'; rule: 'QueryOptions' },
+	opts: { startRule: 'ProcessRule'; rule: 'QueryOptions' },
 ): {
 	tree: ODataOptions;
 	binds: ODataBinds;
 };
 export function parse(
 	url: string,
-	opts?: { startRule: 'ProcessRule'; rule: string },
+	opts?: { startRule: 'ProcessRule'; rule: string } | { startRule: 'Process' },
 ): {
 	tree: any;
 	binds: ODataBinds;
