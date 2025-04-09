@@ -1,8 +1,9 @@
 import * as assert from 'assert';
 import { expect } from 'chai';
 import filterby from './filterby';
+import type { TestFn } from './test';
 
-export default (test) => {
+export default (test: TestFn) => {
 	describe('$orderby', function () {
 		test('$orderby=Property', function (result) {
 			it('sort options are present on the result', () => {
@@ -120,11 +121,15 @@ export default (test) => {
 			});
 		});
 
-		const testFilterOption = function (nestedTest, input, ...optArgs) {
+		const testFilterOption = function (
+			nestedTest: TestFn,
+			input: string,
+			...optArgs: any[]
+		) {
 			const expectation = optArgs.pop();
 			nestedTest(
 				`$orderby=PropertyOne/$count(${input})`,
-				...optArgs,
+				...(optArgs as []),
 				function (result) {
 					it('sort options are present on the result', () => {
 						assert.notEqual(result.options.$orderby, null);

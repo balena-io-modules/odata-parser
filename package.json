@@ -5,12 +5,12 @@
   "type": "commonjs",
   "main": "odata-parser.js",
   "scripts": {
-    "lint": "balena-lint -e ts -e js --typescript odata-parser.d.ts test && tsc --noEmit --project tsconfig.js.json",
-    "pretest": "npm run prepare && npx tsc --noEmit odata-parser.d.ts",
+    "lint": "balena-lint odata-parser.d.ts test && tsc --noEmit",
+    "pretest": "npm run prepare",
     "test": "mocha",
     "posttest": "npm run lint",
     "prepare": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module && peggy --source-map --extra-options-file odata-parser.config.json --output odata-parser.js odata-parser.pegjs",
-    "lint-fix": "balena-lint -e ts -e js --typescript --fix odata-parser.d.ts test"
+    "lint-fix": "balena-lint --fix odata-parser.d.ts test"
   },
   "repository": "https://github.com/balena-io-modules/odata-parser.git",
   "author": "",
@@ -33,7 +33,7 @@
     "reporter": "spec",
     "recursive": true,
     "require": "ts-node/register/transpile-only",
-    "_": "test/run.js"
+    "_": "test/run.ts"
   },
   "engines": {
     "node": ">=16.13.0",

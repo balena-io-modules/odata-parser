@@ -1,14 +1,15 @@
+import type { ExpectationFn } from './test';
 import resourceTest from './test';
 const { raw: test } = resourceTest;
 import assert from 'assert';
 import { expect } from 'chai';
 import { SyntaxError } from '../odata-parser';
 
-const checkResource = (result, expected) => {
+const checkResource = (result: unknown, expected: string) => {
 	expect(result).to.have.property('resource').that.equals(expected);
 };
 
-const checkKeyBind = (result) =>
+const checkKeyBind: ExpectationFn = (result) =>
 	it('should have the key specified for the source', () => {
 		expect(result)
 			.to.have.property('key')
@@ -16,7 +17,7 @@ const checkKeyBind = (result) =>
 			.that.equals(0);
 	});
 
-const checkNamedKeyBind = (result) =>
+const checkNamedKeyBind: ExpectationFn = (result) =>
 	it('should have the key specified for the source', () => {
 		expect(result)
 			.to.have.property('key')
@@ -25,7 +26,7 @@ const checkNamedKeyBind = (result) =>
 			.that.equals(0);
 	});
 
-const checkKeyParam = (result, paramAlias) =>
+const checkKeyParam = (result: unknown, paramAlias: string) =>
 	it('should have the key specified for the source', () => {
 		expect(result)
 			.to.have.property('key')
@@ -33,7 +34,7 @@ const checkKeyParam = (result, paramAlias) =>
 			.that.equals(paramAlias);
 	});
 
-const checkNamedKeyParam = (result, paramAlias) =>
+const checkNamedKeyParam = (result: unknown, paramAlias: string) =>
 	it('should have the key specified for the source', () => {
 		expect(result)
 			.to.have.property('key')
@@ -261,7 +262,7 @@ describe('Resource Parsing', function () {
 		});
 	});
 
-	const filterIdCallback = function (result) {
+	const filterIdCallback: ExpectationFn = function (result) {
 		it('should have the resource specified', () => {
 			checkResource(result, 'model');
 		});

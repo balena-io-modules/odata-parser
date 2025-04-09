@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import { expect } from 'chai';
+import type { TestFn } from './test';
 import $test from './test';
 import filterby from './filterby';
 import format from './format';
@@ -9,7 +10,7 @@ import select from './select';
 import count from './count';
 
 // We default to testing 1 level of expand options, this can be increased to test multiple levels
-const testExpands = function (test, nested = 1) {
+const testExpands = function (test: TestFn, nested = 1) {
 	describe('$expand', function () {
 		test('$expand=Products/Suppliers', function (result) {
 			it('has an $expand value', () => {
@@ -76,27 +77,42 @@ const testExpands = function (test, nested = 1) {
 		});
 
 		if (nested > 0) {
-			const testExpandOption = function (nestedTest, input, ...optArgs) {
+			const testExpandOption = function (
+				nestedTest: TestFn,
+				input: string,
+				...optArgs: any[]
+			) {
 				const expectation = optArgs.pop();
-				nestedTest(`$expand=Products(${input})`, ...optArgs, function (result) {
-					it('has an options property', () => {
-						assert.notEqual(result.options, null);
-					});
-					it('has an $expand value', () => {
-						assert.notEqual(result.options.$expand, null);
-					});
-					it('has a resource of Products', () => {
-						assert.equal(result.options.$expand.properties[0].name, 'Products');
-					});
-					expectation(result.options?.$expand?.properties?.[0]);
-				});
+				nestedTest(
+					`$expand=Products(${input})`,
+					...(optArgs as []),
+					function (result) {
+						it('has an options property', () => {
+							assert.notEqual(result.options, null);
+						});
+						it('has an $expand value', () => {
+							assert.notEqual(result.options.$expand, null);
+						});
+						it('has a resource of Products', () => {
+							assert.equal(
+								result.options.$expand.properties[0].name,
+								'Products',
+							);
+						});
+						expectation(result.options?.$expand?.properties?.[0]);
+					},
+				);
 			};
 
-			const testExpandOptionCount = function (nestedTest, input, ...optArgs) {
+			const testExpandOptionCount = function (
+				nestedTest: TestFn,
+				input: string,
+				...optArgs: any[]
+			) {
 				const expectation = optArgs.pop();
 				nestedTest(
 					`$expand=Products/$count(${input})`,
-					...optArgs,
+					...(optArgs as []),
 					function (result) {
 						it('has an options property', () => {
 							assert.notEqual(result.options, null);
