@@ -1,5 +1,5 @@
 import test from './test';
-import * as assert from 'assert';
+import assert from 'assert';
 import { SyntaxError } from '../odata-parser';
 
 describe('Encoding', function () {
