@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'Build: switch tsconfig to use module "Node16" with type "commonjs"'
+      hash: 2a6499f3c5d259680f9a0f84379c8aed57636a62
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.4
+  title: ""
+  date: 2025-04-09T09:30:46.885Z
+- commits:
     - subject: Avoid setting $count `options` for $orderby when not provided
       hash: 4e1f9750aed95dba4731d1fe9e7a46a000ea4ab6
       body: ""
