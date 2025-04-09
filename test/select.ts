@@ -1,6 +1,7 @@
 import * as assert from 'assert';
+import type { TestFn } from './test';
 
-export default (test) => {
+export default (test: TestFn) => {
 	describe('$select', function () {
 		test('$select=category/person', function (result) {
 			it('has a $select value', () => {

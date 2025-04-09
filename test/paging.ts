@@ -1,6 +1,7 @@
 import * as assert from 'assert';
+import type { TestFn } from './test';
 
-export default (test) => {
+export default (test: TestFn) => {
 	describe('Paging', function () {
 		test(
 			'$top=5&$skip=100',

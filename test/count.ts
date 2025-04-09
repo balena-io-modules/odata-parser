@@ -1,6 +1,7 @@
 import * as assert from 'assert';
+import type { TestFn } from './test';
 
-export default (test) => {
+export default (test: TestFn) => {
 	describe('Count', function () {
 		test('$count=true', (result) =>
 			it('count option should be specified with value true', () => {

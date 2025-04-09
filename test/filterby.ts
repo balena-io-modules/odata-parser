@@ -1,17 +1,24 @@
 import * as assert from 'assert';
 import { expect } from 'chai';
 import * as _ from 'lodash';
+import type { ExpectationFn, TestFn } from './test';
 
-export default function (test) {
+type Duration = {
+	negative?: boolean;
+	day?: number;
+	hour?: number;
+	minute?: number;
+	second?: number;
+};
+
+export default function (test: TestFn) {
 	describe('$filter', function () {
-		const operandTest = function (op, odataValue, value) {
-			if (odataValue === undefined) {
-				odataValue = 2;
-			}
-			if (value === undefined) {
-				value = odataValue;
-			}
-			const binds = [];
+		const operandTest = function (
+			op: string,
+			odataValue: string | number | boolean | null = 2,
+			value: typeof odataValue | Duration = odataValue,
+		) {
+			const binds: Array<string | number | boolean> = [];
 			if (value != null && !_.isObject(value)) {
 				binds.push(value);
 			}
@@ -86,18 +93,12 @@ export default function (test) {
 		operandTest('eq', false);
 		operandTest('eq', null);
 
-		const duration = function (obj) {
-			const result = {
-				negative: false,
-				day: undefined,
-				hour: undefined,
-				minute: undefined,
-				second: undefined,
-			};
-			for (const key of Object.keys(obj)) {
-				result[key] = obj[key];
+		const duration = function (obj: Duration) {
+			obj.negative ??= false;
+			for (const key of ['day', 'hour', 'minute', 'second'] as const) {
+				obj[key] ??= undefined;
 			}
-			return result;
+			return obj;
 		};
 
 		operandTest('eq', "duration'-P1D'", duration({ negative: true, day: 1 }));
@@ -119,7 +120,7 @@ export default function (test) {
 		);
 
 		const date = new Date();
-		const testFunc = function (result) {
+		const testFunc: ExpectationFn = function (result) {
 			it('A filter should be present', () => {
 				assert.notEqual(result.options.$filter, null);
 			});
@@ -631,41 +632,43 @@ export default function (test) {
 		});
 	});
 
-	const methodTest = (args, binds, argsTest) => (methodName, expectFailure) =>
-		test(
-			`$filter=${methodName}(${args}) eq 'cake'`,
-			binds.concat('cake'),
-			function (result, err) {
-				if (expectFailure) {
-					it("Should fail because it's invalid", () => {
-						assert.notEqual(err, null);
+	const methodTest =
+		(args: string, binds: any[], argsTest: (args: any[]) => void) =>
+		(methodName: string, expectFailure = false) => {
+			test(
+				`$filter=${methodName}(${args}) eq 'cake'`,
+				[...binds, 'cake'],
+				function (result) {
+					if (expectFailure) {
+						it("Should fail because it's invalid", () => {
+							expect(result).to.be.instanceOf(Error);
+						});
+						return;
+					}
+
+					it('A filter should be present', () => {
+						assert.notEqual(result.options.$filter, null);
 					});
-				} else if (err) {
-					throw err;
-				}
 
-				it('A filter should be present', () => {
-					assert.notEqual(result.options.$filter, null);
-				});
+					it("Filter should be an instance of 'eq'", () => {
+						assert.equal(result.options.$filter[0], 'eq');
+					});
 
-				it("Filter should be an instance of 'eq'", () => {
-					assert.equal(result.options.$filter[0], 'eq');
-				});
+					it('lhs should be a call', () => {
+						assert.equal(result.options.$filter[1][0], 'call');
+					});
 
-				it('lhs should be a call', () => {
-					assert.equal(result.options.$filter[1][0], 'call');
-				});
+					it(`lhs should be ${methodName} with correct args`, function () {
+						assert.equal(result.options.$filter[1][1].method, methodName);
+						argsTest(result.options.$filter[1][1].args);
+					});
 
-				it(`lhs should be ${methodName} with correct args`, function () {
-					assert.equal(result.options.$filter[1][1].method, methodName);
-					argsTest(result.options.$filter[1][1].args);
-				});
-
-				it('rhs should be bound to the last arg', () => {
-					assert.equal(result.options.$filter[2].bind, binds.length);
-				});
-			},
-		);
+					it('rhs should be bound to the last arg', () => {
+						assert.equal(result.options.$filter[2].bind, binds.length);
+					});
+				},
+			);
+		};
 
 	const methodTestWithThreeArgs = methodTest(
 		"'alfred', Product, 2",
@@ -741,8 +744,8 @@ export default function (test) {
 	methodTestWithThreeArgs('indexof', true)
 	*/
 
-	const lambdaTest = function (methodName) {
-		const lambdaAsserts = function (lambda, alias = 'd') {
+	const lambdaTest = function (methodName: string) {
+		const lambdaAsserts = function (lambda: any, alias = 'd') {
 			it('where it is a lambda', () => {
 				assert.notEqual(lambda, null);
 			});
@@ -773,11 +776,7 @@ export default function (test) {
 		test(
 			`$filter=child/${methodName}(d:d/name eq 'cake')`,
 			['cake'],
-			function (result, err) {
-				if (err) {
-					throw err;
-				}
-
+			function (result) {
 				it('A filter should be present', () => {
 					assert.notEqual(result.options.$filter, null);
 				});
@@ -793,11 +792,7 @@ export default function (test) {
 		test(
 			`$filter=child/${methodName}(long_name:long_name/name eq 'cake')`,
 			['cake'],
-			function (result, err) {
-				if (err) {
-					throw err;
-				}
-
+			function (result) {
 				it('A filter should be present', () => {
 					assert.notEqual(result.options.$filter, null);
 				});
@@ -813,11 +808,7 @@ export default function (test) {
 		test(
 			`$filter=child/grandchild/${methodName}(d:d/name eq 'cake')`,
 			['cake'],
-			function (result, err) {
-				if (err) {
-					throw err;
-				}
-
+			function (result) {
 				it('A filter should be present', () => {
 					assert.notEqual(result.options.$filter, null);
 				});
@@ -836,11 +827,7 @@ export default function (test) {
 	lambdaTest('any');
 	lambdaTest('all');
 
-	test('$filter=child/canAccess(test)', [], function (result, err) {
-		if (err) {
-			throw err;
-		}
-
+	test('$filter=child/canAccess(test)', [], function (result) {
 		it('A filter should be present', () => {
 			assert.notEqual(result.options.$filter, null);
 		});

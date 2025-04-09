@@ -1,6 +1,7 @@
 import * as assert from 'assert';
+import type { TestFn } from './test';
 
-export default (test) => {
+export default (test: TestFn) => {
 	describe('$format', function () {
 		test('$format=application/atom+xml', (result) => {
 			it('has a valid $format value', () => {
