@@ -80,6 +80,7 @@ export interface ODataOptions {
 		| TextBind
 		| DateBind
 		// known $ options
+		// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 		| SelectOption
 		| ExpandOption
 		| OrderByOption
