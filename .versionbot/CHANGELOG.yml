@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update @balena/lint to 9.x
+      hash: c1809b591bae1b5f1872d5a30eab2eb90337d3cd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.6
+  title: ""
+  date: 2025-04-10T03:22:06.692Z
+- commits:
     - subject: "Tests: convert to typescript"
       hash: 0f71c04f5812b10f4a9e09bdf280217c64caa0ee
       body: ""
