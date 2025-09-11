@@ -22,7 +22,7 @@
     "@types/mocha": "^10.0.8",
     "chai": "^4.5.0",
     "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
+    "lint-staged": "^16.0.0",
     "lodash": "^4.17.21",
     "mocha": "^11.0.0",
     "peggy": "^5.0.0",
