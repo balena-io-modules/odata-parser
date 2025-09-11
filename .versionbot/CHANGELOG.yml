@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency lint-staged to v16
+      hash: 1ad6c3e66d76d9fba07440f75e719f210505f9d9
+      body: |
+        Update lint-staged from 15.5.2 to 16.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+  version: 4.2.8
+  title: ""
+  date: 2025-09-11T12:20:28.065Z
+- commits:
     - subject: Update dependency peggy to v5
       hash: a3bd65a4f4a63999b58a5076563e0eaa51a755d3
       body: |
