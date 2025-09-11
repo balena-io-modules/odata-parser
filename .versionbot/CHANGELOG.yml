@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency peggy to v5
+      hash: a3bd65a4f4a63999b58a5076563e0eaa51a755d3
+      body: |
+        Update peggy from 4.2.0 to 5.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+  version: 4.2.7
+  title: ""
+  date: 2025-09-11T12:15:50.679Z
+- commits:
     - subject: Update @balena/lint to 9.x
       hash: c1809b591bae1b5f1872d5a30eab2eb90337d3cd
       body: ""
