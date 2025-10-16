@@ -74,8 +74,8 @@
 		precedence = 0;
 	};
 
-	function Bind(type, value) {
-		binds.push([type, value])
+	function Bind(bind) {
+		binds.push(bind)
 		return { bind: binds.length - 1 }
 	}
 }
@@ -351,7 +351,7 @@ GroupedPrimitive =
 		if (firstNonNullIndex != null) {
 			binds.splice(firstNonNullIndex, totalBoundIndexes);
 		}
-		return Bind('List', bindValues);
+		return Bind(['List', bindValues]);
 	}
 
 FilterMethodCallExpression =
@@ -704,11 +704,11 @@ ParameterAlias =
 
 NumberBind =
 	n:Number
-	{ return Bind('Real', n) }
+	{ return Bind(['Real', n]) }
 
 UnsignedIntegerBind =
 	n:UnsignedInteger
-	{ return Bind('Integer', n) }
+	{ return Bind(['Integer', n]) }
 
 Date =
 	type:(
@@ -726,23 +726,23 @@ Date =
 
 DateBind =
 	d:Date
-	{ return Bind(d[0], d[1]) }
+	{ return Bind(d) }
 
 BooleanBind =
 	b:Boolean
-	{ return Bind('Boolean', b) }
+	{ return Bind(['Boolean', b]) }
 
 ContentReference =
 	'$'
 	resource:ResourceName
 	{
-		const bind = Bind('ContentReference', resource)
+		const bind = Bind(['ContentReference', resource])
 		return { resource: bind, key: bind }
 	}
 
 QuotedTextBind =
 	t:QuotedText
-	{ return Bind('Text', t) }
+	{ return Bind(['Text', t]) }
 
 boundary =
 	(	&'('
