@@ -65,14 +65,6 @@
 	// 	div: 5,
 	// 	mod: 5
 	// };
-
-	function CollapseObjectArray(options) {
-		const optionsObj = {};
-		for(const i in options) {
-			optionsObj[options[i].name] = options[i].value;
-		}
-		return optionsObj;
-	};
 }}
 {
 	let binds = [];
@@ -113,7 +105,7 @@ OData =
 
 QueryOptions =
 	options:QueryOption|1..,'&'|
-	{ return CollapseObjectArray(options) }
+	{ return Object.fromEntries(options) }
 
 QueryOption =
 		Dollar
@@ -148,20 +140,17 @@ ParameterAliasOption =
 	&{ return !binds['@' + name] }
 	{
 		binds['@' + name] = value
-		return {
-			name: '@' + name,
-			value
-		}
+		return [ '@' + name, value ]
 	}
 
 OperationParam =
 	name:Text '=' value:Text
-	{ return { name, value } }
+	{ return [ name, value ] }
 
 SortOption =
 	'orderby='
 	properties:SortProperty|1..,','|
-	{ return { name: '$orderby', value: { properties } } }
+	{ return [ '$orderby', { properties } ] }
 
 SortProperty =
 	property:PropertyPath
@@ -181,12 +170,12 @@ SortProperty =
 TopOption =
 	'top='
 	value:UnsignedIntegerBind
-	{ return { name: '$top', value } }
+	{ return [ '$top', value ] }
 
 SkipOption =
 	'skip='
 	value:UnsignedIntegerBind
-	{ return { name: '$skip', value } }
+	{ return [ '$skip', value ] }
 
 InlineCountOption =
 	'inlinecount='
@@ -195,17 +184,17 @@ InlineCountOption =
 	/	'none'
 	/	Text { return '' }
 	)
-	{ return { name: '$inlinecount', value } }
+	{ return [ '$inlinecount', value ] }
 
 CountOption =
 	'count='
 	value:Boolean
-	{ return { name: '$count', value } }
+	{ return [ '$count', value ] }
 
 ExpandOption =
 	'expand='
 	properties:ExpandPropertyPathList
-	{ return { name: '$expand', value: { properties } } }
+	{ return [ '$expand', { properties } ] }
 
 SelectOption =
 	'select='
@@ -214,13 +203,13 @@ SelectOption =
 	/	properties:PropertyPathList
 		{ return { properties } }
 	)
-	{ return { name: '$select', value } }
+	{ return [ '$select', value ] }
 
 
 FilterByOption =
 	'filter='
 	expr:FilterByExpression
-	{ return { name: '$filter', value: expr } }
+	{ return [ '$filter', expr ] }
 
 
 ContentType =
@@ -244,8 +233,8 @@ FormatOption =
 		/	'minimal'
 		/	'full'
 		)
-		{ return { name: '$format', value: { type, metadata } } }
-	/	'' { return { name: '$format', value: type } }
+		{ return [ '$format', { type, metadata } ] }
+	/	'' { return [ '$format', type ] }
 	)
 
 FilterByExpression =
@@ -344,7 +333,7 @@ FilterNegateExpression =
 GroupedPrimitive =
 	'(' spaces
 		bindings:(@Primitive|1..,',' spaces|)
-		spaces 
+		spaces
 	')'
 	{
 		const bindValues = [];
@@ -454,7 +443,7 @@ PropertyPath =
 					'('
 					(	Dollar
 						option:FilterByOption
-						{ result.options = CollapseObjectArray([option]) }
+						{ result.options = Object.fromEntries([option]) }
 					)
 					')'
 				)?
@@ -490,7 +479,7 @@ ExpandPropertyPath =
 		'('
 		(
 			options:QueryOption|1..,[&;]|
-			{ result.options =  CollapseObjectArray(options) }
+			{ result.options =  Object.fromEntries(options) }
 		/ ''
 		)
 		')'
@@ -516,12 +505,12 @@ Key =
 	'('
 	@(	KeyBind
 	/	keyBinds:NamedKeyBind|1..,','|
-		{ return CollapseObjectArray(keyBinds) }
+		{ return Object.fromEntries(keyBinds) }
 	)
 	')'
 NamedKeyBind =
 	name:ResourceName '=' value:KeyBind
-	{ return { name, value }}
+	{ return [ name, value ] }
 KeyBind =
 		NumberBind
 	/	QuotedTextBind
