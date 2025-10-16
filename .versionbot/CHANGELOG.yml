@@ -1,4 +1,15 @@
 - commits:
+    - subject: Avoid unnecessary allocations for date binds
+      hash: f5d8d9b67611e732288eb4979d7707f2a007ff5f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.10
+  title: ""
+  date: 2025-10-16T14:37:31.073Z
+- commits:
     - subject: Replace `CollapseObjectArray` with `Object.fromEntries`
       hash: cff575f1888896b9278adda63988df3922aae6c7
       body: ""
