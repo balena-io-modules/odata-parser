@@ -1,4 +1,15 @@
 - commits:
+    - subject: Replace `CollapseObjectArray` with `Object.fromEntries`
+      hash: cff575f1888896b9278adda63988df3922aae6c7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.9
+  title: ""
+  date: 2025-10-16T14:25:34.129Z
+- commits:
     - subject: Update dependency lint-staged to v16
       hash: 1ad6c3e66d76d9fba07440f75e719f210505f9d9
       body: |
