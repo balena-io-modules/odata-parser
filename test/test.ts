@@ -1,14 +1,13 @@
 import * as ODataParser from '../odata-parser';
 import { expect } from 'chai';
-import * as _ from 'lodash';
 
 type BindPrimitive = number | string | boolean | object;
 const getBindType = function (value: BindPrimitive) {
-	if (_.isNumber(value)) {
+	if (typeof value === 'number') {
 		return ['Real', value];
-	} else if (_.isString(value)) {
+	} else if (typeof value === 'string') {
 		return ['Text', value];
-	} else if (_.isBoolean(value)) {
+	} else if (typeof value === 'boolean') {
 		return ['Boolean', value];
 	} else {
 		return value;
@@ -61,11 +60,11 @@ function raw(
 	const expectation = optArgs.pop() as ExpectationFn;
 	const [binds = [], options = { startRule: 'Process' }, params = {}] =
 		optArgs as any as [binds?: Binds, opts?: Opts, params?: Params];
-	const processedBinds = _.map(binds, getBindType) as Binds &
+	const processedBinds = binds.map(getBindType) as Binds &
 		Record<string, BindPrimitive>;
-	_.each(params, (value, key) => {
+	for (const [key, value] of Object.entries(params)) {
 		processedBinds[key] = getBindType(value);
-	});
+	}
 	describe(`Parsing ${input}`, function () {
 		let result;
 		try {

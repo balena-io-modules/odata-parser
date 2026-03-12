@@ -1,6 +1,5 @@
 import * as assert from 'assert';
 import { expect } from 'chai';
-import * as _ from 'lodash';
 import type { ExpectationFn, TestFn } from './test';
 
 type Duration = {
@@ -19,7 +18,7 @@ export default function (test: TestFn) {
 			value: typeof odataValue | Duration = odataValue,
 		) {
 			const binds: Array<string | number | boolean> = [];
-			if (value != null && !_.isObject(value)) {
+			if (value != null && typeof value !== 'object') {
 				binds.push(value);
 			}
 			test(`$filter=Foo ${op} ${odataValue}`, binds, function (result) {
@@ -35,7 +34,7 @@ export default function (test: TestFn) {
 						.to.have.property('name')
 						.that.equals('Foo'));
 
-				if (odataValue === null || _.isObject(value)) {
+				if (odataValue === null || typeof value === 'object') {
 					it(`rhr should be ${value}`, () => {
 						expect(result.options.$filter[2]).to.deep.equal(value);
 					});
@@ -56,7 +55,7 @@ export default function (test: TestFn) {
 					expect(result.options.$filter[0]).to.equal(op);
 				});
 
-				if (odataValue === null || _.isObject(value)) {
+				if (odataValue === null || typeof value === 'object') {
 					it(`lhr should be ${value}`, () =>
 						expect(result.options.$filter[1]).to.deep.equal(value));
 				} else {
