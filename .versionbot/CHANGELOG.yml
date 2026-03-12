@@ -1,4 +1,15 @@
 - commits:
+    - subject: "Tests: remove lodash"
+      hash: 83043192219fb01d9c7968ab633d7afb529e5aca
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.12
+  title: ""
+  date: 2026-03-12T20:38:46.950Z
+- commits:
     - subject: "Add id-token: write permission for NPM OIDC publishing"
       hash: cb767ef366951cd363cd272a1752f3521a5d29ec
       body: ""
