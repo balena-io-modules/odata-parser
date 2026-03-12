@@ -40,8 +40,7 @@ export interface OrderByPropertyPath extends GenericPropertyPath<PropertyPath> {
 	order: 'asc' | 'desc';
 }
 export interface ExpandPropertyPath
-	extends GenericPropertyPath<ExpandPropertyPath>,
-		ResourceOptions {}
+	extends GenericPropertyPath<ExpandPropertyPath>, ResourceOptions {}
 export type SelectOption =
 	| '*'
 	| {
@@ -73,7 +72,7 @@ export interface ODataOptions {
 	$format?: FormatOption;
 
 	[key: string]: // User defined options, do not start with $ or @
-	| string
+		| string
 		// Parameter aliases (start with @)
 		| NumberBind
 		| BooleanBind
