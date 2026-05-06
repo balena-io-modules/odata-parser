@@ -325,10 +325,7 @@ FilterNegateExpression =
 	spaces
 	@'not'
 	boundary
-	@(
-		FilterByValue
-	/	'(' spaces @FilterByExpression spaces ')'
-	)
+	@FilterByValue
 
 GroupedPrimitive =
 	'(' spaces
