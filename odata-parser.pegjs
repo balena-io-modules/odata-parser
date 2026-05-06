@@ -390,11 +390,8 @@ FilterMethodCallExpression =
 	)
 	'('
 		spaces
-		args:(
-			@FilterByExpression|1..,spaces ',' spaces|
-			spaces
-		/ '' { return [] }
-		)
+		args:FilterByExpression|0..,spaces ',' spaces|
+		spaces
 		&{ return args.length === methods[methodName] || (Array.isArray(methods[methodName]) && methods[methodName].includes(args.length)) }
 	')'
 	{ return [ 'call', { args, method: methodName } ] }
