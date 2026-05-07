@@ -1,4 +1,15 @@
 - commits:
+    - subject: Simplify arg checking for `FilterMethodCallExpression`
+      hash: 6584e1b45101de7ae00506a6243e47093671e36c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.29
+  title: ""
+  date: 2026-05-07T14:51:52.119Z
+- commits:
     - subject: Revert flowzone pinning to master
       hash: a58f209394f140eaaa2a6d85eb5cf8249c93d48d
       body: ""
