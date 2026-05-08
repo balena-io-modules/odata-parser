@@ -1,4 +1,17 @@
 - commits:
+    - subject: Avoid duplicate parenthesis check in `FilterNegateExpression`
+      hash: 53902d15f20b2fe4d5e97265eeac0e5ef5186580
+      body: |
+        We can use the existing parenthesis check of `FilterByValue` ->
+        `GroupedPrecedenceExpression`
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.2.30
+  title: ""
+  date: 2026-05-08T11:57:37.881Z
+- commits:
     - subject: Simplify arg checking for `FilterMethodCallExpression`
       hash: 6584e1b45101de7ae00506a6243e47093671e36c
       body: ""
