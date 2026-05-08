@@ -239,6 +239,23 @@ export default function (test: TestFn) {
 		});
 	});
 
+	test('$filter=not Price gt 5', [5], function (result) {
+		it('A filter should be present', () => {
+			assert.notEqual(result.options.$filter, null);
+		});
+
+		it("Filter should be an instance of 'gt'", () => {
+			assert.equal(result.options.$filter[0], 'gt');
+		});
+
+		it('Value should be Price gt $0', function () {
+			const [, op1, op2] = result.options.$filter;
+			assert.equal(op1[0], 'not');
+			assert.equal(op1[1].name, 'Price');
+			assert.equal(op2.bind, 0);
+		});
+	});
+
 	test(
 		'$filter=Price in (1, 2, 3)',
 		[
