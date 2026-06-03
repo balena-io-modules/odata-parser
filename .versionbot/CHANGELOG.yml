@@ -1,4 +1,15 @@
 - commits:
+    - subject: Add `ParameterAliasBind` typing utility
+      hash: 2f357db4d0308f7af528c071a959dea097e11a7b
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Otavio Jacobi
+  version: 4.3.0
+  title: ""
+  date: 2026-06-03T14:44:38.692Z
+- commits:
     - subject: Avoid duplicate parenthesis check in `FilterNegateExpression`
       hash: 53902d15f20b2fe4d5e97265eeac0e5ef5186580
       body: |
