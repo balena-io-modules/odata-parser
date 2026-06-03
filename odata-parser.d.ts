@@ -18,6 +18,8 @@ export type BooleanBind = ['Boolean', boolean];
 export type TextBind = ['Text', string];
 export type DateBind = ['Date' | 'Date Time', Date];
 
+export type ParameterAliasBind = NumberBind | BooleanBind | TextBind | DateBind;
+
 export interface ResourceOptions {
 	count?: true;
 	options?: ODataOptions;
@@ -74,10 +76,7 @@ export interface ODataOptions {
 	[key: string]: // User defined options, do not start with $ or @
 		| string
 		// Parameter aliases (start with @)
-		| NumberBind
-		| BooleanBind
-		| TextBind
-		| DateBind
+		| ParameterAliasBind
 		// known $ options
 		// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 		| SelectOption
