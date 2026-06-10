@@ -62,6 +62,23 @@ export type FormatOption =
 			type: string;
 			metadata: 'none' | 'minimal' | 'full';
 	  };
+export type AggregateMethod = 'average' | 'sum' | 'count';
+
+export interface AggregateTransformation {
+	field: string;
+	with: AggregateMethod;
+	as: string;
+}
+
+export interface GroupByOption {
+	properties: string[];
+	aggregate?: AggregateTransformation[];
+}
+
+export interface ApplyOption {
+	groupby?: GroupByOption;
+}
+
 export interface ODataOptions {
 	$select?: SelectOption;
 	$filter?: FilterOption;
@@ -72,6 +89,7 @@ export interface ODataOptions {
 	$count?: boolean;
 	$inlinecount?: string;
 	$format?: FormatOption;
+	$apply?: ApplyOption;
 
 	[key: string]: // User defined options, do not start with $ or @
 		| string
@@ -83,6 +101,7 @@ export interface ODataOptions {
 		| ExpandOption
 		| OrderByOption
 		| FormatOption
+		| ApplyOption
 		| number
 		| boolean
 		| undefined;
