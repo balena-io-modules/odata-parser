@@ -1,4 +1,16 @@
 - commits:
+    - subject: Pin dependencies
+      hash: e83ae536fe82f63d4f2a14908b54dc08bacf2c47
+      body: |
+        Update @types/chai
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+  version: 4.3.1
+  title: ""
+  date: 2026-06-10T14:11:32.875Z
+- commits:
     - subject: Add `ParameterAliasBind` typing utility
       hash: 2f357db4d0308f7af528c071a959dea097e11a7b
       body: ""
