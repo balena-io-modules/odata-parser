@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency chai to v6
+      hash: d9a96172bab5e8091c6120cf58d03e3d5a919659
+      body: |
+        Update chai from 4.5.0 to 6.2.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+  version: 4.3.2
+  title: ""
+  date: 2026-06-11T01:08:10.830Z
+- commits:
     - subject: Pin dependencies
       hash: e83ae536fe82f63d4f2a14908b54dc08bacf2c47
       body: |
