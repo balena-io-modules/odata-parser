@@ -19,7 +19,7 @@
     "@balena/lint": "^9.2.1",
     "@types/chai": "4.3.20",
     "@types/mocha": "10.0.10",
-    "chai": "4.5.0",
+    "chai": "6.2.2",
     "husky": "9.1.7",
     "lint-staged": "16.4.0",
     "mocha": "11.7.6",
