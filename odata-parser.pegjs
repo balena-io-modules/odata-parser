@@ -118,6 +118,7 @@ QueryOption =
 		/	CountOption
 		/	InlineCountOption
 		/	FormatOption
+		/	ApplyOption
 		)
 	/	OperationParam
 	/	ParameterAliasOption
@@ -236,6 +237,46 @@ FormatOption =
 		{ return [ '$format', { type, metadata } ] }
 	/	'' { return [ '$format', type ] }
 	)
+
+// Experimental: $apply=groupby(...) support
+ApplyOption =
+	'apply='
+	value:GroupByTransformation
+	{ return [ '$apply', { groupby: value } ] }
+
+GroupByTransformation =
+	'groupby('
+	spaces '(' spaces
+	properties:ResourceName|1..,spaces ',' spaces|
+	spaces ')'
+	aggregate:(
+		spaces ',' spaces
+		'aggregate('
+		spaces
+		items:AggregateTransformItem|1..,spaces ',' spaces|
+		spaces ')'
+		{ return items }
+	)?
+	spaces ')'
+	{
+		const result = { properties };
+		if (aggregate != null) {
+			result.aggregate = aggregate;
+		}
+		return result;
+	}
+
+AggregateTransformItem =
+	field:ResourceName
+	boundary 'with' boundary
+	method:(
+		'average'
+	/	'sum'
+	/	'count'
+	)
+	boundary 'as' boundary
+	alias:ResourceName
+	{ return { field, 'with': method, as: alias } }
 
 FilterByExpression =
 	('' {
