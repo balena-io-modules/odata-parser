@@ -274,11 +274,15 @@ FilterByValue =
 /	FilterMethodCallExpression
 /	FilterNegateExpression
 /	ParameterAlias
-/	Primitive
+/	PrimitiveValue
 
+// This only needs to be/should only be used in places that do not otherwise handle parentheses
 Primitive =
 		'(' spaces @Primitive spaces ')'
-	/	QuotedTextBind
+	/	PrimitiveValue
+
+PrimitiveValue =
+		QuotedTextBind
 	/	NumberBind
 	/	BooleanBind
 	/	Null
