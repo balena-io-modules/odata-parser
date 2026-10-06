@@ -570,8 +570,7 @@ SubPathSegment =
 
 ResourceName =
 	// This regex is equivalent to `!(ReservedUriComponent / [ %])`
-	resourceName:$[^:/?#\[\]@!$*&()+,;= %]+
-	{ return decodeURIComponent(resourceName) }
+	$[^:/?#\[\]@!$*&()+,;= %]+
 
 Number =
 	sign:Sign
