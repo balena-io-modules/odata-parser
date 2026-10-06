@@ -1,4 +1,18 @@
 - commits:
+    - subject: Use a lookup for `FilterByOperand` and `FilterMethodCallExpression`
+      hash: 8d756e685272dd3869a15a6e4c8955a64fcfa839
+      body: |
+        This avoids needing to list all the literal operand/method names again
+        and also reduces the number of branches/rechecks that will be needed
+        when applying the grammar, which should result in improved performance
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.14
+  title: ""
+  date: 2026-10-06T16:48:09.227Z
+- commits:
     - subject: Avoid unnecessary rechecking for parentheses in `FilterByValue`
       hash: a24622dfb16ba1550dd1eff8385af3019a5c34fe
       body: ""
