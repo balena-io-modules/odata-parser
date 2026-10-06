@@ -33,7 +33,7 @@
 		year: 1
 	};
 
-	const operatorPrecedence = {
+	const operatorPrecedence = new Map(Object.entries({
 		or: 0,
 		and: 0,
 		eq: 1,
@@ -47,7 +47,7 @@
 		mod: 4,
 		div: 5,
 		mul: 6
-	};
+	}));
 
 	// v4 operator precedence
 	// const operatorPrecedence = {
@@ -251,7 +251,7 @@ FilterByExpressionLoop =
 
 	(	op:FilterByOperand
 		&{
-			precedence = operatorPrecedence[op] + 1
+			precedence = operatorPrecedence.get(op) + 1
 			return precedence > minPrecedence
 		}
 
