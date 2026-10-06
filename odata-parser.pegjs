@@ -296,21 +296,8 @@ GroupedPrecedenceExpression =
 
 FilterByOperand =
 	spaces
-	@(
-		'eq'
-	/	'ne'
-	/	'gt'
-	/	'ge'
-	/	'lt'
-	/	'le'
-	/	'and'
-	/	'or'
-	/	'sub'
-	/	'add'
-	/	'mod'
-	/	'div'
-	/	'mul'
-	)
+	@op:$[a-z]+
+	&{ return operatorPrecedence.has(op) }
 	boundary
 
 FilterNegateExpression =
@@ -344,39 +331,8 @@ GroupedPrimitive =
 	}
 
 FilterMethodCallExpression =
-	methodName:(
-		'cast'
-	/	'ceiling'
-	/	'concat'
-	/	'contains'
-	/	'date'
-	/	'day'
-	/	'endswith'
-	/	'floor'
-	/	'fractionalseconds'
-	/	'hour'
-	/	'indexof'
-	/	'isof'
-	/	'length'
-	/	'maxdatetime'
-	/	'mindatetime'
-	/	'minute'
-	/	'month'
-	/	'now'
-	/	'replace'
-	/	'round'
-	/	'second'
-	/	'startswith'
-	/	'substringof'
-	/	'substring'
-	/	'time'
-	/	'tolower'
-	/	'totaloffsetminutes'
-	/	'totalseconds'
-	/	'toupper'
-	/	'trim'
-	/	'year'
-	)
+	methodName:$[a-z]+
+	&{ return methods.has(methodName) }
 	'('
 		spaces
 		args:FilterByExpression|0..,spaces ',' spaces|
