@@ -19,13 +19,14 @@
     "@balena/lint": "^9.4.10",
     "@types/chai": "4.3.20",
     "@types/mocha": "10.0.10",
+    "@types/node": "16.18.126",
     "chai": "6.3.0",
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
     "mocha": "11.8.0",
     "peggy": "5.1.0",
     "ts-node": "10.9.2",
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   },
   "mocha": {
     "reporter": "spec",

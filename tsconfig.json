@@ -12,7 +12,11 @@
 		"removeComments": true,
 		"sourceMap": true,
 		"declaration": true,
-		"outDir": "out"
+		"rootDir": ".",
+		"types": [
+			"node",
+			"mocha"
+		]
 	},
 	"include": [
 		"test/**/*",
