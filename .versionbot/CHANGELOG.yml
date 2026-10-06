@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove unnecessary `decodeURIComponent` for `ResourceName`
+      hash: 5beaa8a5d4d98d05076ba70f5a0d1dd5b896e143
+      body: |
+        Since `ResourceName` won't match any `%` symbols there is nothing to
+        decode
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.9
+  title: ""
+  date: 2026-10-06T13:26:26.058Z
+- commits:
     - subject: Remove unnecessary `reset` function as every parse call reinitializes
       hash: a7f397c715f87e9b8879f9de25522c6a25bb50a8
       body: ""
