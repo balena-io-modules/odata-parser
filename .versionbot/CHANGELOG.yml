@@ -1,4 +1,15 @@
 - commits:
+    - subject: Avoid unnecessary rechecking for parentheses in `FilterByValue`
+      hash: a24622dfb16ba1550dd1eff8385af3019a5c34fe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.13
+  title: ""
+  date: 2026-10-06T16:40:11.053Z
+- commits:
     - subject: Use a `Map` for `methods` for faster lookups
       hash: bd3a25ced87bea26a9b316160286ce911e5801c9
       body: |
