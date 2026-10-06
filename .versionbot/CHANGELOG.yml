@@ -1,4 +1,22 @@
 - commits:
+    - subject: Update typescript to 6.0.3
+      hash: 222820bbfb59d0ab5ae8595448b67384d9baa2e7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Update dev dependencies/fix linting
+      hash: 1e22056052a93e6eeb326830801c0ac98fa628f5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.6
+  title: ""
+  date: 2026-10-06T13:05:58.699Z
+- commits:
     - subject: Update dependency lint-staged to v17.0.8
       hash: ee3b419f2ab388f8bc12e828f44338ceb5b3e381
       body: |
