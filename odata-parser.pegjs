@@ -243,37 +243,31 @@ FilterByExpressionLoop =
 			return precedence;
 		}
 	)
-	@(
-		lhs:(
-			x:FilterByValue
-			{ return [x] }
-		)
 
-		(	op:FilterByOperand
-			&{
-				precedence = operatorPrecedence[op] + 1
-				return precedence > minPrecedence
-			}
-
-			rhs:FilterByExpressionLoop
-			{
-				if (Array.isArray(lhs[0]) && op === lhs[0][0]) {
-					lhs[0].push(rhs);
-				} else {
-					lhs[0] = [ op, lhs[0], rhs ];
-				}
-			}
-		/	boundary 'in' boundary
-			rhs:GroupedPrimitive
-			{lhs[0] = [ 'eqany', lhs[0], rhs ]}
-		)*
-		{ return lhs[0] }
-	/	&{return minPrecedence > 0}
-		{
-			precedence = 0;
-			return peg$parseFilterByExpressionLoop()
-		}
+	lhs:(
+		x:FilterByValue
+		{ return [x] }
 	)
+
+	(	op:FilterByOperand
+		&{
+			precedence = operatorPrecedence[op] + 1
+			return precedence > minPrecedence
+		}
+
+		rhs:FilterByExpressionLoop
+		{
+			if (Array.isArray(lhs[0]) && op === lhs[0][0]) {
+				lhs[0].push(rhs);
+			} else {
+				lhs[0] = [ op, lhs[0], rhs ];
+			}
+		}
+	/	boundary 'in' boundary
+		rhs:GroupedPrimitive
+		{lhs[0] = [ 'eqany', lhs[0], rhs ]}
+	)*
+	{ return lhs[0] }
 
 FilterByValue =
 	GroupedPrecedenceExpression
