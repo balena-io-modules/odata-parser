@@ -1,4 +1,19 @@
 - commits:
+    - subject: Remove unnecessary second branch of `FilterByExpressionLoop`
+      hash: 2818022b1f51f4876f222f6828b136e7875e5559
+      body: |
+        This is already handled by the `*` that repeats the existing loop at
+        higher precedence levels (including level 0) which has the same effect
+        on correctness. So removing the second branch just avoids unnecessary
+        work, particularly on invalid urls
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.11
+  title: ""
+  date: 2026-10-06T14:53:48.355Z
+- commits:
     - subject: Add a fast path for matching `QuotedText` sections without apostrophes
       hash: 6655906fe3b5af9d77087746f19c0f47cc52807f
       body: |
