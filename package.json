@@ -26,7 +26,7 @@
     "mocha": "11.8.0",
     "peggy": "5.1.0",
     "ts-node": "10.9.2",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   },
   "mocha": {
     "reporter": "spec",
