@@ -1,5 +1,5 @@
 {{
-	const methods = {
+	const methods = new Map(Object.entries({
 		cast: [ 1, 2 ],
 		ceiling: 1,
 		concat: 2,
@@ -31,7 +31,7 @@
 		toupper: 1,
 		trim: 1,
 		year: 1
-	};
+	}));
 
 	const operatorPrecedence = new Map(Object.entries({
 		or: 0,
@@ -377,7 +377,10 @@ FilterMethodCallExpression =
 		spaces
 		args:FilterByExpression|0..,spaces ',' spaces|
 		spaces
-		&{ return args.length === methods[methodName] || (Array.isArray(methods[methodName]) && methods[methodName].includes(args.length)) }
+		&{
+			const arity = methods.get(methodName);
+			return args.length === arity || (Array.isArray(arity) && arity.includes(args.length))
+		}
 	')'
 	{ return [ 'call', { args, method: methodName } ] }
 
