@@ -1,4 +1,15 @@
 - commits:
+    - subject: Remove unnecessary `reset` function as every parse call reinitializes
+      hash: a7f397c715f87e9b8879f9de25522c6a25bb50a8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.8
+  title: ""
+  date: 2026-10-06T13:19:14.886Z
+- commits:
     - subject: Update dependency flowzonify to v0.4.16
       hash: 9383193d6ab5cd6654f05f75f2843a70a5f4e9b1
       body: |
