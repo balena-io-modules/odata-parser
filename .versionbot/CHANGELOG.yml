@@ -1,4 +1,24 @@
 - commits:
+    - subject: Use a `Map` for `methods` for faster lookups
+      hash: bd3a25ced87bea26a9b316160286ce911e5801c9
+      body: |
+        The difference is small but this is very hot code and an easy change
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Use a `Map` for `operatorPrecedence` for faster lookups
+      hash: ca8fb092defdb5a66056bc9a231174a29932b64e
+      body: |
+        The difference is small but this is very hot code and an easy change
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.12
+  title: ""
+  date: 2026-10-06T15:50:23.745Z
+- commits:
     - subject: Remove unnecessary second branch of `FilterByExpressionLoop`
       hash: 2818022b1f51f4876f222f6828b136e7875e5559
       body: |
