@@ -69,10 +69,6 @@
 {
 	let binds = [];
 	let precedence = 0;
-	function reset() {
-		binds = [];
-		precedence = 0;
-	};
 
 	function Bind(bind) {
 		binds.push(bind)
@@ -81,13 +77,11 @@
 }
 
 Process =
-	&{reset(); return true;}
 	tree:OData
 	{ return { tree, binds } }
 
 ProcessRule =
 	'' {
-		reset();
 		const tree = eval(`peg$parse${options.rule}()`);
 		return {
 			tree,
