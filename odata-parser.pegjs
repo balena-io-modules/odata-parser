@@ -678,9 +678,13 @@ Apostrophe =
 QuotedText =
 	Apostrophe
 	text:(
+		// A quick scan of multiple characters that cannot match the `Apostrophe` rule, which is the most common case (it's pretty rare for strings to contain `'`/`%`)
+		$[^'%]+
+	/	// Match % characters that could not be quick matched, but do not resolve to an apostrophe
 		!Apostrophe
 		@.
-	/	Apostrophe @Apostrophe
+	/	// And finally match double up apostrophes which is how you escape them
+		Apostrophe @Apostrophe
 	)*
 	Apostrophe
 	{ return decodeURIComponent(text.join('')) }
