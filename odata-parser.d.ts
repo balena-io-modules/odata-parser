@@ -1,11 +1,5 @@
 export type SupportedMethod =
-	| 'GET'
-	| 'PUT'
-	| 'POST'
-	| 'PATCH'
-	| 'MERGE'
-	| 'DELETE'
-	| 'OPTIONS';
+	'GET' | 'PUT' | 'POST' | 'PATCH' | 'MERGE' | 'DELETE' | 'OPTIONS';
 
 /**
  * string for a parameter alias reference, number for an extracted constant
@@ -73,7 +67,8 @@ export interface ODataOptions {
 	$inlinecount?: string;
 	$format?: FormatOption;
 
-	[key: string]: // User defined options, do not start with $ or @
+	[key: string]:
+		// User defined options, do not start with $ or @
 		| string
 		// Parameter aliases (start with @)
 		| ParameterAliasBind
