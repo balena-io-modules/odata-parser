@@ -1,4 +1,20 @@
 - commits:
+    - subject: Use a `Map` based results cache (~1.9x perf improvement)
+      hash: 0f877be508d25d9093abeff055d3006e11ca1f48
+      body: |
+        This results in a significant performance improvement (~1.9x, scaling
+        up with larger inputs) without concerns around potential pathological
+        cases that can occur with disabling the cache altogether
+
+        See: https://github.com/peggyjs/peggy/pull/663
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.15
+  title: ""
+  date: 2026-10-07T13:43:06.574Z
+- commits:
     - subject: Use a lookup for `FilterByOperand` and `FilterMethodCallExpression`
       hash: 8d756e685272dd3869a15a6e4c8955a64fcfa839
       body: |
