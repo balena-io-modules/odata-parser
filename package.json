@@ -5,12 +5,13 @@
   "type": "commonjs",
   "main": "odata-parser.js",
   "scripts": {
-    "lint": "balena-lint odata-parser.d.ts test && tsc --noEmit",
-    "pretest": "npm run prepare",
+    "lint": "balena-lint odata-parser.d.ts test patch-to-map-based-cache.js && tsc --noEmit",
+    "pretest": "npm run build",
     "test": "mocha",
     "posttest": "npm run lint",
-    "prepare": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module && peggy --source-map --extra-options-file odata-parser.config.json --output odata-parser.js odata-parser.pegjs",
-    "lint-fix": "balena-lint --fix odata-parser.d.ts test"
+    "build": "peggy --source-map --extra-options-file odata-parser.config.json --output odata-parser.js odata-parser.pegjs && node patch-to-map-based-cache.js",
+    "prepare": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module && npm run build",
+    "lint-fix": "balena-lint --fix odata-parser.d.ts test patch-to-map-based-cache.js"
   },
   "repository": "https://github.com/balena-io-modules/odata-parser.git",
   "author": "",

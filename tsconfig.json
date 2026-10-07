@@ -13,6 +13,7 @@
 		"sourceMap": true,
 		"declaration": true,
 		"rootDir": ".",
+		"allowJs": true,
 		"types": [
 			"node",
 			"mocha"
@@ -20,7 +21,8 @@
 	},
 	"include": [
 		"test/**/*",
-		"odata-parser.d.ts"
+		"odata-parser.d.ts",
+		"patch-to-map-based-cache.js"
 	],
 	"exclude": [
 		"node_modules"
