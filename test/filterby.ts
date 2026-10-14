@@ -690,6 +690,36 @@ export default function (test: TestFn) {
 		});
 	});
 
+	test('$filter=nullable eq trueish', function (result) {
+		it('should parse names that start with null/true as properties', () => {
+			expect(result.options.$filter).to.deep.equal([
+				'eq',
+				{ name: 'nullable' },
+				{ name: 'trueish' },
+			]);
+		});
+	});
+
+	test('$filter=falsey/nullable eq null', function (result) {
+		it('should parse paths that start with false/null as properties', () => {
+			expect(result.options.$filter).to.deep.equal([
+				'eq',
+				{ name: 'falsey', property: { name: 'nullable' } },
+				null,
+			]);
+		});
+	});
+
+	test('$filter=Foo eq true and Bar eq false', [true, false], (result) => {
+		it('should still parse true/false followed by whitespace as booleans', () => {
+			expect(result.options.$filter).to.deep.equal([
+				'and',
+				['eq', { name: 'Foo' }, { bind: 0 }],
+				['eq', { name: 'Bar' }, { bind: 1 }],
+			]);
+		});
+	});
+
 	const methodTest =
 		(args: string, binds: any[], argsTest: (args: any[]) => void) =>
 		(methodName: string, expectFailure = false) => {
