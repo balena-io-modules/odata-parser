@@ -365,7 +365,9 @@ LambdaMethodCall =
 	'('
 		spaces
 		identifier:ResourceName
+		spaces
 		':'
+		spaces
 		expression:FilterByExpression
 		spaces
 	')'
