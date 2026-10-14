@@ -257,7 +257,10 @@ FilterByExpressionLoop =
 
 		rhs:FilterByExpressionLoop
 		{
-			if (Array.isArray(lhs[0]) && op === lhs[0][0]) {
+			// Only `and`/`or` are associative, so only they are merged into a single node, eg `a and b and c` becomes
+			// `['and', a, b, c]`. Other operators always have exactly two operands, eg `a sub b sub c` becomes
+			// `['sub', ['sub', a, b], c]`, as that is all consumers read for them
+			if ((op === 'and' || op === 'or') && Array.isArray(lhs[0]) && op === lhs[0][0]) {
 				lhs[0].push(rhs);
 			} else {
 				lhs[0] = [ op, lhs[0], rhs ];

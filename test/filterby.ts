@@ -431,6 +431,41 @@ export default function (test: TestFn) {
 		});
 	});
 
+	test('$filter=Price add 5 add 10 gt 20', [5, 10, 20], function (result) {
+		it('should nest a repeated arithmetic operator as binary operations', () => {
+			expect(result.options.$filter).to.deep.equal([
+				'gt',
+				['add', ['add', { name: 'Price' }, { bind: 0 }], { bind: 1 }],
+				{ bind: 2 },
+			]);
+		});
+	});
+
+	test('$filter=Price sub 5 sub 10 gt 20', [5, 10, 20], function (result) {
+		it('should nest a repeated non-associative operator left to right', () => {
+			expect(result.options.$filter).to.deep.equal([
+				'gt',
+				['sub', ['sub', { name: 'Price' }, { bind: 0 }], { bind: 1 }],
+				{ bind: 2 },
+			]);
+		});
+	});
+
+	test(
+		'$filter=Price eq 5 or Price eq 10 or Price eq 15',
+		[5, 10, 15],
+		function (result) {
+			it('should merge a repeated or into a single node', () => {
+				expect(result.options.$filter).to.deep.equal([
+					'or',
+					['eq', { name: 'Price' }, { bind: 0 }],
+					['eq', { name: 'Price' }, { bind: 1 }],
+					['eq', { name: 'Price' }, { bind: 2 }],
+				]);
+			});
+		},
+	);
+
 	test('$filter=Price mul 5 gt 10', [5, 10], function (result) {
 		it('A filter should be present', () => {
 			assert.notEqual(result.options.$filter, null);
