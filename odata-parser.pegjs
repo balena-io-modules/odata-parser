@@ -584,22 +584,22 @@ Duration =
 			@DurationNumber
 			'S'
 		)?
-		// If T is present there must be a time part
-		&{return hour || minute || second}
+		// If T is present there must be a time part.
+		&{ return hour != null || minute != null || second != null }
 		{
 			return {
-				hour: hour || undefined,
-				minute: minute || undefined,
-				second: second || undefined
+				hour: hour ?? undefined,
+				minute: minute ?? undefined,
+				second: second ?? undefined
 			}
 		}
 	)?
 	// There must be a duration part
-	&{return day || time}
+	&{ return day != null || time != null }
 	Apostrophe
 	{ return {
 		negative: sign === '-',
-		day: day || undefined,
+		day: day ?? undefined,
 		hour: time?.hour,
 		minute: time?.minute,
 		second: time?.second,
