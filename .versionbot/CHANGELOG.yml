@@ -1,4 +1,25 @@
 - commits:
+    - subject: Accept duration literals with zero-valued parts
+      hash: 0b55520089659a96b2565d237757adbd4c7ea031
+      body: |
+        The checks that a duration has at least one part used truthiness, so a
+        part with the value `0` counted as missing. `duration'PT0S'`,
+        `duration'P0D'` and `duration'P1DT0H'` are all valid, but failed the
+        `Duration` rule and then matched as a property path named eg
+        `duration'PT0S'`, since `ResourceName` allows apostrophes.
+
+        The checks now compare against `null`, which is what an optional part
+        that is absent returns. Parts that are present now keep the value `0`
+        instead of becoming `undefined`, eg `duration'PT0H5M'` gives
+        `hour: 0`.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.17
+  title: ""
+  date: 2026-10-14T16:10:57.346Z
+- commits:
     - subject: Only merge `and`/`or` chains into n-ary filter nodes
       hash: 01c5cf69787bc8ead551a37f3495d364ff8e1b7f
       body: |
