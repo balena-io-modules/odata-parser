@@ -117,6 +117,10 @@ export default function (test: TestFn) {
 				second: 4.5,
 			}),
 		);
+		operandTest('eq', "duration'PT0S'", duration({ second: 0 }));
+		operandTest('eq', "duration'P0D'", duration({ day: 0 }));
+		operandTest('eq', "duration'P1DT0H'", duration({ day: 1, hour: 0 }));
+		operandTest('eq', "duration'PT0H5M'", duration({ hour: 0, minute: 5 }));
 
 		const date = new Date();
 		const testFunc: ExpectationFn = function (result) {
