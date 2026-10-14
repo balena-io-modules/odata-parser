@@ -1,4 +1,21 @@
 - commits:
+    - subject: Report malformed percent-encoding as a `SyntaxError`
+      hash: b9897ab7edd7132227c7d6895e835f2ef345914e
+      body: |
+        `Text` and `QuotedText` call `decodeURIComponent`, which throws a
+        `URIError` for malformed escapes such as `%ZZ` or a truncated UTF-8
+        sequence. That error escaped the parser as-is, so a request like
+        `/resource?foo=%ZZ` or `$filter=name eq '%ZZ'` did not fail with the
+        parser's expected `SyntaxError`. This meant that downstream would
+        return a 500 error rather than the expected 400
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.18
+  title: ""
+  date: 2026-10-14T16:25:26.355Z
+- commits:
     - subject: Accept duration literals with zero-valued parts
       hash: 0b55520089659a96b2565d237757adbd4c7ea031
       body: |
