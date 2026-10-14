@@ -289,11 +289,6 @@ FilterByValue =
 /	ParameterAlias
 /	PrimitiveValue
 
-// This only needs to be/should only be used in places that do not otherwise handle parentheses
-Primitive =
-		'(' spaces @Primitive spaces ')'
-	/	PrimitiveValue
-
 PrimitiveValue =
 		QuotedTextBind
 	/	NumberBind
@@ -321,27 +316,25 @@ FilterNegateExpression =
 
 GroupedPrimitive =
 	'(' spaces
-		bindings:(@Primitive|1..,',' spaces|)
+		values:ListPrimitive|1..,spaces ',' spaces|
 		spaces
 	')'
-	{
-		const bindValues = [];
-		let firstNonNullIndex = null;
-		let totalBoundIndexes = 0;
-		for (const binding of bindings) {
-			if (binding?.bind != null) {
-				firstNonNullIndex ??= binding.bind;
-				totalBoundIndexes++;
-				bindValues.push(binds[binding.bind]);
-			} else {
-				bindValues.push(['Null']);
-			}
-		}
-		if (firstNonNullIndex != null) {
-			binds.splice(firstNonNullIndex, totalBoundIndexes);
-		}
-		return Bind(['List', bindValues]);
-	}
+	// The whole list is a single bind, so the items are parsed as plain values rather than as binds of their own
+	{ return Bind(['List', values]) }
+
+// The items of an `in` list can only be literals, see `listExpr` in
+// https://docs.oasis-open.org/odata/odata/v4.01/os/abnf/odata-abnf-construction-rules.txt
+ListPrimitive =
+		'(' spaces @ListPrimitive spaces ')'
+	/	text:QuotedText
+		{ return [ 'Text', text ] }
+	/	n:Number
+		{ return [ 'Real', n ] }
+	/	b:Boolean
+		{ return [ 'Boolean', b ] }
+	/	Null
+		{ return [ 'Null' ] }
+	/	Date
 
 FilterMethodCallExpression =
 	methodName:$[a-z]+

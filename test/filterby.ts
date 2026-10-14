@@ -396,6 +396,45 @@ export default function (test: TestFn) {
 		});
 	});
 
+	test(
+		"$filter=Price in ( 'a' , 1 ,true,null )",
+		[['List', [['Text', 'a'], ['Real', 1], ['Boolean', true], ['Null']]]],
+		function (result) {
+			it('should allow whitespace around the list items', () => {
+				expect(result.options.$filter).to.deep.equal([
+					'eqany',
+					{ name: 'Price' },
+					{ bind: 0 },
+				]);
+			});
+		},
+	);
+
+	test(
+		'$filter=Price eq 1 or Price in (2, 3) or Price eq 4',
+		[
+			1,
+			[
+				'List',
+				[
+					['Real', 2],
+					['Real', 3],
+				],
+			],
+			4,
+		],
+		function (result) {
+			it('should number the binds either side of the list in order', () => {
+				expect(result.options.$filter).to.deep.equal([
+					'or',
+					['eq', { name: 'Price' }, { bind: 0 }],
+					['eqany', { name: 'Price' }, { bind: 1 }],
+					['eq', { name: 'Price' }, { bind: 2 }],
+				]);
+			});
+		},
+	);
+
 	test('$filter=Price add 5 gt 10', [5, 10], function (result) {
 		it('A filter should be present', () => {
 			assert.notEqual(result.options.$filter, null);

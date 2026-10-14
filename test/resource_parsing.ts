@@ -360,6 +360,14 @@ describe('Resource Parsing', function () {
 		});
 	});
 
+	for (const item of ['Foo', 'Foo/Bar', "duration'P1D'"]) {
+		resourceTest(`$filter=Price in (1, ${item})`, (result) => {
+			it('should fail because `in` list items must be literals', () => {
+				assert(result instanceof SyntaxError);
+			});
+		});
+	}
+
 	test(
 		'foo eq $INVALID',
 		['$INVALID'],
