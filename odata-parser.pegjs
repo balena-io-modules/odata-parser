@@ -1,4 +1,14 @@
 {{
+	// `decodeURIComponent` throws a `URIError` for malformed input such as `%ZZ`, this reports it as a parse error
+	// instead, using peggy's `error` function, so callers can tell bad input apart from internal failures
+	function decodeURIComponentOrError(text, error) {
+		try {
+			return decodeURIComponent(text);
+		} catch {
+			error('Malformed percent-encoding');
+		}
+	}
+
 	const methods = new Map(Object.entries({
 		cast: [ 1, 2 ],
 		ceiling: 1,
@@ -620,7 +630,7 @@ DurationNumber =
 Text =
 	// This regex is equivalent to `(!ReservedUriComponent)`
 	text:$[^:/?#\[\]@!$*&()+,;=]*
-	{ return decodeURIComponent(text) }
+	{ return decodeURIComponentOrError(text, error) }
 
 Sign =
 		'+'
@@ -647,7 +657,7 @@ QuotedText =
 		Apostrophe @Apostrophe
 	)*
 	Apostrophe
-	{ return decodeURIComponent(text.join('')) }
+	{ return decodeURIComponentOrError(text.join(''), error) }
 
 ParameterAlias =
 	'@' param:ResourceName
