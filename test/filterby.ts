@@ -84,6 +84,9 @@ export default function (test: TestFn) {
 		operandTest('eq', -2);
 		operandTest('eq', 2.5);
 		operandTest('eq', -2.5);
+		operandTest('eq', '1e3', 1000);
+		operandTest('eq', '-2.5E-3', -0.0025);
+		operandTest('eq', '1.5e%2B2', 150);
 		operandTest('eq', "'bar'", 'bar');
 		operandTest('eq', "'%20'", ' ');
 		operandTest('eq', "'()'", '()');

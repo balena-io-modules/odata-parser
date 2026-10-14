@@ -170,6 +170,18 @@ describe('Resource Parsing', function () {
 		});
 	});
 
+	test('/model(1e3)', [1000], (result) => {
+		checkKeyBind(result);
+	});
+
+	for (const key of ['1e999', '1' + '0'.repeat(400)]) {
+		test(`/model(${key})`, (result) => {
+			it('should fail because the number is out of range', () => {
+				expect(result).to.be.an.instanceof(SyntaxError);
+			});
+		});
+	}
+
 	test('/model(1)/child', [1], function (result) {
 		it('should have the resource specified', () => {
 			checkResource(result, 'model');
