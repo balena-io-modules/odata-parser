@@ -1,4 +1,25 @@
 - commits:
+    - subject: Only merge `and`/`or` chains into n-ary filter nodes
+      hash: 01c5cf69787bc8ead551a37f3495d364ff8e1b7f
+      body: |
+        Previously any repeated operator was merged into a single node, eg
+        `a add b add c` became `['add', a, b, c]`. Only `and`/`or` are
+        associative, and odata-to-abstract-sql only reads the first two
+        operands of the arithmetic operators, so the third operand was silently
+        dropped and `$filter=a add b add c gt 5` compiled to `a + b > 5`.
+        The merged form was also ambiguous for non-associative operators such
+        as `sub`.
+
+        All other operators now always produce binary nodes nested left to
+        right, eg `['add', ['add', a, b], c]`, which consumers already handle.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.16
+  title: ""
+  date: 2026-10-14T16:03:57.963Z
+- commits:
     - subject: Use a `Map` based results cache (~1.9x perf improvement)
       hash: 0f877be508d25d9093abeff055d3006e11ca1f48
       body: |
