@@ -1,4 +1,23 @@
 - commits:
+    - subject: Support exponents in number literals
+      hash: d1ea1b79197b1f9fcfad4ff5a0e9367ec8e2cc0d
+      body: |
+        OData allows an exponent in decimal and double literals, eg `1e3` or
+        `2.5E-3` (`decimalValue` in the ABNF), but they were rejected with a
+        `SyntaxError`. They now parse to the same `Real` bind as any other
+        number, so consumers need no changes.
+
+        Numbers too large to represent are now a `SyntaxError` too. They are
+        easy to write with an exponent, eg `1e999`, but a long enough literal
+        without one was already silently turned into an `Infinity` bind.
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Pagan Gazzard
+  version: 4.4.0
+  title: ""
+  date: 2026-10-15T00:55:11.639Z
+- commits:
     - subject: Allow whitespace around the `:` in `any`/`all` lambdas
       hash: 495c094de97c7efa69ebdfc97aac62f66df76a62
       body: >
