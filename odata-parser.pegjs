@@ -553,7 +553,21 @@ Number =
 			[0-9]+
 		)?
 	)
-	{ return Number(sign + d) }
+	exponent:(
+		[eE]
+		exponentSign:Sign
+		digits:$[0-9]+
+		{ return 'e' + exponentSign + digits }
+	/	''
+	)
+	{
+		const n = Number(sign + d + exponent);
+		// Reject numbers too large to represent, eg `1e999`, rather than silently turning them into `Infinity`
+		if (!Number.isFinite(n)) {
+			error('Number out of range');
+		}
+		return n;
+	}
 
 UnsignedInteger =
 	d:$[0-9]+
