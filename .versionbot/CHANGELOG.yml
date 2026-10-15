@@ -1,4 +1,25 @@
 - commits:
+    - subject: Allow whitespace around the `:` in `any`/`all` lambdas
+      hash: 495c094de97c7efa69ebdfc97aac62f66df76a62
+      body: >
+        `$filter=child/any(d: d/name eq 'cake')` was rejected because no
+
+        whitespace was accepted before or after the colon, although whitespace
+
+        was already accepted after `(` and before `)`. The ABNF allows it in
+
+        all four places:
+
+        `anyExpr = "any" OPEN BWS [ lambdaVariableExpr BWS COLON BWS
+        lambdaPredicateExpr ] BWS CLOSE`
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.3.19
+  title: ""
+  date: 2026-10-15T00:12:59.461Z
+- commits:
     - subject: Report malformed percent-encoding as a `SyntaxError`
       hash: b9897ab7edd7132227c7d6895e835f2ef345914e
       body: |
