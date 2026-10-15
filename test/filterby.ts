@@ -861,6 +861,18 @@ export default function (test: TestFn) {
 		);
 
 		test(
+			`$filter=child/${methodName}( d : d/name eq 'cake' )`,
+			['cake'],
+			function (result) {
+				it('Filter should be on the child resource', () => {
+					assert.equal(result.options.$filter.name, 'child');
+				});
+
+				lambdaAsserts(result?.options?.$filter?.lambda);
+			},
+		);
+
+		test(
 			`$filter=child/grandchild/${methodName}(d:d/name eq 'cake')`,
 			['cake'],
 			function (result) {
