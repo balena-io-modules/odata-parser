@@ -21,8 +21,7 @@
 	},
 	"include": [
 		"test/**/*",
-		"odata-parser.d.ts",
-		"patch-to-map-based-cache.js"
+		"odata-parser.d.ts"
 	],
 	"exclude": [
 		"node_modules"
