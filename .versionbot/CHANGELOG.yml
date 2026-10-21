@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update peggy to 5.1.1, removing need for patch-to-map-based-cache
+      hash: 4accfa135ae7ff4c153f44756f03ff0d03398a32
+      body: |
+        This has the performance improvement built into peggy directly, along
+        with other performance improvements
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.4.1
+  title: ""
+  date: 2026-10-21T07:19:38.096Z
+- commits:
     - subject: Support exponents in number literals
       hash: d1ea1b79197b1f9fcfad4ff5a0e9367ec8e2cc0d
       body: |
