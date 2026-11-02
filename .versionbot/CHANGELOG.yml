@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dependency @balena/lint to v11
+      hash: f35f1eaea4f5b119e32f23108c4f01a5b055c8c7
+      body: |
+        Update @balena/lint from 9.4.15 to 11.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+  version: 4.4.2
+  title: ""
+  date: 2026-11-02T23:22:34.381Z
+- commits:
     - subject: Update peggy to 5.1.1, removing need for patch-to-map-based-cache
       hash: 4accfa135ae7ff4c153f44756f03ff0d03398a32
       body: |
