@@ -425,4 +425,52 @@ describe('Resource Parsing', function () {
 			assert(result instanceof SyntaxError);
 		});
 	});
+
+	describe('Names must be OData identifiers', function () {
+		for (const name of ['_model', 'model_1', 'Model_Name1', 'a'.repeat(128)]) {
+			test(`/${name}`, (result) => {
+				it('should parse the name', () => {
+					checkResource(result, name);
+				});
+			});
+		}
+
+		for (const url of [
+			// Not allowed in an identifier
+			'/model-name',
+			'/model.name',
+			'/model~name',
+			"/mo'del",
+			'/1model',
+			// Longer than 128 characters
+			`/${'a'.repeat(129)}`,
+			// The same applies to every name
+			'/model(1)/child-name',
+			'/model(a-b=1)',
+			"/model(date'2012-12-03'x=1)",
+			'/resource?$select=a.b',
+			'/resource?$expand=a~b',
+			"/resource?$orderby=a'b",
+			'/resource?$filter=a/b-c eq 1',
+			'/resource?$filter=a/any(d-e:d-e/f eq 1)',
+			'/resource?$filter=a/f-g() eq 1',
+			'/resource?$filter=a eq @b-c&@b-c=1',
+		]) {
+			test(url, (result) => {
+				it('should fail because the name is not an OData identifier', () => {
+					expect(result).to.be.an.instanceof(SyntaxError);
+				});
+			});
+		}
+
+		// A Content-ID reference is not an identifier, it can be any unreserved characters
+		test('$1a-._~', [['ContentReference', '1a-._~']], (result) => {
+			checkKeyBind(result);
+		});
+		test("$1'", (result) => {
+			it('should fail because it is not a valid Content-ID', () => {
+				expect(result).to.be.an.instanceof(SyntaxError);
+			});
+		});
+	});
 });

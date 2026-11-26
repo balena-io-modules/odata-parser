@@ -541,8 +541,9 @@ SubPathSegment =
 	{ return result }
 
 ResourceName =
-	// This regex is equivalent to `!(ReservedUriComponent / [ %])`
-	$[^:/?#\[\]@!$*&()+,;= %]+
+	// `odataIdentifier` in the OData ABNF: a letter or `_`, then at most 127 letters, digits or `_`. The ABNF also allows
+	// non-ASCII Unicode letters, but model names are ASCII
+	$([a-zA-Z_] [a-zA-Z0-9_]|0..127|)
 
 Number =
 	sign:Sign
@@ -711,7 +712,8 @@ BooleanBind =
 
 ContentReference =
 	'$'
-	resource:ResourceName
+	// A Content-ID is `request-id` in the OData ABNF, which is not an identifier, eg `$1`
+	resource:$[a-zA-Z0-9\-._~]+
 	{
 		const bind = Bind(['ContentReference', resource])
 		return { resource: bind, key: bind }
