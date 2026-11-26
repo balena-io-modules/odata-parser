@@ -474,6 +474,10 @@ NamedKeyBind =
 KeyBind =
 		NumberBind
 	/	QuotedTextBind
+	/	BooleanBind
+	/	DateBind
+	// `null` is deliberately not accepted, a null key would need a unique index with `NULLS NOT DISTINCT` to identify
+	// a single row
 	/	ParameterAlias
 
 Links =

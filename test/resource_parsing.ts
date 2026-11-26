@@ -170,6 +170,122 @@ describe('Resource Parsing', function () {
 		});
 	});
 
+	describe('Keys with boolean and date values', function () {
+		const date = new Date('2012-12-03T07:16:23Z');
+		const isoDate = encodeURIComponent(date.toISOString());
+		const keys = [
+			['true', ['Boolean', true]],
+			['false', ['Boolean', false]],
+			[`date'${isoDate}'`, ['Date', date.getTime()]],
+			[`datetime'${isoDate}'`, ['Date Time', date.getTime()]],
+		] as const;
+		for (const [key, bind] of keys) {
+			test(`/model(${key})`, [bind], function (result) {
+				it('should have the resource specified', () => {
+					checkResource(result, 'model');
+				});
+				checkKeyBind(result);
+			});
+
+			test(`/model(id=${key})`, [bind], function (result) {
+				it('should have the resource specified', () => {
+					checkResource(result, 'model');
+				});
+				checkNamedKeyBind(result);
+			});
+
+			test(`/model(1)/child(${key})`, [1, bind], function (result) {
+				checkKeyBind(result);
+				it('should have the key specified for the child', () => {
+					expect(result.property)
+						.to.have.property('key')
+						.that.deep.equals({ bind: 1 });
+				});
+			});
+
+			test(
+				key,
+				[bind],
+				{ startRule: 'ProcessRule', rule: 'KeyBind' },
+				function (result) {
+					it('should be a bind', () => {
+						expect(result).to.deep.equal({ bind: 0 });
+					});
+				},
+			);
+		}
+
+		test(
+			`/model(a=1,b=false,c=true,d=datetime'${isoDate}')`,
+			[1, false, true, ['Date Time', date.getTime()]],
+			function (result) {
+				it('should have all the keys specified', () => {
+					expect(result)
+						.to.have.property('key')
+						.that.deep.equals({
+							a: { bind: 0 },
+							b: { bind: 1 },
+							c: { bind: 2 },
+							d: { bind: 3 },
+						});
+				});
+			},
+		);
+
+		for (const name of ['nullable', 'trueish', 'false_x']) {
+			test(`/model(${name}=1,b=true)`, [1, true], function (result) {
+				it('should parse a key name that starts with a literal', () => {
+					expect(result)
+						.to.have.property('key')
+						.that.deep.equals({
+							[name]: { bind: 0 },
+							b: { bind: 1 },
+						});
+				});
+			});
+		}
+
+		// A null key would need a unique index with `NULLS NOT DISTINCT` to identify a single row, so it is rejected
+		for (const url of [
+			'/model(null)',
+			'/model(id=null)',
+			'/model(a=1,b=null)',
+			'/model(1)/child(null)',
+		]) {
+			test(url, (result) => {
+				it('should fail because null keys are not supported', () => {
+					expect(result).to.be.an.instanceof(SyntaxError);
+				});
+			});
+		}
+		test(
+			'null',
+			undefined,
+			{ startRule: 'ProcessRule', rule: 'KeyBind' },
+			(result) => {
+				it('should fail because null keys are not supported', () => {
+					expect(result).to.be.an.instanceof(SyntaxError);
+				});
+			},
+		);
+
+		for (const key of [
+			'nullx',
+			'truex',
+			'falsex',
+			'NULL',
+			'True',
+			"datetime'invalid'",
+			"date'invalid'",
+		]) {
+			test(`/model(${key})`, (result) => {
+				it('should fail because it is not a valid key', () => {
+					expect(result).to.be.an.instanceof(SyntaxError);
+				});
+			});
+		}
+	});
+
 	test('/model(1e3)', [1000], (result) => {
 		checkKeyBind(result);
 	});

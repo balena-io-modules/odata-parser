@@ -217,6 +217,47 @@ export default (test: TestFn) => {
 			},
 		);
 
+		test(
+			`$orderby=Products(a=false,b=true,c=date'2012-12-03')/Quantity asc`,
+			[false, true, ['Date', Date.parse('2012-12-03')]],
+			function (result) {
+				it('sort options property should be as expected', () => {
+					assert.deepStrictEqual(result.options.$orderby.properties, [
+						{
+							name: 'Products',
+							key: {
+								a: { bind: 0 },
+								b: { bind: 1 },
+								c: { bind: 2 },
+							},
+							property: { name: 'Quantity' },
+							order: 'asc',
+						},
+					]);
+				});
+			},
+		);
+
+		test(
+			'$orderby=Products(nullable=1,trueish=true)/Quantity asc',
+			[1, true],
+			function (result) {
+				it('sort options property should be as expected', () => {
+					assert.deepStrictEqual(result.options.$orderby.properties, [
+						{
+							name: 'Products',
+							key: {
+								nullable: { bind: 0 },
+								trueish: { bind: 1 },
+							},
+							property: { name: 'Quantity' },
+							order: 'asc',
+						},
+					]);
+				});
+			},
+		);
+
 		test('$orderby=Products(a=1,b=2)/Quantity asc', [1, 2], function (result) {
 			it('sort options are present on the result', () => {
 				assert.notEqual(result.options.$orderby, null);
