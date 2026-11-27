@@ -566,14 +566,19 @@ UnsignedInteger =
 	d:$[0-9]+
 	{ return parseInt(d, 10) }
 
+// The `!ResourceName` checks stop these keywords matching the start of a longer name, otherwise eg `nullable eq 1`
+// would be parsed as `null` followed by `able eq 1` and fail
 Null =
 	'null'
+	!ResourceName
 	{ return null }
 
 Boolean =
 		'true'
+		!ResourceName
 		{ return true }
 	/	'false'
+		!ResourceName
 		{ return false }
 
 Duration =
