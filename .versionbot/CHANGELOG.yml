@@ -1,4 +1,33 @@
 - commits:
+    - subject: Only accept literals in `in` lists and allow spaces before commas
+      hash: 6c9724f6e8aa1d064864264c495e61a48dff1e02
+      body: |
+        `GroupedPrimitive` parsed each list item with `Primitive`, which also
+        accepts property paths and durations, and then turned every item that
+        was not a bind into `['Null']`. So `Price in (1, Foo)` silently became
+        `Price in (1, null)`, and `Price in (duration'P1D')` became
+        `Price in (null)`. The OData `listExpr` rule only allows literals, so
+        these are now a `SyntaxError`.
+
+        The items are now parsed as plain values and put straight into the
+        `List` bind. This replaces pushing a bind for each item and then
+        splicing them back out of `binds`, which relied on those binds being
+        contiguous. The resulting binds are unchanged.
+
+        The list separator also accepts spaces before the comma, eg
+        `Price in (1 , 2)`, as the ABNF allows.
+
+        `Primitive` is removed as nothing uses it any more. peggy drops
+        unreferenced rules from the generated parser, so it could not have
+        stayed reachable through `ProcessRule` anyway.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+  version: 4.4.4
+  title: ""
+  date: 2026-11-27T17:40:34.923Z
+- commits:
     - subject: Update dependency mocha to v12
       hash: e4523028a77958a852ef661ccbc384f587f8e9f4
       body: |
